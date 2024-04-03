@@ -1,21 +1,69 @@
+{% load static %}
+
 <html>
     <head>
-        <title>Django Girls blog</title>
+        <link rel="stylesheet" href="{% static 'css/etikom.css' %}">
+        <title>Etikom</title>
     </head>
     <body>
         <div>
-            <h1><a href="/">Django Girls Blog</a></h1>
+            <h1><a href='/'>ETİKOM</a></h1>
+            <p>E-ticaretin Kolay Muhasebesi</p>
         </div>
         <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">İlk Blogum</a></h2>
-            <p>Çok heyecanlıyım! Bu benim ilk blogum. Ne kadar zevkli bir işmiş bilgisayarlarla uğraşmak. Artık bilgisayar başından kalkmam. </p>
+            <h2>Satış Fiyatı Hesaplama</h2>
+            <p>Ürününüz için satış fiyatını hesaplayabilirsiniz.</p>
         </div>
+        <div>
+            {% block content %}
+            {% endblock %}
 
+        </div>
         <div>
-            <p>published: 14.06.2014, 12:20</p>
-            <h2><a href="">İkinci gönderim</a></h2>
-            <p>Bir varmış bir yokmuş, evvel zaman içinde Ne kadar zevkli bir işmiş bilgisayarlarla uğraşmak. Artık bilgisayar başından kalkmam. kalbur saman içinde, develer tellal iken, pireler berber iken; ben annemin beşiğini tıngır mıngır sallar iken.</p>
+            <script>
+            function toplama() {
+              var sayi1 = document.getElementById('sayi1').value;
+              var sayi2 = document.getElementById('sayi2').value;
+              var sayi3 = document.getElementById('sayi3').value;
+              var sayi4 = document.getElementById('sayi4').value;
+              var sayi5 = document.getElementById('sayi5').value;
+
+
+              var toplam = 100 * (parseInt(sayi1) + parseInt(sayi4) + parseInt(sayi5) + parseInt(sayi1) * parseInt(sayi2) / 100) / (100 - parseInt(sayi3) );
+              toplam= Number(toplam.toFixed(2));
+              document.getElementById('toplam').innerHTML = toplam;
+            }
+
+            document.getElementById('sayi1').onkeyup = function() {
+              toplama();
+            };
+
+            document.getElementById('sayi2').onkeyup = function() {
+              toplama();
+            };
+
+            document.getElementById('sayi3').onkeyup = function() {
+              toplama();
+            };
+
+            document.getElementById('sayi4').onkeyup = function() {
+              toplama();
+            };
+
+            document.getElementById('sayi5').onkeyup = function() {
+              toplama();
+            };
+
+            </script>
+
+            <form class="fhformu">
+                <p>Alış Fiyatı:<input type="number" id="sayi1" value="100" class="input" onkeyup="toplama()"></p>
+                <p>Kar Oranı (%):<input type="number" id="sayi2" value="15" class="input" onkeyup="toplama()"></p>
+                <p>Komisyon Oranı (%):<input type="number" id="sayi3" value="20" class="input" onkeyup="toplama()"></p>
+                <p>Kargo Ücreti:<input type="number" id="sayi4" value="45" class="input" onkeyup="toplama()"></p>
+                <p>Hizmet ve İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
+                <p>Satış Fiyatı:<span id="toplam"></span></p>
+            </form>
         </div>
     </body>
 </html>

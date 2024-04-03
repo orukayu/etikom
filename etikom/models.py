@@ -18,3 +18,9 @@ class Emutablo(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Sayilar(models.Model):
+    sayi1 = models.IntegerField()
+    sayi2 = models.IntegerField()
+    sayi3 = models.IntegerField()
