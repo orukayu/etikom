@@ -1,14 +1,62 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+}
+.govde {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: flex-start;
+}
+.baslik {
+    background-color: #ff9800;
+    box-shadow: 0px 4px 4px 2px #00000026;
+    height: 80px;
+    padding-top: 20px;
+    padding-left: 100px;
+    z-index: 1;
+    margin-bottom: 20px;
+}
+.bir {
+    background-color: #f2f2f2;
+    border-style: ridge;
+    border-radius: 5px;
+    padding: 0 20 10 20;
+}
+.iki {
+    background-color: #f2f2f2;
+    border-style: ridge;
+    border-radius: 5px;
+    padding: 0 20 10 20;
+    margin-left: 20px;
+}
+.baslik h1, .baslik p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 h1 a {
-    color: #FCA205;
+    color: black;
+    text-decoration: none;
 }
-body {
-    padding-left: 15px;
+h2 {
+    text-align: center;
 }
-.fhformu {
+
+.fhformu, .stokgformu {
     width: 300px;
 }
 .input {
-    width: 100px;
+    width: 125px;
+    float: right;
+    text-align: right;
+}
+#id_Stokkodu, #id_Adet, #id_Alisfiyati, #id_Afaturano, #id_Toplam {
+    width: 125px;
     float: right;
     text-align: right;
 }

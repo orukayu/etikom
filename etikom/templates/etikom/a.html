@@ -6,64 +6,66 @@
         <title>Etikom</title>
     </head>
     <body>
-        <div>
+        <div class="baslik">
             <h1><a href='/'>ETİKOM</a></h1>
             <p>E-ticaretin Kolay Muhasebesi</p>
         </div>
-        <div>
-            <h2>Satış Fiyatı Hesaplama</h2>
-            <p>Ürününüz için satış fiyatını hesaplayabilirsiniz.</p>
-        </div>
-        <div>
-            {% block content %}
-            {% endblock %}
+        <div class="govde">
+            <div class="bir">
+                <h2>Satış Fiyatı Hesaplama</h2>
+                <p>Ürününüz için satış fiyatını hesaplatabilirsiniz.</p>
+                <script>
+                function toplama() {
+                    var sayi1 = document.getElementById('sayi1').value;
+                    var sayi2 = document.getElementById('sayi2').value;
+                    var sayi3 = document.getElementById('sayi3').value;
+                    var sayi4 = document.getElementById('sayi4').value;
+                    var sayi5 = document.getElementById('sayi5').value;
 
-        </div>
-        <div>
-            <script>
-            function toplama() {
-              var sayi1 = document.getElementById('sayi1').value;
-              var sayi2 = document.getElementById('sayi2').value;
-              var sayi3 = document.getElementById('sayi3').value;
-              var sayi4 = document.getElementById('sayi4').value;
-              var sayi5 = document.getElementById('sayi5').value;
+                    var toplam = 100 * (parseInt(sayi1) + parseInt(sayi4) + parseInt(sayi5) + parseInt(sayi1) * parseInt(sayi2) / 100) / (100 - parseInt(sayi3) );
+                    toplam= Number(toplam.toFixed(2));
+                    document.getElementById('toplam').innerHTML = toplam;
+                }
 
+                document.getElementById('sayi1').onkeyup = function() {
+                    toplama();
+                };
 
-              var toplam = 100 * (parseInt(sayi1) + parseInt(sayi4) + parseInt(sayi5) + parseInt(sayi1) * parseInt(sayi2) / 100) / (100 - parseInt(sayi3) );
-              toplam= Number(toplam.toFixed(2));
-              document.getElementById('toplam').innerHTML = toplam;
-            }
+                document.getElementById('sayi2').onkeyup = function() {
+                    toplama();
+                };
 
-            document.getElementById('sayi1').onkeyup = function() {
-              toplama();
-            };
+                document.getElementById('sayi3').onkeyup = function() {
+                    toplama();
+                };
 
-            document.getElementById('sayi2').onkeyup = function() {
-              toplama();
-            };
+                document.getElementById('sayi4').onkeyup = function() {
+                    toplama();
+                };
 
-            document.getElementById('sayi3').onkeyup = function() {
-              toplama();
-            };
+                document.getElementById('sayi5').onkeyup = function() {
+                    toplama();
+                };
 
-            document.getElementById('sayi4').onkeyup = function() {
-              toplama();
-            };
+                </script>
 
-            document.getElementById('sayi5').onkeyup = function() {
-              toplama();
-            };
-
-            </script>
-
-            <form class="fhformu">
-                <p>Alış Fiyatı:<input type="number" id="sayi1" value="100" class="input" onkeyup="toplama()"></p>
-                <p>Kar Oranı (%):<input type="number" id="sayi2" value="15" class="input" onkeyup="toplama()"></p>
-                <p>Komisyon Oranı (%):<input type="number" id="sayi3" value="20" class="input" onkeyup="toplama()"></p>
-                <p>Kargo Ücreti:<input type="number" id="sayi4" value="45" class="input" onkeyup="toplama()"></p>
-                <p>Hizmet ve İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
-                <p>Satış Fiyatı:<span id="toplam"></span></p>
-            </form>
+                <form class="fhformu">
+                    <p>Alış Fiyatı:<input type="number" id="sayi1" value="100" class="input" onkeyup="toplama()"></p>
+                    <p>Kar Oranı (%):<input type="number" id="sayi2" value="15" class="input" onkeyup="toplama()"></p>
+                    <p>Komisyon Oranı (%):<input type="number" id="sayi3" value="20" class="input" onkeyup="toplama()"></p>
+                    <p>Kargo Ücreti:<input type="number" id="sayi4" value="45" class="input" onkeyup="toplama()"></p>
+                    <p>Hizmet ve İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
+                    <p>Satış Fiyatı:<span id="toplam"></span></p>
+                </form>
+            </div>
+            <div class="iki">
+                <h2>Stok Takip Programı</h2>
+                <p>Stok ekleme veya Stok çıkartma yapabilirsiniz.</p>
+                <form method="POST" class="stokgformu">{% csrf_token %}
+                    {{ form.as_p }}
+                <button type="submit" class="save btn btn-default">Kaydet</button>
+                </form>
+            </div>
         </div>
     </body>
 </html>
