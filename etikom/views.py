@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Stok
 from .forms import PostForm
 
-from django.db.models import Sum, Avg
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -18,5 +18,5 @@ def anasayfa(request):
 
     ts = Stok.objects.aggregate(Sum("Adet"))
     tm = Stok.objects.aggregate(Sum("Toplam"))
-    om = tm["Toplam__sum"] / ts["Adet__sum"]
+    om = float(tm["Toplam__sum"]) / float(ts["Adet__sum"])
     return render(request, 'etikom/a.html', {'form': form, 'ts': ts, 'om': om, 'tm': tm})
