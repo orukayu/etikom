@@ -9,6 +9,7 @@
         <div class="baslik">
             <h1><a href='/'>ETİKOM</a></h1>
             <p>E-ticaretin Kolay Muhasebesi</p>
+            <p><a href='/admin'>ADMIN</a></p>
         </div>
         <div class="govde">
             <div class="bir">
@@ -23,9 +24,10 @@
                     var sayi5 = document.getElementById('sayi5').value;
 
                     var toplam = 100 * (parseInt(sayi1) + parseInt(sayi4) + parseInt(sayi5) + parseInt(sayi1) * parseInt(sayi2) / 100) / (100 - parseInt(sayi3) );
-                    toplam= Number(toplam.toFixed(2));
+                    toplam = Number(toplam.toFixed(2));
                     document.getElementById('toplam').innerHTML = toplam;
                 }
+
 
                 document.getElementById('sayi1').onkeyup = function() {
                     toplama();
@@ -55,7 +57,7 @@
                     <p>Komisyon Oranı (%):<input type="number" id="sayi3" value="20" class="input" onkeyup="toplama()"></p>
                     <p>Kargo Ücreti:<input type="number" id="sayi4" value="45" class="input" onkeyup="toplama()"></p>
                     <p>Hizmet ve İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
-                    <p>Satış Fiyatı:<span id="toplam"></span></p>
+                    <p>Satış Fiyatı:<span id="toplam" ></span></p>
                 </form>
             </div>
             <div class="iki">
@@ -63,8 +65,12 @@
                 <p>Stok ekleme veya Stok çıkartma yapabilirsiniz.</p>
                 <form method="POST" class="stokgformu">{% csrf_token %}
                     {{ form.as_p }}
-                <button type="submit" class="save btn btn-default">Kaydet</button>
+                <button type="submit" class="save btn btn-default">Ekle</button>
+                <button type="submit" class="save btn btn-default">Cikart</button>
                 </form>
+                <p>Toplam Stok:<span id="ts">{{ ts.Adet__sum|floatformat:2 }}</span></p>
+                <p>Ortalama Maliyet:<span id="ts">{{ om|floatformat:2 }}</span></p>
+                <p>Toplam Maliyet:<span id="ts">{{ tm.Toplam__sum|floatformat:2 }}</span></p>
             </div>
         </div>
     </body>
