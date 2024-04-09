@@ -16,7 +16,15 @@ def anasayfa(request):
     else:
         form = PostForm()
 
-    ts = Stok.objects.aggregate(Sum("Adet"))
-    tm = Stok.objects.aggregate(Sum("Toplam"))
-    om = float(tm["Toplam__sum"]) / float(ts["Adet__sum"])
+    vv = Stok.objects.count() # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
+
+    if vv == 0:
+        ts = 0
+        om = 0
+        tm = 0
+    else:
+        ts = Stok.objects.aggregate(Sum("Adet"))["Adet__sum"]
+        tm = Stok.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
+        om = tm / ts
+
     return render(request, 'etikom/a.html', {'form': form, 'ts': ts, 'om': om, 'tm': tm})

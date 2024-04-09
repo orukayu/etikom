@@ -65,12 +65,16 @@
                 <p>Stok ekleme veya Stok çıkartma yapabilirsiniz.</p>
                 <form method="POST" class="stokgformu">{% csrf_token %}
                     {{ form.as_p }}
+                <div class="butonlar">
                 <button type="submit" class="save btn btn-default">Ekle</button>
                 <button type="submit" class="save btn btn-default">Cikart</button>
+                <button type="submit" class="save btn btn-default">Listele</button>
+                <button type="submit" class="save btn btn-default">Excel Yükle</button>
+                </div>
                 </form>
-                <p>Toplam Stok:<span id="ts">{{ ts.Adet__sum|floatformat:2 }}</span></p>
+                <p>Güncel Stok:<span id="ts">{{ ts|floatformat:2 }}</span></p>
                 <p>Ortalama Maliyet:<span id="ts">{{ om|floatformat:2 }}</span></p>
-                <p>Toplam Maliyet:<span id="ts">{{ tm.Toplam__sum|floatformat:2 }}</span></p>
+                <p>Toplam Maliyet:<span id="ts">{{ tm|floatformat:2 }}</span></p>
             </div>
         </div>
     </body>
