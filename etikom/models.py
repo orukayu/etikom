@@ -10,7 +10,12 @@ class Stok(models.Model):
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Afaturano = models.CharField(max_length=20)
 
-    def save(self, *args, **kwargs):
+    def save1(self, *args, **kwargs):
+        self.Toplam = self.Adet * self.Alisfiyati
+        super().save(*args, **kwargs)
+
+    def save2(self, *args, **kwargs):
+        self.Adet = self.Adet * -1
         self.Toplam = self.Adet * self.Alisfiyati
         super().save(*args, **kwargs)
 

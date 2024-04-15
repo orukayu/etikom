@@ -1,0 +1,43 @@
+{% extends 'etikom/base.html' %}
+
+{% block content %}
+<div class="stoklistesi">
+    <div style="width: 100%; text-align: center;">
+        <h1>STOK LİSTESİ</h1>
+    </div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fatura No (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>/<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)</th>
+                    <th>Stok Kodu (<a href="{% url 'stoksiralama' sort='az-stokkodu' %}">A</a>/<a href="{% url 'stoksiralama' sort='za-stokkodu' %}">Z</a>)</th>
+                    <th>Adet (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>/<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)</th>
+                    <th>Alış Fiyatı (<a href="{% url 'stoksiralama' sort='az-alisfiyati' %}">A</a>/<a href="{% url 'stoksiralama' sort='za-alisfiyati' %}">Z</a>)</th>
+                    <th>Toplam (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>/<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)</th>
+                </tr>
+            </thead>
+            {% for stok in stok %}
+            <tbody>
+                <tr>
+                    <td>
+                        {{ stok.Afaturano }}
+                    </td>
+                    <td>
+                        {{ stok.Stokkodu }}
+                    </td>
+                    <td id="tabloadet">
+                        {{ stok.Adet }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ stok.Alisfiyati }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ stok.Toplam }}
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

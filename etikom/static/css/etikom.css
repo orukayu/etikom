@@ -1,73 +1,163 @@
+* {
+    box-sizing: border-box;
+}
+
 html, body {
     margin: 0px;
     padding: 0px;
-    height: 100%;
-    width: 100%;
-}
-.govde {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: center;
-    align-items: flex-start;
-}
-.baslik {
-    background-color: #ff9800;
-    box-shadow: 0px 4px 4px 2px #00000026;
-    height: 80px;
-    padding-top: 20px;
-    padding-left: 100px;
-    z-index: 1;
-    margin-bottom: 20px;
-}
-.bir {
-    background-color: #f2f2f2;
-    border-style: ridge;
-    border-radius: 5px;
-    padding: 0 20 10 20;
-}
-.iki {
-    background-color: #f2f2f2;
-    border-style: ridge;
-    border-radius: 5px;
-    padding: 0 20 10 20;
-    margin-left: 20px;
-}
-.baslik h1, .baslik p {
-    margin-top: 0px;
-    margin-bottom: 0px;
 }
 
-h1 a {
-    color: black;
-    text-decoration: none;
-}
-h2 {
-    text-align: center;
+.container {  display: grid;
+  grid-template-columns: 10vw 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "solsutun sagsutun"
+    "solsutun sagsutun"
+    "solsutun sagsutun";
 }
 
-.fhformu, .stokgformu {
-    width: 300px;
+.solsutun {  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "solust"
+    "solorta"
+    "solalt";
+  grid-area: solsutun;
+  background-color: #94acc1;
 }
-.input {
-    width: 125px;
-    float: right;
-    text-align: right;
+
+.solust { grid-area: solust;
+  position: fixed;
 }
-#id_Stokkodu, #id_Adet, #id_Alisfiyati, #id_Afaturano, #id_Toplam {
-    width: 125px;
-    float: right;
-    text-align: right;
+
+.solorta { grid-area: solorta; }
+
+.solalt { grid-area: solalt; }
+
+.sagsutun {  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 10vh 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  grid-area: sagsutun;
+  background-color: #96C194;
 }
-#toplam {
-    float: right;
-    padding-right: 20px;
-    font-weight: bold;
+
+.header {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "headersol headerorta headersag";
+  grid-area: header;
+  background-color: #C094C1;
+  position: sticky;
+  top: 0;
 }
-#ts {
-    float: right;
+
+.headersol { grid-area: headersol;
+  display: grid;
+  align-content: center;
+  padding-left: 1vw;
 }
+
+.headerorta { grid-area: headerorta; }
+
+.headersag { grid-area: headersag; }
+
+.main {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "mainsol mainorta mainsag";
+  grid-area: main;
+}
+
+.mainsol { grid-area: mainsol; }
+
+.mainorta { grid-area: mainorta;
+  width: max-content;
+  display: flex;
+}
+
+.mainsag { grid-area: mainsag; }
+
+.footer {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "footersol footerorta footersag";
+  grid-area: footer;
+  position: fixed;
+  bottom: 0;
+  width: -webkit-fill-available;
+  background-color: #C1A994;
+}
+
+.footersol { grid-area: footersol; }
+
+.footerorta { grid-area: footerorta; }
+
+.footersag { grid-area: footersag; }
+
+.input, #id_Afaturano, #id_Stokkodu, #id_Adet, #id_Alisfiyati, #id_Afaturano, #id_Toplam  {
+  float: right;
+  text-align: right;
+}
+
+span#toplam, #ts {
+  float: right;
+  padding-right: 1vw;
+  font-weight: bold;
+}
+
 .butonlar {
     text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 75vw;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+tr:hover {background-color: coral;}
+
+th {
+  text-align: center;
+  background-color: #04AA6D;
+  color: white;
+}
+
+#tabloadet {
+  text-align: center;
+}
+
+#tablofiyat {
+  text-align: right;
+}
+.mofhformu {
+  padding-right: 2vw;
+}
+h2 {
+  text-align: center;
 }

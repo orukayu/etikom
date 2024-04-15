@@ -1,0 +1,111 @@
+{% load static %}
+<!doctype html>
+<html lang="tr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'css/etikom.css' %}">
+        <title>Etikom</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="solsutun">
+                <div class="solust">
+                    <h1><a href='/'>ETİKOM</a></h1>
+                    <p>E-ticaretin Kolay Muhasebesi</p>
+                </div>
+                <div class="solorta"></div>
+                <div class="solalt"></div>
+            </div>
+            <div class="sagsutun">
+                <div class="header">
+                    <div class="headersol">FIRMA ADI</div>
+                    <div class="headerorta"></div>
+                    <div class="headersag"></div>
+                </div>
+                <div class="main">
+                    <div class="mainsol"></div>
+                    <div class="mainorta">
+                        {% block content %}
+                        <div class="mofhformu">
+                            <h2>Satış Fiyatı Hesapla</h2>
+                            <p>Ürününüz için satış fiyatını hesaplayabilirsiniz.</p>
+                            <script>
+                            window.onload = function() {
+                                toplama(); // Sayfa yüklendiğinde toplama fonksiyonunu tetikle
+                            };
+
+                            function toplama() {
+                                var sayi1 = Number(document.getElementById('sayi1').value);
+                                var sayi2 = Number(document.getElementById('sayi2').value);
+                                var sayi3 = Number(document.getElementById('sayi3').value);
+                                var sayi4 = Number(document.getElementById('sayi4').value);
+                                var sayi5 = Number(document.getElementById('sayi5').value);
+
+                                var toplam = 100 * (sayi1 + sayi4 + sayi5 + (sayi1 * sayi2 / 100)) / (100 - sayi3);
+                                toplam = Number(toplam.toFixed(2));
+                                document.getElementById('toplam').innerHTML = toplam;
+                            }
+
+
+                            document.getElementById('sayi1').onkeyup = function() {
+                                toplama();
+                            };
+
+                            document.getElementById('sayi2').onkeyup = function() {
+                                toplama();
+                            };
+
+                            document.getElementById('sayi3').onkeyup = function() {
+                                toplama();
+                            };
+
+                            document.getElementById('sayi4').onkeyup = function() {
+                                toplama();
+                            };
+
+                            document.getElementById('sayi5').onkeyup = function() {
+                                toplama();
+                            };
+
+                            
+
+                            </script>
+
+                            <form class="fhformu">
+                                <p>Alış Fiyatı:<input type="number" id="sayi1" value="100" class="input" onkeyup="toplama()"></p>
+                                <p>Kar Oranı (%):<input type="number" id="sayi2" value="15" class="input" onkeyup="toplama()"></p>
+                                <p>Komisyon Oranı (%):<input type="number" id="sayi3" value="12" class="input" onkeyup="toplama()"></p>
+                                <p>Kargo Ücreti:<input type="number" id="sayi4" value="45" class="input" onkeyup="toplama()"></p>
+                                <p>Hizmet ve İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
+                                <p style="font-weight: bold;">Satış Fiyatı:<span id="toplam"></span></p>
+                            </form>
+                        </div>
+                        <div>
+                            <h2>Stok İşlemleri</h2>
+                            <p>Stok ekleme veya Stok çıkartma yapabilirsiniz.</p>
+                            <form method="POST" class="stokgformu">{% csrf_token %}
+                                {{ form.as_p }}
+                                <div class="butonlar">
+                                    <input type="submit" name="stokekle" class="save btn btn-default" value="Stok Ekle">
+                                    <input type="submit" name="stokcikart" class="save btn btn-default" value="Stok Çıkart">
+                                    <button type="button" onclick="window.location.href = '/stoklistesi';" class="save btn btn-default">Stok Listesi</button>
+                                </div>
+                            </form>
+                            <p style="font-weight: bold;">Güncel Stok Miktarı:<span id="ts">{{ ts|floatformat:2 }}</span></p>
+                            <p style="font-weight: bold;">Ortalama Maliyet:<span id="ts">{{ om|floatformat:2 }}</span></p>
+                            <p style="font-weight: bold;">Toplam Maliyet:<span id="ts">{{ tm|floatformat:2 }}</span></p>
+                        </div>
+                        {% endblock %}
+                    </div>
+                    <div class="mainsag"></div>
+                </div>
+                <div class="footer">
+                    <div class="footersol">ALT KISIM</div>
+                    <div class="footerorta"></div>
+                    <div class="footersag"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
