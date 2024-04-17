@@ -2,6 +2,12 @@ from django import forms
 
 from .models import Stok
 
+class GirisFormu(forms.Form):     
+    firma_adi = forms.CharField(label='Firma Adı')
+    email = forms.EmailField(label='E-posta Adresi')    
+    password1 = forms.CharField(label='Şifre', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Şifreyi Tekrar Girin', widget=forms.PasswordInput)
+
 class StokForm(forms.ModelForm):
 
     class Meta:

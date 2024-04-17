@@ -8,7 +8,7 @@ html, body {
 }
 
 .container {  display: grid;
-  grid-template-columns: 10vw 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -28,11 +28,13 @@ html, body {
     "solorta"
     "solalt";
   grid-area: solsutun;
-  background-color: #94acc1;
+  background-color: #2c3e50;
 }
 
-.solust { grid-area: solust;
-  position: fixed;
+.solust {
+  grid-area: solust;
+  color: white;
+  text-align: center;
 }
 
 .solorta { grid-area: solorta; }
@@ -49,7 +51,7 @@ html, body {
     "main"
     "footer";
   grid-area: sagsutun;
-  background-color: #96C194;
+  background-color: #e1e1e1;
 }
 
 .header {  display: grid;
@@ -60,7 +62,7 @@ html, body {
   grid-template-areas:
     "headersol headerorta headersag";
   grid-area: header;
-  background-color: #C094C1;
+  background-color: #d9d9d9;
   position: sticky;
   top: 0;
 }
@@ -78,11 +80,13 @@ html, body {
 .main {  display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  gap: 0px 0px;
+  gap: 0px 1vw;
   grid-auto-flow: row;
   grid-template-areas:
     "mainsol mainorta mainsag";
   grid-area: main;
+  padding-top: 3vh;
+  background-color: #e1e1e1;
 }
 
 .mainsol { grid-area: mainsol; }
@@ -90,6 +94,7 @@ html, body {
 .mainorta { grid-area: mainorta;
   width: max-content;
   display: flex;
+  gap: 1vw;
 }
 
 .mainsag { grid-area: mainsag; }
@@ -114,7 +119,7 @@ html, body {
 
 .footersag { grid-area: footersag; }
 
-.input, #id_Afaturano, #id_Stokkodu, #id_Adet, #id_Alisfiyati, #id_Afaturano, #id_Toplam  {
+.input, #id_Afaturano, #id_Stokkodu, #id_Adet, #id_Alisfiyati, #id_Afaturano, #id_Toplam, #id_firma_adi, #id_email, #id_password1, #id_password2 {
   float: right;
   text-align: right;
 }
@@ -160,4 +165,25 @@ th {
 }
 h2 {
   text-align: center;
+}
+.kgformu, .mobir, .moiki {
+  padding: 0vw 2vw;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 1px #888888;
+  border-color: darkgreen;
+}
+a:link, a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: red;
+}
+li {
+    color: red;
 }

@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="tr">
     <head>
-        <meta charset="utf-8">
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'css/etikom.css' %}">
         <title>Etikom</title>
@@ -19,7 +19,7 @@
             </div>
             <div class="sagsutun">
                 <div class="header">
-                    <div class="headersol">FIRMA ADI</div>
+                    <div class="headersol">{{ firma_adi }}</div>
                     <div class="headerorta"></div>
                     <div class="headersag"></div>
                 </div>
@@ -27,7 +27,15 @@
                     <div class="mainsol"></div>
                     <div class="mainorta">
                         {% block content %}
-                        <div class="mofhformu">
+                        <div class="kgformu">
+                            <h2>Kullanıcı Giriş Formu</h2>
+                            <p>Diğer modüllerin açılabilmesi için lütfen giriş yapınız.</p>
+                            <form method="post">{% csrf_token %}
+                                {{ kayit.as_p }}
+                            <button type="submit">Kayıt Ol</button>
+                            </form>
+                        </div>
+                        <div class="mobir">
                             <h2>Satış Fiyatı Hesapla</h2>
                             <p>Ürününüz için satış fiyatını hesaplayabilirsiniz.</p>
                             <script>
@@ -81,7 +89,7 @@
                                 <p style="font-weight: bold;">Satış Fiyatı:<span id="toplam"></span></p>
                             </form>
                         </div>
-                        <div>
+                        <div class="moiki">
                             <h2>Stok İşlemleri</h2>
                             <p>Stok ekleme veya Stok çıkartma yapabilirsiniz.</p>
                             <form method="POST" class="stokgformu">{% csrf_token %}
@@ -89,12 +97,12 @@
                                 <div class="butonlar">
                                     <input type="submit" name="stokekle" class="save btn btn-default" value="Stok Ekle">
                                     <input type="submit" name="stokcikart" class="save btn btn-default" value="Stok Çıkart">
-                                    <button type="button" onclick="window.location.href = '/stoklistesi';" class="save btn btn-default">Stok Listesi</button>
+                                    <button type="button" onclick="window.location.href = 'stok-listesi';" class="save btn btn-default">Stok Listesi</button>
                                 </div>
                             </form>
                             <p style="font-weight: bold;">Güncel Stok Miktarı:<span id="ts">{{ ts|floatformat:2 }}</span></p>
-                            <p style="font-weight: bold;">Ortalama Maliyet:<span id="ts">{{ om|floatformat:2 }}</span></p>
-                            <p style="font-weight: bold;">Toplam Maliyet:<span id="ts">{{ tm|floatformat:2 }}</span></p>
+                            <p style="font-weight: bold;">Ortalama Stok Maliyeti:<span id="ts">{{ om|floatformat:2 }}</span></p>
+                            <p style="font-weight: bold;">Toplam Stok Maliyeti:<span id="ts">{{ tm|floatformat:2 }}</span></p>
                         </div>
                         {% endblock %}
                     </div>
