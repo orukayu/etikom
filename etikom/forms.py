@@ -2,7 +2,7 @@ from django import forms
 
 from .models import Stok
 
-class GirisFormu(forms.Form):     
+class KayitFormu(forms.Form):     
     firma_adi = forms.CharField(label='Firma Adı')
     email = forms.EmailField(label='E-posta Adresi')    
     password1 = forms.CharField(label='Şifre', widget=forms.PasswordInput)

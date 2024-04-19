@@ -1,0 +1,12 @@
+{% extends 'etikom/base.html' %}
+
+{% block content %}
+<div class="kgformu">
+    <h2>Kullanıcı Kayıt Formu</h2>
+    <p>Firmanıza özel tablolar için lütfen kayıt olunuz.</p>
+    <form method="post" name="kayit1">{% csrf_token %}
+        {{ kayit.as_p }}
+    <input type="submit" name="girisyap" value="Kayıt Ol">
+    </form>
+</div>
+{% endblock %}

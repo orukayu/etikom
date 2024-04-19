@@ -15,11 +15,15 @@
                     <p>E-ticaretin Kolay Muhasebesi</p>
                 </div>
                 <div class="solorta"></div>
-                <div class="solalt"></div>
+                <div class="solalt">
+                    {% if user.is_authenticated %}
+                    <a class="btn btn-default" href="{% url 'demofirma' %}"><span class="glyphicon glyphicon-pencil">Çıkış Yap</span></a>
+                    {% endif %}
+                </div>
             </div>
             <div class="sagsutun">
                 <div class="header">
-                    <div class="headersol">{{ firma_adi }}</div>
+                    <div class="headersol">{{ firma_adi }}{{ baslik }}</div>
                     <div class="headerorta"></div>
                     <div class="headersag"></div>
                 </div>
@@ -29,10 +33,11 @@
                         {% block content %}
                         <div class="kgformu">
                             <h2>Kullanıcı Giriş Formu</h2>
-                            <p>Diğer modüllerin açılabilmesi için lütfen giriş yapınız.</p>
-                            <form method="post">{% csrf_token %}
+                            <p>Firmanıza özel tablolar için lütfen giriş yapınız.</p>
+                            <form method="post" name="kayit1">{% csrf_token %}
                                 {{ kayit.as_p }}
-                            <button type="submit">Kayıt Ol</button>
+                            <input type="submit" name="girisyap" value="Giriş Yap">
+                            <button type="button" onclick="window.location.href = '/kayit-ol';">Kayıt Ol</button>
                             </form>
                         </div>
                         <div class="mobir">
@@ -92,7 +97,7 @@
                         <div class="moiki">
                             <h2>Stok İşlemleri</h2>
                             <p>Stok ekleme veya Stok çıkartma yapabilirsiniz.</p>
-                            <form method="POST" class="stokgformu">{% csrf_token %}
+                            <form method="POST" name="form1" class="stokgformu">{% csrf_token %}
                                 {{ form.as_p }}
                                 <div class="butonlar">
                                     <input type="submit" name="stokekle" class="save btn btn-default" value="Stok Ekle">

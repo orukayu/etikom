@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Stok
 from .forms import StokForm
-from .forms import GirisFormu
+from .forms import KayitFormu
 
 from django.db.models import Sum
 from django.contrib.auth.models import User
@@ -17,7 +17,9 @@ def anasayfa(request):
 def demofirma(request):
 
     if request.method == "POST":
-        kayit = GirisFormu(request.POST)
+        kayit = KayitFormu(request.POST)
+        form = StokForm(request.POST)
+
         firma_adi = request.POST["firma_adi"]
         email = request.POST["email"]
         password1 = request.POST["password1"]
@@ -35,9 +37,9 @@ def demofirma(request):
             else:
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
         else:
-            kayit = GirisFormu()
+            kayit = KayitFormu()
     else:
-        kayit = GirisFormu()
+        kayit = KayitFormu()
 
 
     if request.method == "POST":
@@ -59,7 +61,7 @@ def demofirma(request):
         form = StokForm()
 
     vv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
-    firma_adi = 'DEMO'
+    firma_adi = 'DEMO FİRMA'
 
     if vv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
         ts = 0
@@ -100,3 +102,29 @@ def liste(request, sort=None):
 
 
     return render(request, 'etikom/stoklistesi.html', {'stok': stok})
+
+
+def kayitol(request):
+    baslik = 'Kayıt Sayfasına Hoşgeldiniz'
+    kayit = KayitFormu()
+    if request.method == "POST":
+        kayit = KayitFormu(request.POST)
+
+        firma_adi = request.POST["firma_adi"]
+        email = request.POST["email"]
+        password1 = request.POST["password1"]
+        password2 = request.POST["password2"]
+
+        if kayit.is_valid():
+            if password1 == password2:
+                var = User.objects.filter(username=firma_adi).count()
+                if var > 0:
+                    kayit.add_error('firma_adi', 'Bu firma adı zaten kullanılıyor.')
+                else:
+                    kayit = User.objects.create_user(username=firma_adi, email=email, password=password1)
+                    kayit.save()
+                    return redirect('demofirma')
+            else:
+                kayit.add_error('password1', 'Şifre farklı girilmiş.')
+
+    return render(request, 'etikom/kayitol.html', {'baslik':baslik, 'kayit': kayit})
