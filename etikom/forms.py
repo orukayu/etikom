@@ -1,6 +1,9 @@
 from django import forms
-
 from .models import Stok
+
+class GirisFormu(forms.Form):
+    firma_adi = forms.CharField(label='Firma Adı')
+    password1 = forms.CharField(label='Şifre', widget=forms.PasswordInput)
 
 class KayitFormu(forms.Form):     
     firma_adi = forms.CharField(label='Firma Adı')

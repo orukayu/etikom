@@ -1,14 +1,30 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.urls import reverse
+
 from .models import Stok
 from .forms import StokForm
 from .forms import KayitFormu
+from .forms import GirisFormu
 
 from django.db.models import Sum
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 
 
 # Create your views here.
+
+def cikisyap(request):
+    logout(request)
+    return redirect('demofirma')
+
+
+def girisyap(request, firma):
+    #firma = GirisFormu(request.POST)
+    # ... anasayfa içeriğini oluşturun
+    return render(request, 'etikom/a.html', {})
+
 
 def anasayfa(request):
     # ... anasayfa içeriğini oluşturun
@@ -17,29 +33,25 @@ def anasayfa(request):
 def demofirma(request):
 
     if request.method == "POST":
-        kayit = KayitFormu(request.POST)
-        form = StokForm(request.POST)
+        giris = GirisFormu(request.POST)
 
-        firma_adi = request.POST["firma_adi"]
-        email = request.POST["email"]
-        password1 = request.POST["password1"]
-        password2 = request.POST["password2"]
+        if giris.is_valid():
+            firma_adi = giris.cleaned_data['firma_adi']
+            password1 = giris.cleaned_data['password1']
+            user = authenticate(username=firma_adi, password=password1)
+            if user is not None:
+                login(request, user)
+                firma = user.username
 
-        if kayit.is_valid():
-            if password1 == password2:
-                var = User.objects.filter(username=firma_adi).count()
-                if var > 0:
-                    kayit.add_error('firma_adi', 'Bu firma adı zaten kullanılıyor.')
-                else:
-                    kayit = User.objects.create_user(username=firma_adi, email=email, password=password1)
-                    kayit.save()
-                    return redirect('demofirma')
+                # Kullanıcıyı URL'ye yönlendir ve urlde kullanilacak olan bilgiyide tasi
+                return redirect('girisurl', firma)
+
             else:
-                kayit.add_error('password1', 'Şifre farklı girilmiş.')
-        else:
-            kayit = KayitFormu()
+                mesaj = ''
+                giris.add_error('firma_adi', 'Hatalı firma adı veya şifre.')
     else:
-        kayit = KayitFormu()
+        giris = GirisFormu()
+        mesaj = ''
 
 
     if request.method == "POST":
@@ -62,6 +74,7 @@ def demofirma(request):
 
     vv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
     firma_adi = 'DEMO FİRMA'
+    mesaj = ''
 
     if vv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
         ts = 0
@@ -72,7 +85,7 @@ def demofirma(request):
         tm = Stok.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
         om = tm / ts
 
-    return render(request, 'etikom/base.html', {'firma_adi': firma_adi, 'kayit': kayit, 'form': form, 'ts': ts, 'om': om, 'tm': tm})
+    return render(request, 'etikom/base.html', {'giris': giris, 'mesaj': mesaj, 'firma_adi': firma_adi, 'form': form, 'ts': ts, 'om': om, 'tm': tm})
 
 def liste(request, sort=None):
     stok = Stok.objects.all()
@@ -100,8 +113,9 @@ def liste(request, sort=None):
     else:
         stok = Stok.objects.all()
 
+    baslik = 'Sayfa Özeti:'
 
-    return render(request, 'etikom/stoklistesi.html', {'stok': stok})
+    return render(request, 'etikom/stoklistesi.html', {'stok': stok, 'baslik': baslik})
 
 
 def kayitol(request):

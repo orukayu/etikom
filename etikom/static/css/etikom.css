@@ -7,31 +7,27 @@ html, body {
     padding: 0px;
 }
 
-.container {  display: grid;
-  grid-template-columns: 20vw 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
+.container {
+  display: grid;
   grid-template-areas:
     "solsutun sagsutun"
     "solsutun sagsutun"
     "solsutun sagsutun";
+  justify-content: start;
 }
 
-.solsutun {  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
+.solsutun {
+  display: grid;
   grid-template-areas:
     "solust"
     "solorta"
     "solalt";
-  grid-area: solsutun;
-  background-color: #2c3e50;
+  background-color: #161d31;
   height: 100vh;
   position: sticky;
   top: 0;
+  width: 15vw;
+  padding: 0 1vw 0 1vw;
 }
 
 .solust {
@@ -40,39 +36,38 @@ html, body {
   text-align: center;
 }
 
-.solorta { grid-area: solorta; }
+.solorta {
+  grid-area: solorta;
+  text-align: center;
+  text-transform: uppercase;
+}
 
 .solalt {
   grid-area: solalt;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: xx-small;
 }
 
-.sagsutun {  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 10vh 1fr 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
+.sagsutun {
+  display: grid;
   grid-template-areas:
     "header"
     "main"
     "footer";
-  grid-area: sagsutun;
-  background-color: #e1e1e1;
+    width: 85vw;
 }
 
-.header {  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
+.header {
+  display: grid;
   grid-template-areas:
     "headersol headerorta headersag";
-  grid-area: header;
-  background-color: #d9d9d9;
+  background-color: #f3f3f3;
   position: sticky;
   top: 0;
+  box-shadow: 0 1px 14px 0 rgba(0,0,0,.15);
+  height: 14vh;
 }
 
 .headersol { grid-area: headersol;
@@ -85,16 +80,13 @@ html, body {
 
 .headersag { grid-area: headersag; }
 
-.main {  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  gap: 0px 1vw;
-  grid-auto-flow: row;
+.main {
+  display: grid;
   grid-template-areas:
     "mainsol mainorta mainsag";
-  grid-area: main;
   padding-top: 3vh;
-  background-color: #e1e1e1;
+  align-items: start;
+  justify-content: center;
 }
 
 .mainsol { grid-area: mainsol; }
@@ -107,18 +99,15 @@ html, body {
 
 .mainsag { grid-area: mainsag; }
 
-.footer {  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
+.footer {
+  display: grid;
   grid-template-areas:
     "footersol footerorta footersag";
-  grid-area: footer;
   position: fixed;
   bottom: 0;
   width: -webkit-fill-available;
   background-color: #C1A994;
+  height: 6vh;
 }
 
 .footersol { grid-area: footersol; }
@@ -142,6 +131,102 @@ span#toplam, #ts {
     text-align: center;
 }
 
+#tabloadet {
+  text-align: center;
+}
+
+#tablofiyat {
+  text-align: right;
+}
+.mofhformu {
+  padding-right: 2vw;
+}
+h2 {
+  text-align: center;
+}
+.kgformu, .mobir, .moiki {
+  padding: 0vw 2vw;
+  border-radius: 5px;
+  box-shadow: 0px 0px 3px 0px #181d307d;
+  border-color: darkgreen;
+}
+.solust a:link, .solust a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.solust a:hover, .solust a:active {
+  background-color: red;
+}
+.solalt a:hover, .solalt a:active {
+  background-color: red;
+}
+.solalt a:link, .solalt a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+li {
+  color: red;
+}
+.stoklistesi a:link {
+  background-color: #04AA6D;
+  padding: 0;
+}
+h3 a {
+  color: ghostwhite;
+  text-decoration: none;
+}
+p {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-size: smaller;
+  font-variation-settings:
+    "wdth" 100;
+}
+h1 a, h2 a, h3 a, h1, h2, h3, h4, h5, h6 {
+  font-family: "Open Sans", sans-serif;
+}
+.stoklistesi a {
+  color: #181d30;
+  text-decoration: none;
+}
+
+
+
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 65vw;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even) {background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #04AA6D;
+  color: white;
+}
+
+//**
 table {
   border-collapse: collapse;
   width: 75vw;
@@ -160,42 +245,4 @@ th {
   background-color: #04AA6D;
   color: white;
 }
-
-#tabloadet {
-  text-align: center;
-}
-
-#tablofiyat {
-  text-align: right;
-}
-.mofhformu {
-  padding-right: 2vw;
-}
-h2 {
-  text-align: center;
-}
-.kgformu, .mobir, .moiki {
-  padding: 0vw 2vw;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px 1px #888888;
-  border-color: darkgreen;
-}
-a:link, a:visited {
-  background-color: #f44336;
-  color: white;
-  padding: 15px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-}
-
-a:hover, a:active {
-  background-color: red;
-}
-li {
-  color: red;
-}
-.stoklistesi a:link {
-  background-color: #04AA6D;
-  padding: 0;
-}
+**//
