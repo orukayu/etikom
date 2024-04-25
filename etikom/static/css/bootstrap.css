@@ -1,4 +1,25 @@
-nav {
-    position: sticky;
-    top: 0;
+
+.navbar-brand {
+    text-align: center;
+}
+.card-body {
+    text-align: left;
+}
+#id_Afaturano, #id_Stokkodu, #id_Adet, #id_Alisfiyati, #id_Afaturano, #id_Toplam, #id_firma_adi, #id_email, #id_password1, #id_password2, #sayi1, #sayi2, #sayi3, #sayi4, #sayi5 {
+  float: right;
+  text-align: right;
+}
+span#toplam, span#ts {
+    float: right;
+    padding-right: 1em;
+}
+.navbar h3 {
+    font-weight: 700;
+    margin-bottom: -8px;
+}
+th {
+    border-left: inset !important;
+}
+thead.table-light {
+    text-align: center;
 }

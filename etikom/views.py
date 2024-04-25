@@ -63,7 +63,7 @@ def demofirma(request):
         form = StokForm()
 
     vv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
-    firma_adi = 'DEMO FİRMA'
+    firma_adi = 'Demo Firma Kontrol Paneli'
     mesaj = ''
     title = 'Etikom'
 
@@ -111,6 +111,7 @@ def liste(request, sort=None):
 
 
 def kayitol(request):
+    title = 'Kayıt Ol'
     baslik = 'Kayıt Sayfasına Hoşgeldiniz'
     kayit = KayitFormu()
     if request.method == "POST":
@@ -133,7 +134,7 @@ def kayitol(request):
             else:
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
 
-    return render(request, 'etikom/kayitol.html', {'baslik':baslik, 'kayit': kayit})
+    return render(request, 'etikom/kayitol.html', {'baslik':baslik, 'kayit': kayit, 'title': title})
 
 
 
