@@ -9,6 +9,7 @@ html, body {
 
 .container {
   display: grid;
+  grid-template-columns: 15vw 1fr;
   grid-template-areas:
     "solsutun sagsutun"
     "solsutun sagsutun"
@@ -26,8 +27,6 @@ html, body {
   height: 100vh;
   position: sticky;
   top: 0;
-  width: 15vw;
-  padding: 0 1vw 0 1vw;
 }
 
 .solust {
@@ -51,12 +50,9 @@ html, body {
 }
 
 .sagsutun {
-  display: grid;
-  grid-template-areas:
-    "header"
-    "main"
-    "footer";
-    width: 85vw;
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f2f2;
 }
 
 .header {
@@ -84,6 +80,7 @@ html, body {
   display: grid;
   grid-template-areas:
     "mainsol mainorta mainsag";
+  grid-template-columns: 1fr 1fr 1fr;
   padding-top: 3vh;
   align-items: start;
   justify-content: center;
@@ -92,7 +89,7 @@ html, body {
 .mainsol { grid-area: mainsol; }
 
 .mainorta { grid-area: mainorta;
-  width: max-content;
+  width: 70vw;
   display: flex;
   gap: 1vw;
 }
@@ -106,8 +103,9 @@ html, body {
   position: fixed;
   bottom: 0;
   width: -webkit-fill-available;
-  background-color: #C1A994;
+  background-color: #181d3005;
   height: 6vh;
+  align-items: center;
 }
 
 .footersol { grid-area: footersol; }
@@ -206,7 +204,8 @@ h1 a, h2 a, h3 a, h1, h2, h3, h4, h5, h6 {
 #customers {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
-  width: 65vw;
+  width: 100%;
+  background-color: ghostwhite;
 }
 
 #customers td, #customers th {
@@ -224,6 +223,12 @@ h1 a, h2 a, h3 a, h1, h2, h3, h4, h5, h6 {
   text-align: center;
   background-color: #04AA6D;
   color: white;
+}
+
+.metin {
+    width: 45vw;
+    text-align: justify;
+    color: #181d30d4;
 }
 
 //**

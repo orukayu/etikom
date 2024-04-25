@@ -15,20 +15,10 @@ from django.contrib.auth import logout
 
 # Create your views here.
 
-def cikisyap(request):
-    logout(request)
-    return redirect('demofirma')
-
-
-def girisyap(request, firma):
-    #firma = GirisFormu(request.POST)
-    # ... anasayfa içeriğini oluşturun
-    return render(request, 'etikom/a.html', {})
-
-
 def anasayfa(request):
     # ... anasayfa içeriğini oluşturun
     return redirect('demofirma')
+
 
 def demofirma(request):
 
@@ -75,6 +65,7 @@ def demofirma(request):
     vv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
     firma_adi = 'DEMO FİRMA'
     mesaj = ''
+    title = 'Etikom'
 
     if vv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
         ts = 0
@@ -85,7 +76,8 @@ def demofirma(request):
         tm = Stok.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
         om = tm / ts
 
-    return render(request, 'etikom/base.html', {'giris': giris, 'mesaj': mesaj, 'firma_adi': firma_adi, 'form': form, 'ts': ts, 'om': om, 'tm': tm})
+    return render(request, 'etikom/base.html', {'giris': giris, 'mesaj': mesaj, 'firma_adi': firma_adi, 'form': form, 'ts': ts, 'om': om, 'tm': tm, 'title': title})
+
 
 def liste(request, sort=None):
     stok = Stok.objects.all()
@@ -142,3 +134,33 @@ def kayitol(request):
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
 
     return render(request, 'etikom/kayitol.html', {'baslik':baslik, 'kayit': kayit})
+
+
+
+def cikisyap(request):
+    logout(request)
+    return redirect('demofirma')
+
+
+def iletisimyap(request):
+    title = 'İletişim'
+    baslik = 'İletişim Sayfamız'
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/iletisim.html', {'baslik': baslik, 'title': title})
+
+def girisyap(request, firma):
+    #firma = GirisFormu(request.POST)
+    # ... anasayfa içeriğini oluşturun
+    return render(request, 'etikom/a.html', {})
+
+def hakkimizdayap(request):
+    title = 'Hakkımızda'
+    baslik = 'Hakkımızda Sayfamız'
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/hakkimizda.html', {'baslik': baslik, 'title': title})
+
+def fiyatlamayap(request):
+    title = 'Fiyatlandırma'
+    baslik = 'Paket Sayfamız'
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/fiyatlandirma.html', {'baslik': baslik, 'title': title})

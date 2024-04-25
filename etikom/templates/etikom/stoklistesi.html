@@ -2,37 +2,54 @@
 
 {% block content %}
 <div class="stoklistesi">
-    <div style="width: 100%; text-align: center;">
-        <h1>STOK LİSTESİ</h1>
-    </div>
-    <div>
-        <table id="customers">
-            <tr>
-                <th>Fatura No (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)</th>
-                <th>Stok Kodu (<a href="{% url 'stoksiralama' sort='az-stokkodu' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-stokkodu' %}">Z</a>)</th>
-                <th>Adet (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)</th>
-                <th>Alış Fiyatı (<a href="{% url 'stoksiralama' sort='az-alisfiyati' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-alisfiyati' %}">Z</a>)</th>
-                <th>Toplam (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)</th>
-            </tr>
-            {% for stok in stok %}
-            <tr>
-                <td>
-                    {{ stok.Afaturano }}
-                </td>
-                <td>
-                    {{ stok.Stokkodu }}
-                </td>
-                <td id="tabloadet">
-                    {{ stok.Adet }}
-                </td>
-                <td id="tablofiyat">
-                    {{ stok.Alisfiyati }}
-                </td>
-                <td id="tablofiyat">
-                    {{ stok.Toplam }}
-                </td>
-            </tr>
-            {% endfor %}
+    <h6>
+        Fatura detayı için Fatura Numarasına, ürün detayı içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden sayfaya ait durum raporlarını görebilirsiniz.
+    </h6>
+    <h2>
+        Stok Listesi
+    </h2>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Fatura No<br>
+                        (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)
+                    </th>
+                    <th scope="col">Stok Kodu<br>
+                        (<a href="{% url 'stoksiralama' sort='az-stokkodu' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-stokkodu' %}">Z</a>)
+                    </th>
+                    <th scope="col">Adet<br>
+                        (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)
+                    </th>
+                    <th scope="col">Alış Fiyatı<br>
+                        (<a href="{% url 'stoksiralama' sort='az-alisfiyati' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-alisfiyati' %}">Z</a>)
+                    </th>
+                    <th scope="col">Toplam<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stok in stok %}
+                <tr>
+                    <td>
+                        {{ stok.Afaturano }}
+                    </td>
+                    <td>
+                        {{ stok.Stokkodu }}
+                    </td>
+                    <td id="tabloadet">
+                        {{ stok.Adet }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ stok.Alisfiyati }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ stok.Toplam }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 </div>
