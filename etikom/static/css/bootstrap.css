@@ -31,4 +31,5 @@ td#tablofiyat {
 input {
     float: right;
     text-align: right;
+    max-width: 170px;
 }

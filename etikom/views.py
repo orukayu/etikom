@@ -47,12 +47,7 @@ def demofirma(request):
                 post = stok.save(commit=False)
                 post.save1()
                 return redirect('demofirma')
-        elif 'stokcikart' in request.POST:
-            stok = StokFormu(request.POST)
-            if stok.is_valid():
-                post = stok.save(commit=False)
-                post.save2()
-                return redirect('demofirma')
+
         elif 'sipekle' in request.POST:
             siparis = SiparisFormu(request.POST)
             giris = GirisFormu()
@@ -70,12 +65,12 @@ def demofirma(request):
         stok = StokFormu()
         siparis = SiparisFormu()
 
-    vv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
+    stv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
     mesaj = ''
     firma_adi = 'Demo Firma Kontrol Paneli'
     title = 'Etikom'
 
-    if vv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
+    if stv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
         ts = 0
         om = 0
         tm = 0
@@ -84,7 +79,20 @@ def demofirma(request):
         tm = Stok.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
         om = tm / ts
 
-    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'title': title, 'ts': ts, 'om': om, 'tm': tm})
+    siv = Siparis.objects.count()                       # Bu kod, Siparis modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
+
+    if siv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
+        tss = 0
+        osm = 0
+        tsm = 0
+    else:
+        tfs = Siparis.objects.values('Siparisno').order_by('Siparisno').distinct()      # Siparis tablosunda ki satir sayisi
+        tss = len(tfs)
+        tsm = Siparis.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
+        osm = tsm / tss
+
+
+    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
 
 
 def stokliste(request, sort=None):
@@ -204,6 +212,18 @@ def hakkimizdayap(request):
 
 def fiyatlamayap(request):
     title = 'Fiyatlandırma'
-    baslik = 'Paket Sayfamız'
+    baslik = 'Premium ve Plus Avantajlar'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/fiyatlandirma.html', {'baslik': baslik, 'title': title})
+
+def stokexcelyuklemeyap(request):
+    title = 'Excel Yükle'
+    baslik = 'Stok Exceli Yükleme Sayfası'
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/stokexcelyukle.html', {'baslik': baslik, 'title': title})
+
+def sipexcelyuklemeyap(request):
+    title = 'Excel Yükle'
+    baslik = 'Sipariş Exceli Yükleme Sayfası'
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/sipexcelyukle.html', {'baslik': baslik, 'title': title})
