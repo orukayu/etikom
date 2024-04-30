@@ -1,0 +1,98 @@
+{% extends 'etikom/base.html' %}
+
+{% block content %}
+<div class="siparislistesi">
+    <h6>
+        Fatura detayı için Fatura Numarasına, ürün detayı içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden sayfaya ait durum raporlarını görebilirsiniz.
+    </h6>
+    <h2>
+        Sipariş Listesi
+    </h2>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Pazaryeri<br>
+                        (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)
+                    </th>
+                    <th scope="col">Tarih<br>
+                        (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)
+                    </th>
+                    <th scope="col">Siparis No<br>
+                        (<a href="{% url 'stoksiralama' sort='az-stokkodu' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-stokkodu' %}">Z</a>)
+                    </th>
+                    <th scope="col">Stok Kodu<br>
+                        (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)
+                    </th>
+                    <th scope="col">Adet<br>
+                        (<a href="{% url 'stoksiralama' sort='az-alisfiyati' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-alisfiyati' %}">Z</a>)
+                    </th>
+                    <th scope="col">Satis Fiyati<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                    <th scope="col">Toplam<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                    <th scope="col">Komisyon Orani (%)<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                    <th scope="col">Kargo Tutari<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                    <th scope="col">Hizmet Bedeli<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                    <th scope="col">Islem Bedeli<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                    <th scope="col">Kalan<br>
+                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for siparis in siparis %}
+                <tr>
+                    <td>
+                        {{ siparis.Pazaryeri}}
+                    </td>
+                    <td>
+                        {{ siparis.Tarih }}
+                    </td>
+                    <td>
+                        {{ siparis.Siparisno }}
+                    </td>
+                    <td id="tabloadet">
+                        {{ siparis.Stokkodu }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Adet }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Satisfiyati }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Toplam }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Komisyon }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Kargo }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Hibedeli }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Isbedeli }}
+                    </td>
+                    <td id="tablofiyat">
+                        {{ siparis.Kalan }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

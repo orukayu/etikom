@@ -2,19 +2,22 @@
 
 {% block content %}
 <div class="metin">
-    <h5>
-        7/24 İletişim Bilgilerimiz,
-    </h5>
-    <br>
-    <h6>
-        TELEFON : +90546 831 44 88
-    </h6>
-    <h6>
-        E-POSTA : oktaybayram@hotmail.com
-    </h6>
-    <br>
-    <p>
-        Ticaret ile uğraşan her firma gibi, e-ticaret yapan firmalarında en büyük ihtiyacı olan fiyat tespiti, stok girişi, kar/zarar takibi gibi işlemleri yapan uygulamamız hakkında bizim ile 7/24 iletişime geçebilirsiniz.
-    </p>
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">7/24 İletişim Bilgilerimiz</h4>
+                </div>
+                <div class="card-body">
+                    <h6>TELEFON : +90546 831 44 88</h6>
+                    <h6>E-POSTA : <a href="mailto:oktaybayram@hotmail.com?subject=Etikom Hakkında">oktaybayram@hotmail.com</a></h6>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Ticaret ile uğraşan her firma gibi, e-ticaret yapan firmalarında en büyük ihtiyacı olan fiyat tespiti, stok girişi, kar/zarar takibi gibi işlemleri yapan uygulamamız hakkında bizim ile 7/24 iletişime geçebilirsiniz.</li>
+                    </ul>
+                    <button class="w-100 btn btn-success btn-lg btn-primary" onclick=" window.open('https://wa.me/905468314488?text=Etikom hakkında yardımcı olabilir misiniz.','_blank')">WhatsApp</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

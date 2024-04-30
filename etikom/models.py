@@ -1,6 +1,38 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+import datetime
+
+class Siparis(models.Model):
+    Siparisno = models.CharField(max_length=25)
+    Pazaryeri = models.CharField(max_length=25)
+    Tarih = models.DateField()
+    Stokkodu = models.CharField(max_length=20)
+    Adet = models.IntegerField()
+    Satisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
+    Toplam = models.DecimalField(max_digits=10, decimal_places=2)
+    Komisyon = models.DecimalField(max_digits=10, decimal_places=2)
+    Kargo = models.DecimalField(max_digits=10, decimal_places=2)
+    Hibedeli = models.DecimalField(max_digits=10, decimal_places=2)
+    Isbedeli = models.DecimalField(max_digits=10, decimal_places=2)
+    Kalan = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def save3(self, *args, **kwargs):
+        self.Toplam = self.Adet * self.Satisfiyati
+        self.Kalan = self.Toplam - self.Komisyon - self.Kargo - self.Hibedeli - self.Isbedeli
+        super().save(*args, **kwargs)
+
+    def save4(self, *args, **kwargs):
+        self.Adet = self.Adet * -1
+        self.Toplam = self.Adet * self.Satisfiyati
+        self.Kalan = self.Toplam - self.Komisyon - self.Kargo - self.Hibedeli - self.Isbedeli
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['Siparisno',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+
+    def __str__(self):
+        return self.Siparisno
 
 class Stok(models.Model):
     Afaturano = models.CharField(max_length=20)
