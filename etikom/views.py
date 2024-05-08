@@ -213,7 +213,7 @@ def kayitol(request):
                 else:
                     kayit = User.objects.create_user(username=firma_adi, email=email, password=password1)
                     kayit.save()
-                    return redirect('demofirma')
+                    return redirect('demofirmaurl')
             else:
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
 
