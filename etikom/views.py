@@ -18,8 +18,13 @@ from django.contrib.auth import logout
 # Create your views here.
 
 def anasayfa(request):
-    # ... anasayfa içeriğini oluşturun
-    return redirect('demofirma')
+    if not request.user.is_authenticated:
+        user = authenticate(username='demo firma', password='demofirma')
+        if user:
+            login(request, user)
+            return redirect('demofirmaurl')
+
+    return redirect('demofirmaurl')
 
 
 def demofirma(request):
@@ -35,9 +40,7 @@ def demofirma(request):
                 userkontrol = authenticate(username=firma_adi, password=password1)
                 if userkontrol is not None:
                     login(request, userkontrol)
-                    firma = userkontrol.username
-                    # Kullanıcıyı URL'ye yönlendir ve urlde kullanilacak olan bilgiyide tasi
-                    return redirect('girisurl', firma)
+                    return redirect('girisurl')
                 else:
                     mesaj = ''
                     giris.add_error('firma_adi', 'Hatalı firma adı veya şifre.')
@@ -45,8 +48,9 @@ def demofirma(request):
             stok = StokFormu(request.POST)
             if stok.is_valid():
                 post = stok.save(commit=False)
+                post.Firmaadi = request.user
                 post.save1()
-                return redirect('demofirma')
+                return redirect('demofirmaurl')
 
         elif 'sipekle' in request.POST:
             siparis = SiparisFormu(request.POST)
@@ -55,7 +59,7 @@ def demofirma(request):
             if siparis.is_valid():
                 post = siparis.save(commit=False)
                 post.save3()
-                return redirect('demofirma')
+                return redirect('demofirmaurl')
         else:
             giris = GirisFormu()
             stok = StokFormu()
@@ -67,7 +71,8 @@ def demofirma(request):
 
     stv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
     mesaj = ''
-    firma_adi = 'Demo Firma Kontrol Paneli'
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
     title = 'Etikom'
 
     if stv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
@@ -75,8 +80,8 @@ def demofirma(request):
         om = 0
         tm = 0
     else:
-        ts = Stok.objects.aggregate(Sum("Adet"))["Adet__sum"]       # Adet sutununda ki rakamlarin toplamini verir.
-        tm = Stok.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
+        ts = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]       # Adet sutununda ki rakamlarin toplamini verir.
+        tm = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
         om = tm / ts
 
     siv = Siparis.objects.count()                       # Bu kod, Siparis modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
@@ -96,65 +101,93 @@ def demofirma(request):
 
 
 def stokliste(request, sort=None):
-    stok = Stok.objects.all()
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
 
-    if sort == 'az-faturano':
-        stok = Stok.objects.all().order_by('Afaturano').values()
-    elif sort == 'za-faturano':
-        stok = Stok.objects.all().order_by('-Afaturano').values()
-    elif sort == 'az-stokkodu':
-        stok = Stok.objects.all().order_by('Stokkodu').values()
-    elif sort == 'za-stokkodu':
-        stok = Stok.objects.all().order_by('-Stokkodu').values()
+    if sort == 'az-sira-no':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('id').values()
+    elif sort == 'za-sira-no':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-id').values()
+    elif sort == 'az-fatura-no':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Afaturano').values()
+    elif sort == 'za-fatura-no':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Afaturano').values()
+    elif sort == 'az-stok-kodu':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Stokkodu').values()
+    elif sort == 'za-stok-kodu':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Stokkodu').values()
     elif sort == 'az-adet':
-        stok = Stok.objects.all().order_by('Adet').values()
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Adet').values()
     elif sort == 'za-adet':
-        stok = Stok.objects.all().order_by('-Adet').values()
-    elif sort == 'az-alisfiyati':
-        stok = Stok.objects.all().order_by('Alisfiyati').values()
-    elif sort == 'za-alisfiyati':
-        stok = Stok.objects.all().order_by('-Alisfiyati').values()
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Adet').values()
+    elif sort == 'az-alis-fiyati':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Alisfiyati').values()
+    elif sort == 'za-alis-fiyati':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Alisfiyati').values()
     elif sort == 'az-toplam':
-        stok = Stok.objects.all().order_by('Toplam').values()
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
     elif sort == 'za-toplam':
-        stok = Stok.objects.all().order_by('-Toplam').values()
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Toplam').values()
     else:
-        stok = Stok.objects.all()
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
-    baslik = 'Sayfa Özeti:'
     title = 'Stok Listesi'
+    ek = ' Stok Raporu:'
+    baslik = firma_adi + ek
 
     return render(request, 'etikom/stoklistesi.html', {'stok': stok, 'baslik': baslik, 'title': title})
 
 
 def siparisliste(request, sort=None):
-    siparis = Siparis.objects.all()
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
 
-    if sort == 'az-faturano':
-        stok = Stok.objects.all().order_by('Afaturano').values()
-    elif sort == 'za-faturano':
-        stok = Stok.objects.all().order_by('-Afaturano').values()
-    elif sort == 'az-stokkodu':
-        stok = Stok.objects.all().order_by('Stokkodu').values()
-    elif sort == 'za-stokkodu':
-        stok = Stok.objects.all().order_by('-Stokkodu').values()
+    if sort == 'az-sira-no':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('id').values()
+    elif sort == 'za-sira-no':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-id').values()
+    elif sort == 'az-pazaryeri':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Pazaryeri').values()
+    elif sort == 'za-pazaryeri':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Pazaryeri').values()
+    elif sort == 'az-tarih':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Tarih').values()
+    elif sort == 'za-tarih':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values()
+    elif sort == 'az-siparis-no':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Siparisno').values()
+    elif sort == 'za-siparis-no':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Siparisno').values()
+    elif sort == 'az-stok-kodu':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Stokkodu').values()
+    elif sort == 'za-stok-kodu':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Stokkodu').values()
     elif sort == 'az-adet':
-        stok = Stok.objects.all().order_by('Adet').values()
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Adet').values()
     elif sort == 'za-adet':
-        stok = Stok.objects.all().order_by('-Adet').values()
-    elif sort == 'az-alisfiyati':
-        stok = Stok.objects.all().order_by('Alisfiyati').values()
-    elif sort == 'za-alisfiyati':
-        stok = Stok.objects.all().order_by('-Alisfiyati').values()
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Adet').values()
+    elif sort == 'az-satis-fiyati':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Satisfiyati').values()
+    elif sort == 'za-satis-fiyati':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Satisfiyati').values()
     elif sort == 'az-toplam':
-        stok = Stok.objects.all().order_by('Toplam').values()
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
     elif sort == 'za-toplam':
-        stok = Stok.objects.all().order_by('-Toplam').values()
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Toplam').values()
+    elif sort == 'az-komisyon-orani':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Komisyon').values()
+    elif sort == 'za-komisyon-orani':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Komisyon').values()
+    elif sort == 'az-komisyon-tutari':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Komisyontutari').values()
+    elif sort == 'za-komisyon-tutari':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Komisyontutari').values()
     else:
-        stok = Stok.objects.all()
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
-    baslik = 'Sayfa Özeti:'
     title = 'Siparis Listesi'
+    ek = ' Siparis Raporu:'
+    baslik = firma_adi + ek
 
     return render(request, 'etikom/siparislistesi.html', {'siparis': siparis, 'baslik': baslik, 'title': title})
 
@@ -190,7 +223,7 @@ def kayitol(request):
 
 def cikisyap(request):
     logout(request)
-    return redirect('demofirma')
+    return redirect('anasayfa')
 
 
 def iletisimyap(request):
@@ -199,10 +232,14 @@ def iletisimyap(request):
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/iletisim.html', {'baslik': baslik, 'title': title})
 
-def girisyap(request, firma):
-    #firma = GirisFormu(request.POST)
+def girisyap(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Giriş'
+    ek = ' Giriş Sayfası'
+    baslik = firma_adi + ek
     # ... anasayfa içeriğini oluşturun
-    return render(request, 'etikom/a.html', {})
+    return render(request, 'etikom/giris.html', {'baslik': baslik, 'title': title})
 
 def hakkimizdayap(request):
     title = 'Hakkımızda'
@@ -218,12 +255,12 @@ def fiyatlamayap(request):
 
 def stokexcelyuklemeyap(request):
     title = 'Excel Yükle'
-    baslik = 'Stok Exceli Yükleme Sayfası'
+    baslik = 'Excel ile Stok Yükleme Sayfası'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/stokexcelyukle.html', {'baslik': baslik, 'title': title})
 
 def sipexcelyuklemeyap(request):
     title = 'Excel Yükle'
-    baslik = 'Sipariş Exceli Yükleme Sayfası'
+    baslik = 'Excel ile Sipariş Yükleme Sayfası'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/sipexcelyukle.html', {'baslik': baslik, 'title': title})

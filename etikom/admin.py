@@ -6,11 +6,11 @@ from .models import Siparis
 
 
 class StokAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam', 'Afaturano')
+    list_display = ('id', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam', 'Firmaadi')
 
 
 class SiparisAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Toplam', 'Komisyon', 'Kargo', 'Hibedeli', 'Isbedeli', 'Kalan')
+    list_display = ('id', 'Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Toplam', 'Komisyon', 'Komisyontutari', 'Firmaadi')
 
 
 admin.site.register(Stok,StokAdmin)

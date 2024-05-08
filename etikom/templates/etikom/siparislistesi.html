@@ -12,47 +12,44 @@
         <table class="table table-striped table-sm">
             <thead class="table-light">
                 <tr>
+                    <th scope="col">Sıra No<br>
+                        (<a href="{% url 'siparissiralama' sort='az-sira-no' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-sira-no' %}">Z</a>)
+                    </th>
                     <th scope="col">Pazaryeri<br>
-                        (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-pazaryeri' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-pazaryeri' %}">Z</a>)
                     </th>
                     <th scope="col">Tarih<br>
-                        (<a href="{% url 'stoksiralama' sort='az-faturano' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-faturano' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-tarih' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-tarih' %}">Z</a>)
                     </th>
                     <th scope="col">Sipariş No<br>
-                        (<a href="{% url 'stoksiralama' sort='az-stokkodu' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-stokkodu' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-siparis-no' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-siparis-no' %}">Z</a>)
                     </th>
                     <th scope="col">Stok Kodu<br>
-                        (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-stok-kodu' %}">Z</a>)
                     </th>
                     <th scope="col">Adet<br>
-                        (<a href="{% url 'stoksiralama' sort='az-alisfiyati' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-alisfiyati' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-adet' %}">Z</a>)
                     </th>
                     <th scope="col">Satış Fiyatı<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-satis-fiyati' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-satis-fiyati' %}">Z</a>)
                     </th>
                     <th scope="col">Toplam<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                        (<a href="{% url 'siparissiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-toplam' %}">Z</a>)
                     </th>
-                    <th scope="col">Komisyon Oranı (%)<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    <th scope="col">Komisyon<br>Oranı (%)<br>
+                        (<a href="{% url 'siparissiralama' sort='az-komisyon-orani' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-komisyon-orani' %}">Z</a>)
                     </th>
-                    <th scope="col">Kargo Tutarı<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
-                    </th>
-                    <th scope="col">Hizmet Bedeli<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
-                    </th>
-                    <th scope="col">İşlem Bedeli<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
-                    </th>
-                    <th scope="col">Kalan<br>
-                        (<a href="{% url 'stoksiralama' sort='az-toplam' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-toplam' %}">Z</a>)
+                    <th scope="col">Komisyon<br>Tutarı<br>
+                        (<a href="{% url 'siparissiralama' sort='az-komisyon-tutari' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-komisyon-tutari' %}">Z</a>)
                     </th>
                 </tr>
             </thead>
             <tbody>
                 {% for siparis in siparis %}
                 <tr>
+                    <td>
+                        {{ siparis.id}}
+                    </td>
                     <td>
                         {{ siparis.Pazaryeri}}
                     </td>
@@ -62,10 +59,10 @@
                     <td>
                         {{ siparis.Siparisno }}
                     </td>
-                    <td id="tabloadet">
+                    <td>
                         {{ siparis.Stokkodu }}
                     </td>
-                    <td id="tablofiyat">
+                    <td id="tabloadet">
                         {{ siparis.Adet }}
                     </td>
                     <td id="tablofiyat">
@@ -74,20 +71,11 @@
                     <td id="tablofiyat">
                         {{ siparis.Toplam }}
                     </td>
-                    <td id="tablofiyat">
+                    <td id="tabloadet">
                         {{ siparis.Komisyon }}
                     </td>
                     <td id="tablofiyat">
-                        {{ siparis.Kargo }}
-                    </td>
-                    <td id="tablofiyat">
-                        {{ siparis.Hibedeli }}
-                    </td>
-                    <td id="tablofiyat">
-                        {{ siparis.Isbedeli }}
-                    </td>
-                    <td id="tablofiyat">
-                        {{ siparis.Kalan }}
+                        {{ siparis.Komisyontutari }}
                     </td>
                 </tr>
                 {% endfor %}

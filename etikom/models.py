@@ -12,17 +12,15 @@ class Siparis(models.Model):
     Satisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Komisyon = models.DecimalField(max_digits=10, decimal_places=2)
-    Kargo = models.DecimalField(max_digits=10, decimal_places=2)
-    Hibedeli = models.DecimalField(max_digits=10, decimal_places=2)
-    Isbedeli = models.DecimalField(max_digits=10, decimal_places=2)
-    Kalan = models.DecimalField(max_digits=10, decimal_places=2)
+    Komisyontutari = models.DecimalField(max_digits=10, decimal_places=2)
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     
     def save3(self, *args, **kwargs):
         self.Toplam = self.Adet * self.Satisfiyati
-        self.Kalan = self.Toplam - self.Komisyon - self.Kargo - self.Hibedeli - self.Isbedeli
+        self.Komisyontutari = self.Toplam * self.Komisyon / 100
         super().save(*args, **kwargs)
 
-    def save4(self, *args, **kwargs):
+    def save4(self, *args, **kwargs):       # şimdilik kullanılmıyor. Formda ikinci butona basıldığında yapılacak işlem için örnek duruyor.
         self.Adet = self.Adet * -1
         self.Toplam = self.Adet * self.Satisfiyati
         self.Kalan = self.Toplam - self.Komisyon - self.Kargo - self.Hibedeli - self.Isbedeli
@@ -35,6 +33,7 @@ class Siparis(models.Model):
         return self.Siparisno
 
 class Stok(models.Model):
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Afaturano = models.CharField(max_length=20)
     Stokkodu = models.CharField(max_length=20)
     Adet = models.IntegerField()
@@ -45,7 +44,7 @@ class Stok(models.Model):
         self.Toplam = self.Adet * self.Alisfiyati
         super().save(*args, **kwargs)
 
-    def save2(self, *args, **kwargs):
+    def save2(self, *args, **kwargs):   # Şimdilik kullanılmıyor. Modele ikinci butona basıldığında yapılacak kaydetme için örnek duruyor.
         self.Adet = self.Adet * -1
         self.Toplam = self.Adet * self.Alisfiyati
         super().save(*args, **kwargs)
