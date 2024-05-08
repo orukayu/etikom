@@ -33,7 +33,7 @@ class Siparis(models.Model):
         return self.Siparisno
 
 class Stok(models.Model):
-    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     Afaturano = models.CharField(max_length=20)
     Stokkodu = models.CharField(max_length=20)
     Adet = models.IntegerField()
