@@ -33,3 +33,7 @@ input {
     text-align: right;
     max-width: 170px;
 }
+tr {
+    display: table-row;
+    vertical-align: middle;
+}

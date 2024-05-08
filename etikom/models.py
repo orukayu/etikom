@@ -13,7 +13,7 @@ class Siparis(models.Model):
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Komisyon = models.DecimalField(max_digits=10, decimal_places=2)
     Komisyontutari = models.DecimalField(max_digits=10, decimal_places=2)
-    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def save3(self, *args, **kwargs):
         self.Toplam = self.Adet * self.Satisfiyati
@@ -33,7 +33,7 @@ class Siparis(models.Model):
         return self.Siparisno
 
 class Stok(models.Model):
-    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Afaturano = models.CharField(max_length=20)
     Stokkodu = models.CharField(max_length=20)
     Adet = models.IntegerField()

@@ -28,6 +28,8 @@ def anasayfa(request):
 
 
 def demofirma(request):
+    title = 'Etikom'
+    baslik = ' İşlemleri'
 
     if request.method == 'POST':
         if 'girisyap' in request.POST:
@@ -69,11 +71,10 @@ def demofirma(request):
         stok = StokFormu()
         siparis = SiparisFormu()
 
-    stv = Stok.objects.count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
     mesaj = ''
     firma_adi = request.user.username
     firma_adi_id = request.user.id
-    title = 'Etikom'
+    stv = Stok.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
 
     if stv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
         ts = 0
@@ -84,20 +85,20 @@ def demofirma(request):
         tm = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
         om = tm / ts
 
-    siv = Siparis.objects.count()                       # Bu kod, Siparis modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
+    siv = Siparis.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Siparis modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
 
     if siv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
         tss = 0
         osm = 0
         tsm = 0
     else:
-        tfs = Siparis.objects.values('Siparisno').order_by('Siparisno').distinct()      # Siparis tablosunda ki satir sayisi
+        tfs = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Siparisno').order_by('Siparisno').distinct()      # Siparis tablosunda ki satir sayisi
         tss = len(tfs)
-        tsm = Siparis.objects.aggregate(Sum("Toplam"))["Toplam__sum"]
+        tsm = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
         osm = tsm / tss
 
 
-    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
+    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'baslik': baslik, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
 
 
 def stokliste(request, sort=None):
@@ -186,7 +187,7 @@ def siparisliste(request, sort=None):
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Siparis Listesi'
-    ek = ' Siparis Raporu:'
+    ek = ' siparis raporu:'
     baslik = firma_adi + ek
 
     return render(request, 'etikom/siparislistesi.html', {'siparis': siparis, 'baslik': baslik, 'title': title})
@@ -235,8 +236,8 @@ def iletisimyap(request):
 def girisyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
-    title = 'Giriş'
-    ek = ' Giriş Sayfası'
+    title = 'Raporlar'
+    ek = ' Rapor Sayfası'
     baslik = firma_adi + ek
     # ... anasayfa içeriğini oluşturun
     return render(request, 'etikom/giris.html', {'baslik': baslik, 'title': title})
