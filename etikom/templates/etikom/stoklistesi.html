@@ -1,13 +1,35 @@
 {% extends 'etikom/base.html' %}
 
+{% block rapor %}
+<div class="col-6 col-md">
+    <ul class="list-unstyled">
+        <li>Toplam Fatura Sayısı: <strong>{{ tfta }}</strong></li>
+        <li>Toplam Stok Çeşidi: <strong>{{ tsc }}</strong></li>
+        <li>Toplam Stok Girişi: <strong>{{ tstg }}</strong></li>
+    </ul>
+</div>
+<div class="col-6 col-md">
+    <ul class="list-unstyled">
+        <li>Toplam Stok Çıkışı: <strong>{{ tstc }}</strong></li>
+        <li>Toplam Stok Miktarı: <strong>{{ ksa }}</strong></li>
+        <li>Toplam Stok Maliyeti: <strong>{{ tstm|floatformat:2 }}</strong></li>
+    </ul>
+</div>
+<div class="col-6 col-md">
+    <ul class="list-unstyled">
+        <li>Ortalama Stok Maliyeti: <strong>{{ ostm|floatformat:2 }}</strong></li>
+    </ul>
+</div>  
+{% endblock %}
+
 {% block content %}
 <div class="stoklistesi">
     <h6>
-        Fatura detayı için Fatura Numarasına, ürün detayı içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden sayfaya ait durum raporlarını görebilirsiniz.
+        Değiştirmek istediğiniz satır için Sıra No sayısına, faturaya ait detay için Fatura Numarasına, ürüne ait detay içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden o sayfaya ait durum raporlarını görebilirsiniz.
     </h6>
-    <h2>
-        Stok Listesi
-    </h2>
+    <h4>
+        Ayrıntılı Stok Listeniz
+    </h4>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead class="table-light">

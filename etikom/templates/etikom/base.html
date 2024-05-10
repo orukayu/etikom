@@ -224,7 +224,7 @@
                             <ul class="nav flex-column mb-auto">
                                 <li class="nav-item">
                                     <a class="nav-link d-flex align-items-center gap-2" href="{% url 'girisurl' %}">
-                                        <svg class="bi"><use xlink:href="#signpost"></use></svg>Tüm Raporlar
+                                        <svg class="bi"><use xlink:href="#signpost"></use></svg>Raporlar
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -269,8 +269,11 @@
                     </div>
                 </div>
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2">{{ firma_adi|title }}{{ baslik|title }}</h1>
+                    <div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <div class="col-12 col-md">
+                            <h1 class="h4">{{ firma_adi|title }}</h1>
+                            <h1 class="h4">{{ baslik|title }}</h1>
+                        </div>
                         <!--<div class="btn-toolbar mb-2 mb-md-0">     --Basligin sagindaki ikonlarin kodlari--
                             <div class="btn-group me-2">
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
@@ -280,10 +283,12 @@
                                 This week
                             </button>
                         </div>-->
+                        {% block rapor %}
+                        {% endblock %}
                     </div>
                     {% block content %}
-                    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-                        <div class="col">
+                    <div class="row" data-masonry="{" percentPosition": true }" style="position: relative;">
+                        <div class="col-sm-6 col-lg-4 mb-4">
                             <div class="card mb-4 rounded-3 shadow-sm">
                                 <div class="card-header py-3">
                                     <h4 class="my-0 fw-normal">Kullanıcı Girişi</h4>
@@ -313,7 +318,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-sm-6 col-lg-4 mb-4">
                             <div class="card mb-4 rounded-3 shadow-sm">
                                 <div class="card-header py-3">
                                     <h4 class="my-0 fw-normal">Fiyat Hesaplama</h4>
@@ -369,7 +374,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-sm-6 col-lg-4 mb-4">
                             <div class="card mb-4 rounded-3 shadow-sm">
                                 <div class="card-header py-3">
                                     <h4 class="my-0 fw-normal">Stok İşlemleri</h4>
@@ -391,13 +396,13 @@
                                         </button>
                                     </div>
                                     </form>
-                                    <p style="font-weight: bold;">Stok Miktarı:<span id="ts">{{ ts|floatformat:2 }}</span></p>
+                                    <p style="font-weight: bold;">Toplam Stok Miktarı:<span id="ts">{{ ts|floatformat:2 }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Stok Maliyeti:<span id="ts">{{ om|floatformat:2 }}</span></p>
                                     <p style="font-weight: bold;">Toplam Stok Maliyeti:<span id="ts">{{ tm|floatformat:2 }}</span></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-sm-6 col-lg-4 mb-4">
                             <div class="card mb-4 rounded-3 shadow-sm">
                                 <div class="card-header py-3">
                                     <h4 class="my-0 fw-normal">Sipariş İşlemleri</h4>
@@ -419,7 +424,7 @@
                                         </button>
                                     </div>
                                     </form>
-                                    <p style="font-weight: bold;">Sipariş Sayısı:<span id="ts">{{ tss|floatformat:2 }}</span></p>
+                                    <p style="font-weight: bold;">Toplam Sipariş Sayısı:<span id="ts">{{ tss|floatformat:2 }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Sipariş Tutarı:<span id="ts">{{ osm|floatformat:2 }}</span></p>
                                     <p style="font-weight: bold;">Toplam Sipariş Tutarı:<span id="ts">{{ tsm|floatformat:2 }}</span></p>
                                 </div>
@@ -431,6 +436,7 @@
                 <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
                 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
                 <script src="https://getbootstrap.com/docs/5.3/examples/dashboard/dashboard.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
             </div>
         </div>
     </body>

@@ -37,3 +37,6 @@ tr {
     display: table-row;
     vertical-align: middle;
 }
+li {
+    font-size: small;
+}

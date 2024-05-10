@@ -29,7 +29,6 @@ def anasayfa(request):
 
 def demofirma(request):
     title = 'Etikom'
-    baslik = ' İşlemleri'
 
     if request.method == 'POST':
         if 'girisyap' in request.POST:
@@ -74,6 +73,9 @@ def demofirma(request):
     mesaj = ''
     firma_adi = request.user.username
     firma_adi_id = request.user.id
+    ek = ' İşlemleri'
+    baslik = firma_adi + ek
+
     stv = Stok.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
 
     if stv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
@@ -98,12 +100,20 @@ def demofirma(request):
         osm = tsm / tss
 
 
-    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'baslik': baslik, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
+    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'baslik': baslik, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
 
 
 def stokliste(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
+
+    tfta = Stok.objects.filter(Firmaadi=firma_adi_id).values('Afaturano').order_by('Afaturano').distinct().count()
+    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]   #firma id si giriş yapılan firmanın olan ve Adet sütunu 0 dan büyük olan satırların toplamı
+    ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
+    tstc = (ksa - tstg) * (-1)
+    tstm = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
+    ostm = tstm / ksa
 
     if sort == 'az-sira-no':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('id').values()
@@ -133,10 +143,10 @@ def stokliste(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Stok Listesi'
-    ek = ' Stok Raporu:'
-    baslik = firma_adi + ek
+    baslik = 'Stok Raporu:'
+    
 
-    return render(request, 'etikom/stoklistesi.html', {'stok': stok, 'baslik': baslik, 'title': title})
+    return render(request, 'etikom/stoklistesi.html', {'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
 
 
 def siparisliste(request, sort=None):
@@ -186,8 +196,8 @@ def siparisliste(request, sort=None):
     else:
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
-    title = 'Siparis Listesi'
-    ek = ' siparis raporu:'
+    title = 'Sipariş Listesi'
+    ek = ' sipariş raporu:'
     baslik = firma_adi + ek
 
     return render(request, 'etikom/siparislistesi.html', {'siparis': siparis, 'baslik': baslik, 'title': title})
@@ -244,7 +254,7 @@ def girisyap(request):
 
 def hakkimizdayap(request):
     title = 'Hakkımızda'
-    baslik = 'Hakkımızda Sayfamız'
+    baslik = 'Etikom Hakkında'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/hakkimizda.html', {'baslik': baslik, 'title': title})
 
@@ -256,7 +266,7 @@ def fiyatlamayap(request):
 
 def stokexcelyuklemeyap(request):
     title = 'Excel Yükle'
-    baslik = 'Excel ile Stok Yükleme Sayfası'
+    baslik = 'Excel İle Stok Yükleme Sayfası'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/stokexcelyukle.html', {'baslik': baslik, 'title': title})
 
