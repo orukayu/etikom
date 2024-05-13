@@ -6,7 +6,7 @@ from .models import Siparis
 
 
 class StokAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam', 'Firmaadi')
+    list_display = ('id', 'Firmaadi', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
 
 
 class SiparisAdmin(admin.ModelAdmin):

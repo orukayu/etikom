@@ -6,10 +6,28 @@
         DİKKAT
     </h5>
     <p>
-        Yükleyeceğiniz excel dosyası, Excel 2010 xlsx/xlsm/xltx/xltm formatında ve aşağıda ki örnek tablo gibi olmalıdır.
+        Yükleyeceğiniz excel dosyası, 2007 veya üzeri bir sürüm olup "xlsx/xlsm/xltx/xltm" uzantılı ve aşağıda ki örnek tablo şeklinde olmalıdır.
+    </p>
+    <p>
+        Örnek excel stok dosyasını indirmek için <a href="/static/file/ornek-stok-dosyasi.xlsx">tıklayınız.</a>
     </p>
 </div>
+
 <div style="max-width: 650px;">
     <img src="/static/media/ornekstoktablosu.jpg" class="img-fluid"/>
 </div>
+
+<div class="mt-3">
+    <form method="post" class="row g-3" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="col-auto">
+            <input class="form-control" type="file" name="excel_file">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Yukle</button>
+        </div>
+    </form>
+</div>
+
+
 {% endblock %}

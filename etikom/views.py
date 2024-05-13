@@ -14,6 +14,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 
+import pandas as pd         # excel yukleme icin pandas kuruldu ve pd kisaltma adi verildi, ayrıca pip install openpyxl ında kurulması gerekıyor.
+
 
 # Create your views here.
 
@@ -73,8 +75,7 @@ def demofirma(request):
     mesaj = ''
     firma_adi = request.user.username
     firma_adi_id = request.user.id
-    ek = ' İşlemleri'
-    baslik = firma_adi + ek
+    baslik = 'İşlemleri'
 
     stv = Stok.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
 
@@ -100,7 +101,7 @@ def demofirma(request):
         osm = tsm / tss
 
 
-    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'baslik': baslik, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
+    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'baslik': baslik, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
 
 
 def stokliste(request, sort=None):
@@ -239,7 +240,7 @@ def cikisyap(request):
 
 def iletisimyap(request):
     title = 'İletişim'
-    baslik = 'İletişim Sayfamız'
+    baslik = 'İletişim ve Hesap Bilgilerimiz'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/iletisim.html', {'baslik': baslik, 'title': title})
 
@@ -266,9 +267,37 @@ def fiyatlamayap(request):
 
 def stokexcelyuklemeyap(request):
     title = 'Excel Yükle'
-    baslik = 'Excel İle Stok Yükleme Sayfası'
+    firma_adi = request.user.username
+    baslik = '- Excel İle Stok Yükleme Sayfası'
+
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/stokexcelyukle.html', {'baslik': baslik, 'title': title})
+    if request.method == "POST":
+        if 'excel_file' in request.FILES:
+            excel_file = request.FILES['excel_file']
+            df = pd.read_excel(excel_file)
+            for index, row in df.iterrows():
+                stok = Stok(
+                    Afaturano = row['Fatura No'],
+                    Stokkodu = row['Stok Kodu'],
+                    Adet = row['Adet'],
+                    Alisfiyati = row['Fiyat'],
+                    Toplam = row['Toplam'],
+                    Firmaadi = request.user
+                )
+                stok.save()
+            
+            return redirect('stoklistesiurl')
+
+    return render(request, 'etikom/stokexcelyukle.html', {'firma_adi': firma_adi, 'baslik': baslik, 'title': title})
+
+#    elif 'stokekle' in request.POST:
+#        stok = StokFormu(request.POST)
+#        if stok.is_valid():
+#            post = stok.save(commit=False)
+#            post.Firmaadi = request.user
+#            post.save1()
+#            return redirect('demofirmaurl')
+
 
 def sipexcelyuklemeyap(request):
     title = 'Excel Yükle'
