@@ -16,5 +16,6 @@ urlpatterns = [
     path('hakkimizda/', views.hakkimizdayap, name='hakkimizdaurl'),
     path('fiyatlandirma/', views.fiyatlamayap, name='fiyatlamaurl'),
     path('stok-exceli-yukle/', views.stokexcelyuklemeyap, name='stokexcelyukleurl'),
+    path('stok-exceli-indir/', views.stokexceliindir, name='stokexcelindirurl'),
     path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),
 ]

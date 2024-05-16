@@ -15,6 +15,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 
 import pandas as pd         # pip install pandas ile excel yukleme icin pandas kuruldu ve pd kisaltma adi verildi, ayrıca pip install openpyxl ında kurulması gerekıyor.
+from django.http import HttpResponse
+import os
 
 
 # Create your views here.
@@ -290,17 +292,35 @@ def stokexcelyuklemeyap(request):
 
     return render(request, 'etikom/stokexcelyukle.html', {'firma_adi': firma_adi, 'baslik': baslik, 'title': title})
 
-#    elif 'stokekle' in request.POST:
-#        stok = StokFormu(request.POST)
-#        if stok.is_valid():
-#            post = stok.save(commit=False)
-#            post.Firmaadi = request.user
-#            post.save1()
-#            return redirect('demofirmaurl')
-
 
 def sipexcelyuklemeyap(request):
     title = 'Excel Yükle'
     baslik = 'Excel ile Sipariş Yükleme Sayfası'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/sipexcelyukle.html', {'baslik': baslik, 'title': title})
+
+
+def stokexceliindir(request):
+
+    # Stok modelinden tüm verileri al
+    stoklar = Stok.objects.all()
+
+    # Stok verilerini bir DataFrame'e dönüştür
+    data = {
+        'Firmaadi': [stok.Firmaadi for stok in stoklar],
+        'Afaturano': [stok.Afaturano for stok in stoklar],
+        'Stokkodu': [stok.Stokkodu for stok in stoklar],
+        'Adet': [stok.Adet for stok in stoklar],
+        'Alisfiyati': [stok.Alisfiyati for stok in stoklar],
+        'Toplam': [stok.Toplam for stok in stoklar],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_file = df.to_excel(f"{request.user.username} etikom stoklar.xlsx", index=False)
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username} etikom stoklar.xlsx"'
+
+    return response

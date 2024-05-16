@@ -24,12 +24,20 @@
 
 {% block content %}
 <div class="stoklistesi">
-    <p>
-        Değiştirmek istediğiniz satır için Sıra No sayısına, faturaya ait detay için Fatura Numarasına, ürüne ait detay içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden o sayfaya ait durum raporlarını görebilirsiniz.
-    </p>
-    <h4>
-        Ayrıntılı Stok Listeniz
-    </h4>
+    <div>
+        <p>
+            Değiştirmek istediğiniz satır için Sıra No sayısına, faturaya ait detay için Fatura Numarasına, ürüne ait detay içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden o sayfaya ait durum raporlarını görebilirsiniz.
+        </p>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top">
+        <h4>
+            Ayrıntılı Stok Listeniz
+        </h4>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">İndir</button>
+        </div>
+    </div>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead class="table-light">
