@@ -17,6 +17,7 @@ from django.contrib.auth import logout
 import pandas as pd         # pip install pandas ile excel yukleme icin pandas kuruldu ve pd kisaltma adi verildi, ayrıca pip install openpyxl ında kurulması gerekıyor.
 from django.http import HttpResponse
 import os
+from django.conf import settings
 
 
 # Create your views here.
@@ -301,13 +302,13 @@ def sipexcelyuklemeyap(request):
 
 
 def stokexceliindir(request):
+    firma_adi_id = request.user.id
 
     # Stok modelinden tüm verileri al
-    stoklar = Stok.objects.all()
+    stoklar = Stok.objects.filter(Firmaadi=firma_adi_id)
 
     # Stok verilerini bir DataFrame'e dönüştür
     data = {
-        'Firmaadi': [stok.Firmaadi for stok in stoklar],
         'Afaturano': [stok.Afaturano for stok in stoklar],
         'Stokkodu': [stok.Stokkodu for stok in stoklar],
         'Adet': [stok.Adet for stok in stoklar],
@@ -319,8 +320,12 @@ def stokexceliindir(request):
     # DataFrame'i Excel dosyasına dönüştür
     excel_file = df.to_excel(f"{request.user.username} etikom stoklar.xlsx", index=False)
 
-    # HTTP yanıtı olarak Excel dosyasını döndür
-    response = HttpResponse(excel_file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{request.user.username} etikom stoklar.xlsx"'
+    filepath = os.path.join(settings.BASE_DIR, f"{request.user.username} etikom stoklar.xlsx")
 
+    with open(filepath, 'rb') as f:
+    # HTTP yanıtı olarak Excel dosyasını döndür
+        response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{request.user.username} etikom stoklar.xlsx"'
+
+    os.remove(filepath)
     return response
