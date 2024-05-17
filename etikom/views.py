@@ -147,7 +147,7 @@ def stokliste(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Stok Listesi'
-    baslik = 'Stok Raporu:'
+    baslik = 'Stok Raporunuz:'
     
 
     return render(request, 'etikom/stoklistesi.html', {'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})

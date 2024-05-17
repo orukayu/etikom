@@ -1,41 +1,47 @@
 {% extends 'etikom/base.html' %}
 
 {% block rapor %}
-<div class="rapor col-6 col-md">
-    <ul class="list-unstyled">
-        <li>Toplam Fatura Sayısı: <strong>{{ tfta }}</strong></li>
-        <li>Toplam Stok Çeşidi: <strong>{{ tsc }}</strong></li>
-        <li>Toplam Stok Girişi: <strong>{{ tstg }}</strong></li>
-    </ul>
-</div>
-<div class="rapor col-6 col-md">
-    <ul class="list-unstyled">
-        <li>Toplam Stok Çıkışı: <strong>{{ tstc }}</strong></li>
-        <li>Toplam Stok Miktarı: <strong>{{ ksa }}</strong></li>
-        <li>Toplam Stok Maliyeti: <strong>{{ tstm|floatformat:2 }}</strong></li>
-    </ul>
-</div>
-<div class="rapor col-6 col-md">
-    <ul class="list-unstyled">
-        <li>Ortalama Stok Maliyeti: <strong>{{ ostm|floatformat:2 }}</strong></li>
-    </ul>
+<div>
+    <p>
+        Değiştirmek istediğiniz satır için Sıra No sayısına, faturaya ait detay için Fatura Numarasına, ürüne ait detay içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden o sayfaya ait durum raporlarını görebilirsiniz.
+    </p>
 </div>  
 {% endblock %}
 
 {% block content %}
 <div class="stoklistesi">
-    <div>
-        <p>
-            Değiştirmek istediğiniz satır için Sıra No sayısına, faturaya ait detay için Fatura Numarasına, ürüne ait detay içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden o sayfaya ait durum raporlarını görebilirsiniz.
-        </p>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Fatura Sayısı: <strong>{{ tfta|floatformat:"-3g" }}</strong></li>
+                <li>Toplam Stok Çeşidi: <strong>{{ tsc|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Stok Girişi: <strong>{{ tstg|floatformat:"-3g" }}</strong></li>
+                <li>Toplam Stok Çıkışı: <strong>{{ tstc|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Stok Miktarı: <strong>{{ ksa|floatformat:"-3g" }}</strong></li>
+                <li>Toplam Stok Maliyeti: <strong>{{ tstm|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Ortalama Stok Maliyeti: <strong>{{ ostm|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
     </div>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h4>
             Ayrıntılı Stok Listeniz
         </h4>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">İndir</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
     <div class="table-responsive small">

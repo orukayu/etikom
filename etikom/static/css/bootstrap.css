@@ -53,6 +53,21 @@ small.hesap {
     margin-left: 1rem;
 }
 
+/* SVG'nin normal durumdaki stilini tanımla */
+.bi {
+    transition: transform 0.3s ease;
+}
+
+/* .hover-target div'in üzerine gelindiğinde, altındaki svg'yi büyüt */
+.btn:hover .bi {
+    transform: scale(1.2);
+}
+
+.nav-link:hover .bi {
+    transform: scale(1.2);
+}
+
+
 
 
 .dropdown-toggle { outline: 0; }
