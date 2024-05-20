@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -119,11 +119,9 @@ def stokliste(request, sort=None):
     tstm = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
     ostm = tstm / ksa
 
-    if sort == 'az-sira-no':
-        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('id').values()
-    elif sort == 'za-sira-no':
-        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-id').values()
-    elif sort == 'az-fatura-no':
+    stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
+
+    if sort == 'az-fatura-no':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Afaturano').values()
     elif sort == 'za-fatura-no':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Afaturano').values()
@@ -150,7 +148,7 @@ def stokliste(request, sort=None):
     baslik = 'Stok Raporunuz:'
     
 
-    return render(request, 'etikom/stoklistesi.html', {'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
+    return render(request, 'etikom/stoklistesi.html', {'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
 
 
 def siparisliste(request, sort=None):
@@ -329,3 +327,36 @@ def stokexceliindir(request):
 
     os.remove(filepath)
     return response
+
+
+def stokduzeltme(request):
+
+    
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    pk = request.POST.get('pk')
+    kontrol = get_object_or_404(Stok, pk=pk)
+    form = StokFormu(instance=kontrol)
+
+    if request.method == "POST":
+        if 'stoksil' in request.POST:
+            kontrol.delete()
+            return redirect('stoklistesiurl')
+        elif 'stokekle' in request.POST:
+            form = StokFormu(request.POST, instance=kontrol)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.Firmaadi = request.user
+                post.save1()
+                return redirect('stoklistesiurl')
+
+    else:
+        form = StokFormu(instance=kontrol)
+
+    title = 'Stok Detayı'
+    baslik = 'Stok Detayı:'
+    
+
+    return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title, 'baslik': baslik})
+

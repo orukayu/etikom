@@ -67,6 +67,22 @@ small.hesap {
     transform: scale(1.2);
 }
 
+a {
+    text-decoration: none !important;
+}
+
+form.stok-edit {
+    display: ruby-text;
+}
+
+.stok-edit label {
+    display: none;
+}
+
+.stok-edit p {
+    margin: inherit;
+    margin-bottom: 0px;
+}
 
 
 
