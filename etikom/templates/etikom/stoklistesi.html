@@ -73,7 +73,7 @@
                     <td>
                         <form method="post" class="text-center" action="{% url 'stokduzeltmeurl' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="pk" value="{{ stok.pk }}">
+                            <input type="hidden" name="pk" value="{{ stok.id }}">
                             <button type="submit" class="btn"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></button>
                         </form>
                     </td>
