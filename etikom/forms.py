@@ -36,7 +36,7 @@ class StokFormu(forms.ModelForm):
         fields = ('Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
         labels = {"Stokkodu" : "Stok Kodu", "Alisfiyati" : "Fiyat", "Afaturano" : "Fatura No"}
         widgets = {
-            'Afaturano': forms.TextInput(attrs={'placeholder': 'FTR2024000375'}),
+            'Afaturano': forms.TextInput(attrs={'placeholder': 'FTR202400001234'}),
             'Stokkodu': forms.TextInput(attrs={'placeholder': 'AB1030'}),
             'Adet': forms.TextInput(attrs={'placeholder': '4'}),
             'Alisfiyati': forms.TextInput(attrs={'placeholder': '7.50'}),

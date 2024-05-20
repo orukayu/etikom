@@ -1,0 +1,49 @@
+{% extends 'etikom/base.html' %}
+
+{% block content %}
+<div class="sayimlistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+        <h4>
+            Stok Mevcutları
+        </h4>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-sm btn-success me-2" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
+        </div>
+    </div>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Sıra No<br>
+                    </th>
+                    <th scope="col">Stok Kodu<br>
+                        (<a href="{% url 'stoksiralama' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-stok-kodu' %}">Z</a>)
+                    </th>
+                    <th scope="col">Adet<br>
+                        (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in etopla %}
+                <tr>
+                    <td id="tabloadet">
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                        {{ item.Stokkodu }}
+                    </td>
+                    <td id="tabloadet">
+                        {{ item.total_adet }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-2 px-3 border-bottom">
+        <p>{{ stsys }} Satır</p>
+    </div>
+</div>
+{% endblock %}

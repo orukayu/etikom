@@ -331,7 +331,6 @@ def stokexceliindir(request):
 
 def stokduzeltme(request):
 
-    
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -357,6 +356,26 @@ def stokduzeltme(request):
     title = 'Stok Detayı'
     baslik = 'Stok Detayı:'
     
-
     return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title, 'baslik': baslik})
+
+
+def sayimliste(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    # Stokkodu ile gruplandırma ve Adet sütununun toplamını hesaplama
+    etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu')
+
+    stsys = etopla.count()
+    title = 'Sayım Listesi'
+    baslik = 'Sayım Listesi:'
+
+    context = {
+        'etopla': etopla,
+        'firma_adi': firma_adi,
+        'title': title,
+        'baslik': baslik,
+        'stsys': stsys,
+    }
+
+    return render(request, 'etikom/sayimlistesi.html', context)
 
