@@ -3,7 +3,7 @@
 {% block baslik %}
 <div>
     <p>
-        Değiştirmek veya silmek istediğiniz satır için <mark>Kalem</mark> <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg> simgesine, faturaya ait bilgiler için <mark>Fatura Numarasına</mark>, ürüne ait girişler içinde <mark>Stok Kodu</mark>'na tıklayabilirsiniz.
+        Değiştirmek veya silmek istediğiniz satır için <mark>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></mark> simgesine, faturaya ait bilgiler için <mark>Fatura Numarasına</mark>, ürüne ait hareketler içinde <mark>Stok Kodu</mark>'na tıklayabilirsiniz.
     </p>
 </div>  
 {% endblock %}
@@ -37,7 +37,7 @@
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h4>
-            Ayrıntılı Stok Listeniz
+            Stok Hareketleriniz;
         </h4>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-success me-2" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>

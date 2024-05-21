@@ -4,11 +4,10 @@
 <div class="sayimlistesi">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h4>
-            Stok Mevcutları
+            Stok Adetleriniz;
         </h4>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button type="button" class="btn btn-sm btn-success me-2" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
-            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'sayimexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
     <div class="table-responsive small">
@@ -18,10 +17,10 @@
                     <th scope="col">Sıra No<br>
                     </th>
                     <th scope="col">Stok Kodu<br>
-                        (<a href="{% url 'stoksiralama' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-stok-kodu' %}">Z</a>)
+                        (<a href="{% url 'sayimsiralama' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'sayimsiralama' sort='za-stok-kodu' %}">Z</a>)
                     </th>
                     <th scope="col">Adet<br>
-                        (<a href="{% url 'stoksiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralama' sort='za-adet' %}">Z</a>)
+                        (<a href="{% url 'sayimsiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'sayimsiralama' sort='za-adet' %}">Z</a>)
                     </th>
                 </tr>
             </thead>

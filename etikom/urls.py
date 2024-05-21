@@ -9,6 +9,7 @@ urlpatterns = [
     path('sayim-listesi/', views.sayimliste, name='sayimlistesiurl'),
     path('stok-detay/', views.stokduzeltme, name='stokduzeltmeurl'),
     path('stok-listesi/<str:sort>/', views.stokliste, name='stoksiralama'),
+    path('sayim-listesi/<str:sort>/', views.sayimliste, name='sayimsiralama'),
     path('siparis-listesi/', views.siparisliste, name='siparislistesi'),
     path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
     path('kayit-ol/', views.kayitol, name='kayit-ol'),
@@ -19,5 +20,6 @@ urlpatterns = [
     path('fiyatlandirma/', views.fiyatlamayap, name='fiyatlamaurl'),
     path('stok-exceli-yukle/', views.stokexcelyuklemeyap, name='stokexcelyukleurl'),
     path('stok-exceli-indir/', views.stokexceliindir, name='stokexcelindirurl'),
+    path('sayim-exceli-indir/', views.sayimexcelindir, name='sayimexcelindirurl'),
     path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),
 ]

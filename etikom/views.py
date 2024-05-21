@@ -17,6 +17,7 @@ from django.contrib.auth import logout
 import pandas as pd         # pip install pandas ile excel yukleme icin pandas kuruldu ve pd kisaltma adi verildi, ayrıca pip install openpyxl ında kurulması gerekıyor.
 from django.http import HttpResponse
 import os
+from io import BytesIO
 from django.conf import settings
 
 
@@ -144,8 +145,8 @@ def stokliste(request, sort=None):
     else:
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
-    title = 'Stok Listesi'
-    baslik = 'Stok Raporunuz:'
+    title = 'Stok Hareketleri'
+    baslik = 'Genel Stok Raporu'
     
 
     return render(request, 'etikom/stoklistesi.html', {'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
@@ -307,26 +308,25 @@ def stokexceliindir(request):
 
     # Stok verilerini bir DataFrame'e dönüştür
     data = {
-        'Afaturano': [stok.Afaturano for stok in stoklar],
-        'Stokkodu': [stok.Stokkodu for stok in stoklar],
+        'Fatura No': [stok.Afaturano for stok in stoklar],
+        'Stok Kodu': [stok.Stokkodu for stok in stoklar],
         'Adet': [stok.Adet for stok in stoklar],
-        'Alisfiyati': [stok.Alisfiyati for stok in stoklar],
+        'Alış Fiyatı': [stok.Alisfiyati for stok in stoklar],
         'Toplam': [stok.Toplam for stok in stoklar],
     }
     df = pd.DataFrame(data)
 
     # DataFrame'i Excel dosyasına dönüştür
-    excel_file = df.to_excel(f"{request.user.username} etikom stoklar.xlsx", index=False)
+    excel_buffer = BytesIO()
+    df.to_excel(excel_buffer, index=False)
+    excel_buffer.seek(0)  # Buffer'ın başına git
 
-    filepath = os.path.join(settings.BASE_DIR, f"{request.user.username} etikom stoklar.xlsx")
-
-    with open(filepath, 'rb') as f:
     # HTTP yanıtı olarak Excel dosyasını döndür
-        response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = f'attachment; filename="{request.user.username} etikom stoklar.xlsx"'
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_stok_hareketleri.xlsx"'
 
-    os.remove(filepath)
     return response
+
 
 
 def stokduzeltme(request):
@@ -359,15 +359,26 @@ def stokduzeltme(request):
     return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title, 'baslik': baslik})
 
 
-def sayimliste(request):
+def sayimliste(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     # Stokkodu ile gruplandırma ve Adet sütununun toplamını hesaplama
     etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu')
 
+    if sort == 'az-stok-kodu':
+        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu').values()
+    elif sort == 'za-stok-kodu':
+        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('-Stokkodu').values()
+    elif sort == 'az-adet':
+        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Adet').annotate(total_adet=Sum('Adet')).order_by('Adet').values()
+    elif sort == 'za-adet':
+        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Adet').annotate(total_adet=Sum('Adet')).order_by('-Adet').values()
+    else:
+        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu')
+
     stsys = etopla.count()
-    title = 'Sayım Listesi'
-    baslik = 'Sayım Listesi:'
+    title = 'Stok Listesi'
+    baslik = 'Stok Listesi'
 
     context = {
         'etopla': etopla,
@@ -379,3 +390,27 @@ def sayimliste(request):
 
     return render(request, 'etikom/sayimlistesi.html', context)
 
+
+def sayimexcelindir(request):
+    firma_adi_id = request.user.id
+
+    # Stok modelinden tüm verileri al
+    stoklar = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet'))
+
+    # Stok verilerini bir DataFrame'e dönüştür
+    data = {
+        'Stok Kodu': [item['Stokkodu'] for item in stoklar],
+        'Adet': [item['total_adet'] for item in stoklar],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_buffer = BytesIO()
+    df.to_excel(excel_buffer, index=False)
+    excel_buffer.seek(0)  # Buffer'ın başına git
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_stok_adetleri.xlsx"'
+
+    return response
