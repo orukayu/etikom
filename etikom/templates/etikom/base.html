@@ -237,7 +237,7 @@
                                     <div class="collapse" id="stok-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                             <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'anasayfa' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'demofirmaurl' %}#stok-kanca" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                     <svg class="bi"><use xlink:href="#grid"></use></svg>Stok Ekle
                                                 </a>
                                             </li>
@@ -247,12 +247,12 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'sayimlistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stoklistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                     <svg class="bi"><use xlink:href="#sayim"></use></svg>Stok Listesi
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stoklistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokhareketleriurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                     <svg class="bi"><use xlink:href="#columns-gap"></use></svg>Stok Hareketleri
                                                 </a>
                                             </li>
@@ -266,7 +266,7 @@
                                     <div class="collapse" id="siparis-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                             <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'anasayfa' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'demofirmaurl' %}#sip-kanca" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                     <svg class="bi"><use xlink:href="#cart"></use></svg>Sipariş Ekle
                                                 </a>
                                             </li>
@@ -345,7 +345,7 @@
                                             Çıkış Yap
                                         </button>
                                         {% endif %}
-                                        <button class="btn btn-success rounded-pill px-3" type="button" onclick="window.location.href = '/fiyatlandirma';">
+                                        <button class="btn btn-success rounded-pill px-3" type="button" onclick="window.location.href = '{% url 'fiyatlamaurl' %}';">
                                             Kayıt Ol
                                         </button>
                                     </div>
@@ -406,6 +406,7 @@
                                         <p>Hizmet+İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
                                         <p style="font-weight: bold;">Satış Fiyatı:<span id="toplam"></span></p>
                                     </form>
+                                    <div id="stok-kanca"></div>
                                 </div>
                             </div>
                         </div>
@@ -434,6 +435,7 @@
                                     <p style="font-weight: bold;">Toplam Stok Miktarı:<span id="ts">{{ ts|floatformat:"-3g" }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Stok Maliyeti:<span id="ts">{{ om|floatformat:"2g" }}</span></p>
                                     <p style="font-weight: bold;">Toplam Stok Maliyeti:<span id="ts">{{ tm|floatformat:"2g" }}</span></p>
+                                    <div id="sip-kanca"></div>
                                 </div>
                             </div>
                         </div>

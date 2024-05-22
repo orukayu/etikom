@@ -146,7 +146,7 @@ def stokliste(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Stok Hareketleri'
-    baslik = 'Genel Stok Raporu'
+    baslik = 'Özet Stok Raporu'
     
 
     return render(request, 'etikom/stoklistesi.html', {'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
@@ -241,31 +241,33 @@ def cikisyap(request):
 
 
 def iletisimyap(request):
+    firma_adi = request.user.username
     title = 'İletişim'
     baslik = 'İletişim ve Hesap Bilgilerimiz'
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/iletisim.html', {'baslik': baslik, 'title': title})
+    return render(request, 'etikom/iletisim.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
 
 def girisyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Raporlar'
-    ek = ' Rapor Sayfası'
-    baslik = firma_adi + ek
+    baslik = ' Rapor Sayfası'
     # ... anasayfa içeriğini oluşturun
-    return render(request, 'etikom/giris.html', {'baslik': baslik, 'title': title})
+    return render(request, 'etikom/giris.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
 
 def hakkimizdayap(request):
+    firma_adi = request.user.username
     title = 'Hakkımızda'
     baslik = 'Etikom Hakkında'
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/hakkimizda.html', {'baslik': baslik, 'title': title})
+    return render(request, 'etikom/hakkimizda.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
 
 def fiyatlamayap(request):
+    firma_adi = request.user.username
     title = 'Fiyatlandırma'
     baslik = 'Premium ve Plus Avantajlar'
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/fiyatlandirma.html', {'baslik': baslik, 'title': title})
+    return render(request, 'etikom/fiyatlandirma.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
 
 def stokexcelyuklemeyap(request):
     title = 'Excel Yükle'

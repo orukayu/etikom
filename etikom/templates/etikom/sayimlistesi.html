@@ -1,5 +1,14 @@
 {% extends 'etikom/base.html' %}
 
+{% block baslik %}
+<div>
+    <p>
+        Ürünlerinize ait stok kodlarının ve toplam adetlerinin listesidir. Listenizi Excel dosyası olarak indirip stok sayımlarınızda kullanabilirsiniz. Kontrol etmek istediğiniz ürüne ait hareketler için <mark>Stok Kodu</mark>'na tıklayabilirsiniz.
+    </p>
+</div>  
+{% endblock %}
+
+
 {% block content %}
 <div class="sayimlistesi">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
@@ -17,10 +26,10 @@
                     <th scope="col">Sıra No<br>
                     </th>
                     <th scope="col">Stok Kodu<br>
-                        (<a href="{% url 'sayimsiralama' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'sayimsiralama' sort='za-stok-kodu' %}">Z</a>)
+                        (<a href="{% url 'stoksiralamaurl' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'stoksiralamaurl' sort='za-stok-kodu' %}">Z</a>)
                     </th>
                     <th scope="col">Adet<br>
-                        (<a href="{% url 'sayimsiralama' sort='az-adet' %}">A</a>↔<a href="{% url 'sayimsiralama' sort='za-adet' %}">Z</a>)
+                        (<a href="{% url 'stoksiralamaurl' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralamaurl' sort='za-adet' %}">Z</a>)
                     </th>
                 </tr>
             </thead>
