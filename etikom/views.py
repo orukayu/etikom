@@ -146,10 +146,9 @@ def stokliste(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Stok Hareketleri'
-    baslik = 'Özet Stok Raporu'
     
 
-    return render(request, 'etikom/stoklistesi.html', {'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi,'baslik': baslik, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
+    return render(request, 'etikom/stoklistesi.html', {'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
 
 
 def siparisliste(request, sort=None):
@@ -209,7 +208,6 @@ def siparisliste(request, sort=None):
 
 def kayitol(request):
     title = 'Kayıt Ol'
-    baslik = 'Kayıt Sayfasına Hoşgeldiniz'
     kayit = KayitFormu()
     if request.method == "POST":
         kayit = KayitFormu(request.POST)
@@ -231,7 +229,7 @@ def kayitol(request):
             else:
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
 
-    return render(request, 'etikom/kayitol.html', {'baslik':baslik, 'kayit': kayit, 'title': title})
+    return render(request, 'etikom/kayitol.html', {'kayit': kayit, 'title': title})
 
 
 
@@ -243,9 +241,8 @@ def cikisyap(request):
 def iletisimyap(request):
     firma_adi = request.user.username
     title = 'İletişim'
-    baslik = 'İletişim ve Hesap Bilgilerimiz'
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/iletisim.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
+    return render(request, 'etikom/iletisim.html', {'title': title, 'firma_adi': firma_adi})
 
 def girisyap(request):
     firma_adi = request.user.username
@@ -258,21 +255,18 @@ def girisyap(request):
 def hakkimizdayap(request):
     firma_adi = request.user.username
     title = 'Hakkımızda'
-    baslik = 'Etikom Hakkında'
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/hakkimizda.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
+    return render(request, 'etikom/hakkimizda.html', {'title': title, 'firma_adi': firma_adi})
 
 def fiyatlamayap(request):
     firma_adi = request.user.username
     title = 'Fiyatlandırma'
-    baslik = 'Premium ve Plus Avantajlar'
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/fiyatlandirma.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
+    return render(request, 'etikom/fiyatlandirma.html', {'title': title, 'firma_adi': firma_adi})
 
 def stokexcelyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
-    baslik = '- Excel İle Stok Yükleme Sayfası'
 
     # ... iletişim sayfası içeriğini oluşturun
     if request.method == "POST":
@@ -292,7 +286,7 @@ def stokexcelyuklemeyap(request):
             
             return redirect('stoklistesiurl')
 
-    return render(request, 'etikom/stokexcelyukle.html', {'firma_adi': firma_adi, 'baslik': baslik, 'title': title})
+    return render(request, 'etikom/stokexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 
 def sipexcelyuklemeyap(request):
@@ -356,9 +350,8 @@ def stokduzeltme(request):
         form = StokFormu(instance=kontrol)
 
     title = 'Stok Detayı'
-    baslik = 'Stok Detayı:'
     
-    return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title, 'baslik': baslik})
+    return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 
 def sayimliste(request, sort=None):
@@ -380,13 +373,11 @@ def sayimliste(request, sort=None):
 
     stsys = etopla.count()
     title = 'Stok Listesi'
-    baslik = 'Stok Listesi'
 
     context = {
         'etopla': etopla,
         'firma_adi': firma_adi,
         'title': title,
-        'baslik': baslik,
         'stsys': stsys,
     }
 
