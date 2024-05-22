@@ -49,8 +49,8 @@ hr {
     margin-left: auto !important;
     margin-right: auto !important;
 }
-small.hesap {
-    margin-left: 1rem;
+p.hesap {
+    margin-left: 1rem !important;
 }
 
 /* SVG'nin normal durumdaki stilini tanımla */

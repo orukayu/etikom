@@ -1,5 +1,18 @@
 {% extends 'etikom/base.html' %}
 
+{% block copy %}
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            alert('IBAN Kopyalandı: ' + text);
+        }, function(err) {
+            console.error('Kopyalama işlemi başarısız oldu: ', err);
+        });
+    }
+</script>
+{% endblock %}
+
+
 {% block content %}
 <div class="metin mt-3">
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
@@ -25,51 +38,47 @@
                 <div class="card-body">
                     <div class="border-bottom pb-2">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-                            <h6>TC İŞ BANKASI TL HESABI</h6>
+                            <h6>İŞ BANKASI TL HESABI</h6>
                             <svg class="bi"><use xlink:href="#turklira"></use></svg>
                         </div>
-                        <small class="hesap">
-                            OKTAY BAYRAM
-                        </small><br>
-                        <small class="hesap">
-                            TR28 0006 4000 0011 1530 4706 46
-                        </small>
-                    </div>
-                    <div class="border-bottom pb-2">
+                        <p class="small hesap m-0">OKTAY BAYRAM</p>
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-                            <h6 style="margin-top: 0.5rem;">TC İŞ BANKASI EUR HESABI</h6>
+                            <p class="small hesap m-0">TR28 0006 4000 0011 1530 4706 46</p>
+                            <button class="btn p-0" title="Kopyala" onclick="copyToClipboard('TR28 0006 4000 0011 1530 4706 46')"><svg class="bi link-primary"><use xlink:href="#copy"></use></svg></button>
+                        </div>
+                    </div>
+                    <div class="border-bottom pb-2 mt-3">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                            <h6>İŞ BANKASI EUR HESABI</h6>
                             <svg class="bi"><use xlink:href="#euro"></use></svg>
                         </div>
-                        <small class="hesap">
-                            OKTAY BAYRAM
-                        </small><br>
-                        <small class="hesap">
-                            TR59 0006 4000 0021 0410 6988 82
-                        </small>
-                    </div>
-                    <div class="border-bottom pb-2">
+                        <p class="small hesap m-0">OKTAY BAYRAM</p>
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-                            <h6 style="margin-top: 0.5rem;">GARANTİ BANKASI USD HESABI</h6>
+                            <p class="small hesap m-0">TR59 0006 4000 0021 0410 6988 82</p>
+                            <button class="btn p-0" title="Kopyala" onclick="copyToClipboard('TR59 0006 4000 0021 0410 6988 82')"><svg class="bi link-primary"><use xlink:href="#copy"></use></svg></button>
+                        </div>
+                    </div>
+                    <div class="border-bottom pb-2 mt-3">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                            <h6>GARANTİ BANKASI USD HESABI</h6>
                             <svg class="bi"><use xlink:href="#usd"></use></svg>
                         </div>
-                        <small class="hesap">
-                            OKTAY BAYRAM
-                        </small><br>
-                        <small class="hesap">
-                            TR52 0006 2000 7000 0009 0932 36
-                        </small>
-                    </div>
-                    <div class="pb-1">
+                        <p class="small hesap m-0">OKTAY BAYRAM</p>
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-                            <h6 style="margin-top: 0.5rem;">USDT (TetherUS) HESABI</h6>
+                            <p class="small hesap m-0">TR52 0006 2000 7000 0009 0932 36</p>
+                            <button class="btn p-0" title="Kopyala" onclick="copyToClipboard('TR52 0006 2000 7000 0009 0932 36')"><svg class="bi link-primary"><use xlink:href="#copy"></use></svg></button>
+                        </div>
+                    </div>
+                    <div class="pb-2 mt-3">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                            <h6>BINANCE USDT (TetherUS) HESABI</h6>
                             <svg class="bi"><use xlink:href="#tether"></use></svg>
                         </div>
-                        <small class="hesap">
-                            Tron (TRC20)
-                        </small><br>
-                        <small class="hesap">
-                            TXHNrSvswCbrYmSh124bnC9GgvTLUv5cnr
-                        </small>
+                        <p class="small hesap m-0">Tron (TRC20)</p>
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                            <p class="small hesap m-0">TXHNrSvswCbrYmSh124bnC9GgvTLUv5cnr</p>
+                            <button class="btn p-0" title="Kopyala" onclick="copyToClipboard('TXHNrSvswCbrYmSh124bnC9GgvTLUv5cnr')"><svg class="bi link-primary"><use xlink:href="#copy"></use></svg></button>
+                        </div>
                     </div>
                 </div>
             </div>
