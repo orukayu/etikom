@@ -117,8 +117,8 @@ def stokliste(request, sort=None):
     tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]   #firma id si giriş yapılan firmanın olan ve Adet sütunu 0 dan büyük olan satırların toplamı
     ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
     tstc = (ksa - tstg) * (-1)
-    tstm = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
-    ostm = tstm / ksa
+    tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+    ostm = tstm / tstg
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
@@ -357,28 +357,54 @@ def stokduzeltme(request):
 def sayimliste(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
-    # Stokkodu ile gruplandırma ve Adet sütununun toplamını hesaplama
-    etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu')
 
-    if sort == 'az-stok-kodu':
-        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu').values()
-    elif sort == 'za-stok-kodu':
-        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('-Stokkodu').values()
-    elif sort == 'az-adet':
-        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Adet').annotate(total_adet=Sum('Adet')).order_by('Adet').values()
-    elif sort == 'za-adet':
-        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Adet').annotate(total_adet=Sum('Adet')).order_by('-Adet').values()
-    else:
-        etopla = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).order_by('Stokkodu')
+    # Adet > 0 olan satırlardan Toplam sütunlarının toplamını hesaplama
+    toplam_toplam = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(
+        total_toplam=Sum('Toplam')
+    ).order_by('Stokkodu')
 
-    stsys = etopla.count()
+    # Adet > 0 olan satırlardan Adet sütunlarının toplamını hesaplama
+    toplam_adet_filtered = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(
+        total_adet_filtered=Sum('Adet')
+    ).order_by('Stokkodu')
+
+    # Stok Kodu'na göre tüm Adet sütunlarının toplamını hesaplama (Adet değerine bakmaksızın)
+    toplam_adet_all = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(
+        total_adet_all=Sum('Adet')
+    ).order_by('Stokkodu')
+
+    # Sonuçları birleştirerek tek bir yapı oluşturma
+    etopla = {}
+    for item in toplam_toplam:
+        etopla[item['Stokkodu']] = {
+            'total_toplam': item['total_toplam'],
+            'total_adet_filtered': 0,
+            'total_adet_all': 0,
+            'ortalama_alisfiyati': 0
+        }
+
+    for item in toplam_adet_filtered:
+        if item['Stokkodu'] in etopla:
+            etopla[item['Stokkodu']]['total_adet_filtered'] = item['total_adet_filtered']
+
+    for item in toplam_adet_all:
+        if item['Stokkodu'] in etopla:
+            etopla[item['Stokkodu']]['total_adet_all'] = item['total_adet_all']
+
+    # Ortalama alış fiyatını hesaplama
+    for stok_kodu, values in etopla.items():
+        total_toplam = values['total_toplam']
+        total_adet_filtered = values['total_adet_filtered']
+        values['ortalama_alisfiyati'] = total_toplam / total_adet_filtered if total_adet_filtered else 0
+
+
+    # stsys = etopla.count()
     title = 'Stok Listesi'
 
     context = {
         'etopla': etopla,
         'firma_adi': firma_adi,
         'title': title,
-        'stsys': stsys,
     }
 
     return render(request, 'etikom/sayimlistesi.html', context)
@@ -393,7 +419,7 @@ def sayimexcelindir(request):
     # Stok verilerini bir DataFrame'e dönüştür
     data = {
         'Stok Kodu': [item['Stokkodu'] for item in stoklar],
-        'Adet': [item['total_adet'] for item in stoklar],
+        'Toplam Adet': [item['total_adet'] for item in stoklar],
     }
     df = pd.DataFrame(data)
 
@@ -407,3 +433,25 @@ def sayimexcelindir(request):
     response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_stok_adetleri.xlsx"'
 
     return response
+
+
+def stokeklemeyap(request):
+
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    if request.method == "POST":
+        if 'stokekle' in request.POST:
+            form = StokFormu(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.Firmaadi = request.user
+                post.save1()
+                return redirect('stoklistesiurl')
+
+    else:
+        form = StokFormu()
+
+    title = 'Stok Ekle'
+    
+    return render(request, 'etikom/stokekle.html', {'form': form, 'firma_adi': firma_adi, 'title': title})

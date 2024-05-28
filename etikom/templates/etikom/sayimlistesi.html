@@ -6,7 +6,7 @@
 </div>
 <div>
     <p>
-        Ürünlerinize ait stok kodlarının ve toplam adetlerinin listesidir. Listenizi Excel dosyası olarak indirip stok sayımlarınızda kullanabilirsiniz. Kontrol etmek istediğiniz ürüne ait hareketler için <mark>Stok Kodu</mark>'na tıklayabilirsiniz.
+        Ürünlerinize ait stok kodlarının, toplam adetleri ve ortalama alış fiyatlarının listesidir. Listenizi Excel dosyası olarak indirip stok sayımlarınızda kullanabilirsiniz. Kontrol etmek istediğiniz ürüne ait hareketler için <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
     </p>
 </div>  
 {% endblock %}
@@ -26,27 +26,30 @@
         <table class="table table-striped table-sm">
             <thead class="table-light">
                 <tr>
-                    <th scope="col">Sıra No<br>
+                    <th scope="col">Sıra No
                     </th>
-                    <th scope="col">Stok Kodu<br>
-                        (<a href="{% url 'stoksiralamaurl' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'stoksiralamaurl' sort='za-stok-kodu' %}">Z</a>)
+                    <th scope="col">Stok Kodu
                     </th>
-                    <th scope="col">Adet<br>
-                        (<a href="{% url 'stoksiralamaurl' sort='az-adet' %}">A</a>↔<a href="{% url 'stoksiralamaurl' sort='za-adet' %}">Z</a>)
+                    <th scope="col">Toplam Adet
+                    </th>
+                    <th scope="col">Ort. Alış Fiyatı
                     </th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in etopla %}
+                {% for stok_kodu, values in etopla.items %}
                 <tr>
                     <td id="tabloadet">
                         {{ forloop.counter }}
                     </td>
                     <td>
-                        {{ item.Stokkodu }}
+                        {{ stok_kodu }}
                     </td>
                     <td id="tabloadet">
-                        {{ item.total_adet }}
+                        {{ values.total_adet_all }}
+                    </td>
+                    <td id="tabloadet">
+                        {{ values.ortalama_alisfiyati|floatformat:"2g" }}
                     </td>
                 </tr>
                 {% endfor %}
@@ -54,7 +57,7 @@
         </table>
     </div>
     <div class="mb-2 px-3 border-bottom">
-        <p>{{ stsys }} Satır</p>
+        <p></p>
     </div>
 </div>
 {% endblock %}

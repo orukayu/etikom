@@ -2,95 +2,53 @@
 <!doctype html>
 <html lang="tr">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+        <meta name="description" content="E-ticaret satıcılarının en çok ihtiyaç duydukları özelliklere ve raporlara sahip mini muhasebe programı.">
+        <meta name="author" content="Oktay BAYRAM">
+        <meta name="generator" content="Python">
+        <meta name="publisher" content="Etikom.Net"/>
+
+        <link rel="canonical" href="https://www.etikom.net/"/>
+        <meta name="theme-color" content="#212529">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
         <title>{{ title }}</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link href="https://getbootstrap.com/docs/5.3/examples/dashboard/dashboard.css" rel="stylesheet">
-        <style>
-          .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-          }
 
-          @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-              font-size: 3.5rem;
-            }
-          }
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="color-scheme" content="light dark">
 
-          .b-example-divider {
-            width: 100%;
-            height: 3rem;
-            background-color: rgba(0, 0, 0, .1);
-            border: solid rgba(0, 0, 0, .15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-          }
+        <meta property="og:url" content="https://www.etikom.net">
+        <meta property="og:title" content="ETİKOM.NET">
+        <meta property="og:description" content="E-ticaret satıcılarının en çok ihtiyaç duydukları özelliklere ve raporlara sahip mini muhasebe programı.">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://etikom.net/static/media/social.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="2000">
+        <meta property="og:image:height" content="1000">
+        <meta property="og:locale" content="tr_TR">
+        <meta property="og:site_name" content="Etikom.Net"> 
 
-          .b-example-vr {
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 100vh;
-          }
-
-          .bi {
-            vertical-align: -.125em;
-            fill: currentColor;
-          }
-
-          .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-          }
-
-          .nav-scroller .nav {
-            display: flex;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .btn-bd-primary {
-            --bd-violet-bg: #712cf9;
-            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-            --bs-btn-font-weight: 600;
-            --bs-btn-color: var(--bs-white);
-            --bs-btn-bg: var(--bd-violet-bg);
-            --bs-btn-border-color: var(--bd-violet-bg);
-            --bs-btn-hover-color: var(--bs-white);
-            --bs-btn-hover-bg: #6528e0;
-            --bs-btn-hover-border-color: #6528e0;
-            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-            --bs-btn-active-color: var(--bs-btn-hover-color);
-            --bs-btn-active-bg: #5a23c8;
-            --bs-btn-active-border-color: #5a23c8;
-          }
-
-          .bd-mode-toggle {
-            z-index: 1500;
-          }
-
-          .bd-mode-toggle .dropdown-menu .active .bi {
-            display: block !important;
-          }
-        </style>
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" href="{% static '/media/apple-touch-icon.png' %}" sizes="180x180">
+        <link rel="alternate icon" href="{% static '/media/favicon.png' %}" type="image/png">
+        <link rel="icon" href="{% static '/media/favicon-32x32.png' %}" sizes="32x32" type="image/png">
+        <link rel="icon" href="{% static '/media/favicon-16x16.png' %}" sizes="16x16" type="image/png">
+        <link rel="icon" href="{% static '/media/favicon.svg' %}" sizes="any" type="image/svg+xml">
+        <link rel="icon" href="{% static '/media/favicon.ico' %}">
+        
         {% block copy %}
         {% endblock %}
+
     </head>
     <body>
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -177,7 +135,7 @@
         </svg>
         <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
             <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="/">
-                <h3>ETİKOM</h3>
+                <h3>ETİKOM.NET</h3>
                 <small>E-ticaretin Kolay Muhasebesi</small>
             </a>
             <ul class="navbar-nav flex-row d-md-none">
@@ -242,7 +200,7 @@
                                     <div class="collapse" id="stok-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                             <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'demofirmaurl' %}#stok-kanca" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                     <svg class="bi"><use xlink:href="#grid"></use></svg>Stok Ekle
                                                 </a>
                                             </li>
@@ -271,7 +229,7 @@
                                     <div class="collapse" id="siparis-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                             <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'demofirmaurl' %}#sip-kanca" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'demofirmaurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                     <svg class="bi"><use xlink:href="#cart"></use></svg>Sipariş Ekle
                                                 </a>
                                             </li>
@@ -342,15 +300,15 @@
                                         {% csrf_token %}
                                         {{ giris.as_p }}                                    
                                     <div class="d-flex gap-2 justify-content-center py-3">
-                                        <button class="btn btn-primary rounded-pill px-3" type="submit" name="girisyap">
+                                        <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="girisyap">
                                             Giriş Yap
                                         </button>
                                         {% if user.is_authenticated %}
-                                        <button class="btn btn-secondary rounded-pill px-3" type="button" name="btncikisyap" onclick="window.location.href = '{% url 'cikisurl' %}';">
+                                        <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" name="btncikisyap" onclick="window.location.href = '{% url 'cikisurl' %}';">
                                             Çıkış Yap
                                         </button>
                                         {% endif %}
-                                        <button class="btn btn-success rounded-pill px-3" type="button" onclick="window.location.href = '{% url 'fiyatlamaurl' %}';">
+                                        <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'fiyatlamaurl' %}';">
                                             Kayıt Ol
                                         </button>
                                     </div>
@@ -411,7 +369,6 @@
                                         <p>Hizmet+İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
                                         <p style="font-weight: bold;">Satış Fiyatı:<span id="toplam"></span></p>
                                     </form>
-                                    <div id="stok-kanca"></div>
                                 </div>
                             </div>
                         </div>
@@ -421,18 +378,18 @@
                                     <h4 class="my-0 fw-normal">Stok Ekle</h4>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Stok bilgisi ekleyebilir veya Excel ile toplu stok yüklemede yapabilirsiniz.</small></h5>
+                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Ürünleriniz için stok bilgisi ekleyebilir yada Excel ile toplu stok yüklemede yapabilirsiniz.</small></h5>
                                     <form method="POST">
                                         {% csrf_token %}
                                         {{ stok.as_p }}
                                     <div class="d-flex gap-2 justify-content-center py-3">
-                                        <button class="btn btn-primary rounded-pill px-3" type="submit" style="font-size: small" name="stokekle">
+                                        <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="stokekle">
                                             Stok Ekle
                                         </button>
-                                        <button class="btn btn-secondary rounded-pill px-3" type="button" style="font-size: small" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">
+                                        <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">
                                             Excel Yükle
                                         </button>
-                                        <button class="btn btn-success rounded-pill px-3" type="button" style="font-size: small" onclick="window.location.href = '{% url 'stoklistesiurl' %}';">
+                                        <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stoklistesiurl' %}';">
                                             Stok Listesi
                                         </button>
                                     </div>
@@ -440,7 +397,6 @@
                                     <p style="font-weight: bold;">Toplam Stok Miktarı:<span id="ts">{{ ts|floatformat:"-3g" }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Stok Maliyeti:<span id="ts">{{ om|floatformat:"2g" }}</span></p>
                                     <p style="font-weight: bold;">Toplam Stok Maliyeti:<span id="ts">{{ tm|floatformat:"2g" }}</span></p>
-                                    <div id="sip-kanca"></div>
                                 </div>
                             </div>
                         </div>
@@ -455,13 +411,13 @@
                                         {% csrf_token %}
                                         {{ siparis.as_p }}
                                     <div class="d-flex gap-2 justify-content-center py-3">
-                                        <button class="btn btn-primary rounded-pill px-3" type="submit" style="font-size: small" name="sipekle">
+                                        <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="sipekle">
                                             Sipariş Ekle
                                         </button>
-                                        <button class="btn btn-secondary rounded-pill px-3" type="button" style="font-size: small" onclick="window.location.href = '{% url 'sipexcelyukleurl' %}';">
+                                        <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'sipexcelyukleurl' %}';">
                                             Excel Yükle
                                         </button>
-                                        <button class="btn btn-success rounded-pill px-3" type="button" style="font-size: small" onclick="window.location.href = '{% url 'siparislistesi' %}';">
+                                        <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'siparislistesi' %}';">
                                             Sipariş Listesi
                                         </button>
                                     </div>

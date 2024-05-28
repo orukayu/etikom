@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.anasayfa, name='anasayfa'),
     path('anasayfa/', views.demofirma, name='demofirmaurl'),
 
+    path('stok-ekle/', views.stokeklemeyap, name='stokekleurl'),
     path('stok-exceli-yukle/', views.stokexcelyuklemeyap, name='stokexcelyukleurl'),
 
     path('stok-listesi/', views.sayimliste, name='stoklistesiurl'),

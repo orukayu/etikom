@@ -2,26 +2,27 @@
 
 {% block baslik %}
 <div class="col-12 col-sm-5">
-    <h1 class="h4">{{ firma_adi|title }} - Excel İle Stok Yükleme Sayfası</h1>
+    <h1 class="h4">{{ firma_adi|title }} - Toplu Stok Girişi</h1>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="metin mt-3">
     <h5>
-        DİKKAT
+        DİKKAT !
     </h5>
     <p>
-        Yükleyeceğiniz excel dosyası, 2007 veya üzeri bir sürüm olup "xlsx/xlsm/xltx/xltm" uzantılı ve aşağıda ki örnek tablo şeklinde olmalıdır.
-    </p>
-    <p>
-        Örnek excel stok dosyasını indirmek için <a href="/static/file/ornek-stok-dosyasi.xlsx"><strong>tıklayınız.</strong></a>
+        Yükleyeceğiniz excel dosyası, 2007 veya üzeri bir sürüm olup "xlsx/xlsm/xltx/xltm" uzantılı ve aşağıda ki örnek tablo şeklinde olmalıdır.<br>
+        Toptan satışlarınızı veya iade ettiğiniz ürünleri (-) adet olarak girebilirsiniz. Daha fazla bilgi için instagram videolarımızı izleyebilirsiniz.
     </p>
 </div>
 
 <div style="max-width: 650px;">
-    <img src="/static/media/ornekstoktablosu.webp" class="img-fluid"/>
+    <img src="/static/media/ornek-excel-stok-tablosu.webp" class="img-fluid"/>
 </div>
+<p>
+    Örnek excel dosyasını indirmek için <a href="/static/file/ornek-stok-dosyasi.xlsx"><strong>tıklayınız.</strong></a>
+</p>
 
 <div class="mt-3">
     <form method="post" class="row g-3" enctype="multipart/form-data">
