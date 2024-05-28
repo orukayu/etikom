@@ -1,6 +1,7 @@
 from django import forms
 from .models import Stok
 from .models import Siparis
+from django.utils.dateparse import parse_date
 
 class GirisFormu(forms.Form):
     firma_adi = forms.CharField(label='Firma Adı')
@@ -21,13 +22,23 @@ class SiparisFormu(forms.ModelForm):
         labels = {"Komisyon" : "Komisyon (%)", "Siparisno" : "Sipariş No", "Tarih" : "Sipariş Tarihi", "Stokkodu" : "Stok Kodu", "Satisfiyati" : "Satış Fiyatı"}
         widgets = {            
             'Pazaryeri': forms.TextInput(attrs={'placeholder': 'Trendyol, HB, N11 vb.'}),
-            'Tarih': forms.TextInput(attrs={'placeholder': '2024-04-28'}),
+            'Tarih': forms.DateInput(format='%d-%m-%Y', attrs={'placeholder': '28/04/2024'}),
             'Siparisno': forms.TextInput(attrs={'placeholder': '2155139405'}),
-            'Stokkodu': forms.TextInput(attrs={'placeholder': 'AB1030'}),
+            'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12'}),
             'Adet': forms.TextInput(attrs={'placeholder': '4'}),
             'Satisfiyati': forms.TextInput(attrs={'placeholder': '137.50'}),
             'Komisyon': forms.TextInput(attrs={'placeholder': '9.60'}),
         }
+
+        input_formats = {
+            'Tarih': ['%d-%m-%Y'],
+        }
+
+    def clean_Tarih(self):
+        tarih = self.cleaned_data['Tarih']
+        if not tarih:
+            raise forms.ValidationError("Lütfen tarihi 'gg/aa/yyyy' formatında girin.")
+        return tarih
 
 class StokFormu(forms.ModelForm):
 

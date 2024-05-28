@@ -29,7 +29,7 @@
         <meta property="og:title" content="ETİKOM.NET">
         <meta property="og:description" content="E-ticaret satıcılarının en çok ihtiyaç duydukları özelliklere ve raporlara sahip mini muhasebe programı.">
         <meta property="og:type" content="website">
-        <meta property="og:image" content="https://etikom.net/static/media/social.png">
+        <meta property="og:image" content="https://etikom.pythonanywhere.com/static/media/social.png">
         <meta property="og:image:type" content="image/png">
         <meta property="og:image:width" content="2000">
         <meta property="og:image:height" content="1000">
@@ -160,121 +160,123 @@
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" aria-current="page" href="/">
-                                        <svg class="bi"><use xlink:href="#house"></use></svg>Anasayfa
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'hakkimizdaurl' %}">
-                                        <svg class="bi"><use xlink:href="#file-earmark-text"></use></svg>Hakkımızda
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
-                                        <svg class="bi"><use xlink:href="#briefcase"></use></svg>Premium
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'iletisimurl' %}">
-                                        <svg class="bi"><use xlink:href="#whatsapp"></use></svg>İletişim
-                                    </a>
-                                </li>
-                            </ul>
+                            <div class="fixed-sol">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" aria-current="page" href="/">
+                                            <svg class="bi"><use xlink:href="#house"></use></svg>Anasayfa
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'hakkimizdaurl' %}">
+                                            <svg class="bi"><use xlink:href="#file-earmark-text"></use></svg>Hakkımızda
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
+                                            <svg class="bi"><use xlink:href="#briefcase"></use></svg>Premium
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'iletisimurl' %}">
+                                            <svg class="bi"><use xlink:href="#whatsapp"></use></svg>İletişim
+                                        </a>
+                                    </li>
+                                </ul>
+                                
+                                <hr class="my-3">
 
-                            <hr class="my-3">
+                                <ul class="nav flex-column mb-auto">
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'girisurl' %}">
+                                            <svg class="bi"><use xlink:href="#signpost"></use></svg>Genel Raporlar
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#stok-collapse" aria-expanded="false">
+                                          Stok İşlemleri
+                                        </button>
+                                        <div class="collapse" id="stok-collapse" style="">
+                                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#grid"></use></svg>Stok Ekle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stoklistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#sayim"></use></svg>Stok Listesi
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokhareketleriurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#columns-gap"></use></svg>Stok Hareketleri
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#siparis-collapse" aria-expanded="false">
+                                          Sipariş İşlemleri
+                                        </button>
+                                        <div class="collapse" id="siparis-collapse" style="">
+                                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'siparisekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#cart"></use></svg>Sipariş Ekle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'sipexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'siparislistesi' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#graph-up-arrow"></use></svg>Sipariş Listesi
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
+                                            <svg class="bi"><use xlink:href="#graph-down-arrow"></use></svg>İade Listesi
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
+                                            <svg class="bi"><use xlink:href="#receipt"></use></svg>Fatura Listesi
+                                        </a>
+                                    </li>
+                                </ul>
 
-                            <ul class="nav flex-column mb-auto">
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'girisurl' %}">
-                                        <svg class="bi"><use xlink:href="#signpost"></use></svg>Genel Raporlar
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#stok-collapse" aria-expanded="false">
-                                      Stok İşlemleri
-                                    </button>
-                                    <div class="collapse" id="stok-collapse" style="">
-                                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#grid"></use></svg>Stok Ekle
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stoklistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#sayim"></use></svg>Stok Listesi
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stokhareketleriurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#columns-gap"></use></svg>Stok Hareketleri
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#siparis-collapse" aria-expanded="false">
-                                      Sipariş İşlemleri
-                                    </button>
-                                    <div class="collapse" id="siparis-collapse" style="">
-                                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'demofirmaurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#cart"></use></svg>Sipariş Ekle
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'sipexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'siparislistesi' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                    <svg class="bi"><use xlink:href="#graph-up-arrow"></use></svg>Sipariş Listesi
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
-                                        <svg class="bi"><use xlink:href="#graph-down-arrow"></use></svg>İade Listesi
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
-                                        <svg class="bi"><use xlink:href="#receipt"></use></svg>Fatura Listesi
-                                    </a>
-                                </li>
-                            </ul>
+                                <hr class="my-3">
 
-                            <hr class="my-3">
-
-                            <ul class="nav flex-column mb-auto">
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
-                                        <svg class="bi"><use xlink:href="#people-circle"></use></svg>Kayıt Ol
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'cikisurl' %}">
-                                        <svg class="bi"><use xlink:href="#door-closed"></use></svg>Çıkış Yap
-                                    </a>
-                                </li>
-                            </ul>
+                                <ul class="nav flex-column mb-auto">
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
+                                            <svg class="bi"><use xlink:href="#people-circle"></use></svg>Kayıt Ol
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'cikisurl' %}">
+                                            <svg class="bi"><use xlink:href="#door-closed"></use></svg>Çıkış Yap
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 min-vh-100">
                     <div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
                         {% block baslik %}
                         <div class="col-12 col-sm-5">
@@ -297,19 +299,11 @@
                                     <form method="post">
                                         {% csrf_token %}
                                         {{ giris.as_p }}                                    
-                                    <div class="d-flex gap-2 justify-content-center py-3">
-                                        <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="girisyap">
-                                            Giriş Yap
-                                        </button>
-                                        {% if user.is_authenticated %}
-                                        <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" name="btncikisyap" onclick="window.location.href = '{% url 'cikisurl' %}';">
-                                            Çıkış Yap
-                                        </button>
-                                        {% endif %}
-                                        <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'fiyatlamaurl' %}';">
-                                            Kayıt Ol
-                                        </button>
-                                    </div>
+                                        <div class="d-flex gap-2 justify-content-center py-3">
+                                            <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="girisyap">Giriş Yap</button>
+                                            <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" name="btncikisyap" onclick="window.location.href = '{% url 'cikisurl' %}';">Çıkış Yap</button>
+                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'fiyatlamaurl' %}';">Kayıt Ol</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -380,17 +374,11 @@
                                     <form method="POST">
                                         {% csrf_token %}
                                         {{ stok.as_p }}
-                                    <div class="d-flex gap-2 justify-content-center py-3">
-                                        <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="stokekle">
-                                            Stok Ekle
-                                        </button>
-                                        <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">
-                                            Excel Yükle
-                                        </button>
-                                        <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stoklistesiurl' %}';">
-                                            Stok Listesi
-                                        </button>
-                                    </div>
+                                        <div class="d-flex gap-2 justify-content-center py-3">
+                                            <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="stokekle">Stok Ekle</button>
+                                            <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
+                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stoklistesiurl' %}';">Stok Listesi</button>
+                                        </div>
                                     </form>
                                     <p style="font-weight: bold;">Toplam Stok Miktarı:<span id="ts">{{ ts|floatformat:"-3g" }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Stok Maliyeti:<span id="ts">{{ om|floatformat:"2g" }}</span></p>
@@ -408,17 +396,11 @@
                                     <form method="POST">
                                         {% csrf_token %}
                                         {{ siparis.as_p }}
-                                    <div class="d-flex gap-2 justify-content-center py-3">
-                                        <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="sipekle">
-                                            Sipariş Ekle
-                                        </button>
-                                        <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'sipexcelyukleurl' %}';">
-                                            Excel Yükle
-                                        </button>
-                                        <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'siparislistesi' %}';">
-                                            Sipariş Listesi
-                                        </button>
-                                    </div>
+                                        <div class="d-flex gap-2 justify-content-center py-3">
+                                            <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="sipekle">Sipariş Ekle</button>
+                                            <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'sipexcelyukleurl' %}';">Excel Yükle</button>
+                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'siparislistesi' %}';">Sipariş Listesi</button>
+                                        </div>
                                     </form>
                                     <p style="font-weight: bold;">Toplam Sipariş Sayısı:<span id="ts">{{ tss|floatformat:"-3g" }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Sipariş Tutarı:<span id="ts">{{ osm|floatformat:"2g" }}</span></p>

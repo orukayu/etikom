@@ -21,10 +21,14 @@ urlpatterns = [
     path('sayim-exceli-indir/', views.sayimexcelindir, name='sayimexcelindirurl'),
 
 
+
+    path('siparis-ekle/', views.siparisekleme, name='siparisekleurl'),
+    path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),
+
     path('siparis-listesi/', views.siparisliste, name='siparislistesi'),
     path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
 
-    path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),
+    
 
 
     path('giris/', views.girisyap, name='girisurl'),

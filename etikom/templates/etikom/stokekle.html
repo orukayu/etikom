@@ -18,9 +18,9 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="d-flex gap-2 justify-content-center py-3">
-                    <button class="btn btn-primary rounded-pill px-3" type="submit" style="font-size: small" name="stokekle">Stok Ekle</button>
-                    <button class="btn btn-secondary rounded-pill px-3" type="button" style="font-size: small" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
-                    <button class="btn btn-success rounded-pill px-3" type="button" onclick="window.location.href = '{% url 'stokhareketleriurl' %}';"><small>Stok Hareketleri</small></button>
+                    <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="stokekle">Stok Ekle</button>
+                    <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stokexcelyukleurl' %}';">Excel Yükle</button>
+                    <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'stokhareketleriurl' %}';">Stok Hareketleri</button>
                 </div>
             </form>
         </div>

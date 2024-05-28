@@ -65,6 +65,7 @@ def demofirma(request):
             stok = StokFormu()
             if siparis.is_valid():
                 post = siparis.save(commit=False)
+                post.Firmaadi = request.user
                 post.save3()
                 return redirect('demofirmaurl')
         else:
@@ -105,7 +106,23 @@ def demofirma(request):
         osm = tsm / tss
 
 
-    return render(request, 'etikom/base.html', {'giris': giris, 'stok': stok, 'siparis': siparis, 'mesaj': mesaj, 'firma_adi': firma_adi, 'baslik': baslik, 'title': title, 'ts': ts, 'om': om, 'tm': tm, 'tss': tss, 'osm': osm, 'tsm': tsm})
+    context = {
+        'giris': giris,
+        'stok': stok,
+        'siparis': siparis,
+        'mesaj': mesaj,
+        'firma_adi': firma_adi,
+        'baslik': baslik,
+        'title': title,
+        'ts': ts,
+        'om': om,
+        'tm': tm,
+        'tss': tss,
+        'osm': osm,
+        'tsm': tsm,
+    }
+
+    return render(request, 'etikom/base.html', context)
 
 
 def stokliste(request, sort=None):
@@ -118,6 +135,7 @@ def stokliste(request, sort=None):
     ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
     tstc = (ksa - tstg) * (-1)
     tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+    tsts = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]
     ostm = tstm / tstg
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
@@ -148,7 +166,7 @@ def stokliste(request, sort=None):
     title = 'Stok Hareketleri'
     
 
-    return render(request, 'etikom/stoklistesi.html', {'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
+    return render(request, 'etikom/stoklistesi.html', {'tsts': tsts, 'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
 
 
 def siparisliste(request, sort=None):
@@ -455,3 +473,25 @@ def stokeklemeyap(request):
     title = 'Stok Ekle'
     
     return render(request, 'etikom/stokekle.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+
+
+def siparisekleme(request):
+
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    if request.method == "POST":
+        if 'sipekle' in request.POST:
+            siparis = SiparisFormu(request.POST)
+            if siparis.is_valid():
+                post = siparis.save(commit=False)
+                post.Firmaadi = request.user
+                post.save3()
+                return redirect('siparislistesi')
+
+    else:
+        siparis = SiparisFormu()
+
+    title = 'Sipariş Ekle'
+    
+    return render(request, 'etikom/sipekle.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
