@@ -7,7 +7,7 @@ class Siparis(models.Model):
     Siparisno = models.CharField(max_length=25)
     Pazaryeri = models.CharField(max_length=25)
     Tarih = models.DateField()
-    Stokkodu = models.CharField(max_length=20)
+    Stokkodu = models.CharField(max_length=25)
     Adet = models.IntegerField()
     Satisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)

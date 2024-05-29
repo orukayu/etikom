@@ -110,10 +110,11 @@ td#tabloadet {
 td#tablofiyat {
     text-align: right;
 }
-input {
+input, select#id_Stokkodu {
     float: right;
     text-align: right;
     max-width: 170px;
+    width: -webkit-fill-available;
 }
 .g-3 input {
     float: none;

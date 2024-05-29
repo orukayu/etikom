@@ -60,7 +60,7 @@ def demofirma(request):
                 return redirect('demofirmaurl')
 
         elif 'sipekle' in request.POST:
-            siparis = SiparisFormu(request.POST)
+            siparis = SiparisFormu(request.POST, user=request.user)
             giris = GirisFormu()
             stok = StokFormu()
             if siparis.is_valid():
@@ -71,11 +71,11 @@ def demofirma(request):
         else:
             giris = GirisFormu()
             stok = StokFormu()
-            siparis = SiparisFormu()
+            siparis = SiparisFormu(user=request.user)
     else:
         giris = GirisFormu()
         stok = StokFormu()
-        siparis = SiparisFormu()
+        siparis = SiparisFormu(user=request.user)
 
     mesaj = ''
     firma_adi = request.user.username
@@ -482,7 +482,7 @@ def siparisekleme(request):
 
     if request.method == "POST":
         if 'sipekle' in request.POST:
-            siparis = SiparisFormu(request.POST)
+            siparis = SiparisFormu(request.POST, user=request.user)
             if siparis.is_valid():
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
@@ -490,7 +490,7 @@ def siparisekleme(request):
                 return redirect('siparislistesi')
 
     else:
-        siparis = SiparisFormu()
+        siparis = SiparisFormu(user=request.user)
 
     title = 'Sipariş Ekle'
     
