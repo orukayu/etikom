@@ -242,7 +242,10 @@ def siparisliste(request, sort=None):
 
     tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
 
-    ostt = tstt / tsps
+    if tstt is None:
+        ostt = 0
+    else:
+        ostt = tstt / tsps
 
     stsys = Siparis.objects.filter(Firmaadi=firma_adi_id).count()
 
