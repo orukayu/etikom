@@ -235,14 +235,16 @@ def siparisliste(request, sort=None):
 
     tdns = fark_ay
 
-    orsp = tstc / tsps
-
-    if orsp is None:
+    if tstc == 0:
         orsp = 0
+    else:
+        orsp = tstc / tsps
 
     tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
 
     ostt = tstt / tsps
+
+    stsys = Siparis.objects.filter(Firmaadi=firma_adi_id).count()
 
     if sort == 'az-pazaryeri':
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Pazaryeri').values()
@@ -297,6 +299,7 @@ def siparisliste(request, sort=None):
         'orsp': orsp,
         'tstt': tstt,
         'ostt': ostt,
+        'stsys': stsys,
     }
 
     return render(request, 'etikom/siparislistesi.html', context)
