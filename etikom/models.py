@@ -27,7 +27,7 @@ class Siparis(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        ordering = ['Siparisno',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+        ordering = ['-id',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
 
     def __str__(self):
         return self.Siparisno

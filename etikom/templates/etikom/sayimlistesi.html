@@ -39,16 +39,16 @@
             <tbody>
                 {% for stok_kodu, values in etopla.items %}
                 <tr>
-                    <td id="tabloadet">
+                    <td class="text-center">
                         {{ forloop.counter }}
                     </td>
                     <td>
                         {{ stok_kodu }}
                     </td>
-                    <td id="tabloadet">
+                    <td class="text-center">
                         {{ values.total_adet_all }}
                     </td>
-                    <td id="tabloadet">
+                    <td class="text-center">
                         {{ values.ortalama_alisfiyati|floatformat:"2g" }}
                     </td>
                 </tr>

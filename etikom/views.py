@@ -20,6 +20,9 @@ import os
 from io import BytesIO
 from django.conf import settings
 
+from django.db.models import Min, Max
+from dateutil.relativedelta import relativedelta
+
 
 # Create your views here.
 
@@ -80,7 +83,6 @@ def demofirma(request):
     mesaj = ''
     firma_adi = request.user.username
     firma_adi_id = request.user.id
-    baslik = 'İşlemleri'
 
     stv = Stok.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
 
@@ -112,7 +114,6 @@ def demofirma(request):
         'siparis': siparis,
         'mesaj': mesaj,
         'firma_adi': firma_adi,
-        'baslik': baslik,
         'title': title,
         'ts': ts,
         'om': om,
@@ -129,14 +130,37 @@ def stokliste(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    tfta = Stok.objects.filter(Firmaadi=firma_adi_id).values('Afaturano').order_by('Afaturano').distinct().count()
-    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
-    tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]   #firma id si giriş yapılan firmanın olan ve Adet sütunu 0 dan büyük olan satırların toplamı
-    ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
-    tstc = (ksa - tstg) * (-1)
-    tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
-    tsts = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]
-    ostm = tstm / tstg
+    tfta = Stok.objects.filter(Firmaadi=firma_adi_id).values('Afaturano').order_by('Afaturano').distinct().count()   # toplam fatura sayisi
+    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()      # Toplam stok cesidi
+
+    if tsc == 0:
+        tstg = 0
+        ksa = 0
+        tstm = 0
+        ostm = 0
+    else:
+        tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
+        ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
+        tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+        ostm = tstm / tstg
+
+        # None kontrolü
+        if tstg is None:
+            tstg = 0
+            ostm = 0
+        if ksa is None:
+            ksa = 0
+            ostm = 0
+        if tstm is None:
+            tstm = 0
+            ostm = 0
+
+    # tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]   #firma id si giriş yapılan firmanın olan ve Adet sütunu 0 dan büyük olan satırların toplamı (top stk girisi)
+    # ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]        # Stok miktari
+    tstc = (ksa - tstg) * (-1)                                                                  # Stok cikisi
+    # tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok maliyeti
+    tsts = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]           # toplam stok satis bedeli
+    # ostm = tstm / tstg                                                                          # Ortalama stok maliyeti
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
@@ -164,20 +188,63 @@ def stokliste(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Stok Hareketleri'
+
+    context = {
+        'stok': stok,
+        'firma_adi': firma_adi,
+        'title': title,
+        'stsys': stsys,
+        'ostm': ostm,
+        'tstm': tstm,
+        'tsts': tsts,
+        'tfta': tfta,
+        'tsc': tsc,
+        'tstg': tstg,
+        'tstc': tstc,
+        'ksa': ksa,
+    }
     
 
-    return render(request, 'etikom/stoklistesi.html', {'tsts': tsts, 'stsys': stsys, 'stok': stok, 'firma_adi': firma_adi, 'title': title, 'tfta': tfta, 'tsc': tsc, 'tstg': tstg, 'tstc': tstc, 'ksa': ksa, 'tstm': tstm, 'ostm': ostm})
+    return render(request, 'etikom/stoklistesi.html', context)
 
 
 def siparisliste(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    if sort == 'az-sira-no':
-        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('id').values()
-    elif sort == 'za-sira-no':
-        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-id').values()
-    elif sort == 'az-pazaryeri':
+    tpys = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct().count()
+    tsps = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Siparisno').order_by('Siparisno').distinct().count()
+    tsts = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tstc = Siparis.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
+
+    if tstc is None:
+        tstc = 0
+
+    # En küçük ve en büyük tarihleri bulma
+    tarih_araligi = Siparis.objects.aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
+
+    en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
+    en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
+
+    # Tarihler arasındaki farkı hesaplama
+    if en_kucuk_tarih and en_buyuk_tarih:
+        fark = relativedelta(en_buyuk_tarih, en_kucuk_tarih)
+        fark_ay = fark.years * 12 + fark.months
+    else:
+        fark_ay = 0  # Eğer tarihlerden biri None ise, fark 0 olarak ayarlanır
+
+    tdns = fark_ay
+
+    orsp = tstc / tsps
+
+    if orsp is None:
+        orsp = 0
+
+    tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
+
+    ostt = tstt / tsps
+
+    if sort == 'az-pazaryeri':
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Pazaryeri').values()
     elif sort == 'za-pazaryeri':
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Pazaryeri').values()
@@ -217,16 +284,29 @@ def siparisliste(request, sort=None):
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
     title = 'Sipariş Listesi'
-    ek = ' sipariş raporu:'
-    baslik = firma_adi + ek
 
-    return render(request, 'etikom/siparislistesi.html', {'siparis': siparis, 'baslik': baslik, 'title': title})
+    context = {
+        'siparis': siparis,
+        'firma_adi': firma_adi,
+        'title': title,
+        'tpys': tpys,
+        'tsps': tsps,
+        'tsts': tsts,
+        'tstc': tstc,
+        'tdns': tdns,
+        'orsp': orsp,
+        'tstt': tstt,
+        'ostt': ostt,
+    }
+
+    return render(request, 'etikom/siparislistesi.html', context)
 
 
 
 def kayitol(request):
     title = 'Kayıt Ol'
     kayit = KayitFormu()
+    firma_adi = request.user.username
     if request.method == "POST":
         kayit = KayitFormu(request.POST)
 
@@ -247,7 +327,7 @@ def kayitol(request):
             else:
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
 
-    return render(request, 'etikom/kayitol.html', {'kayit': kayit, 'title': title})
+    return render(request, 'etikom/kayitol.html', {'firma_adi': firma_adi, 'kayit': kayit, 'title': title})
 
 
 
@@ -286,7 +366,6 @@ def stokexcelyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
 
-    # ... iletişim sayfası içeriğini oluşturun
     if request.method == "POST":
         if 'excel_file' in request.FILES:
             excel_file = request.FILES['excel_file']
@@ -300,7 +379,7 @@ def stokexcelyuklemeyap(request):
                     Toplam = row['Toplam'],
                     Firmaadi = request.user
                 )
-                stok.save()
+                stok.save1()
             
             return redirect('stoklistesiurl')
 
@@ -309,9 +388,28 @@ def stokexcelyuklemeyap(request):
 
 def sipexcelyuklemeyap(request):
     title = 'Excel Yükle'
-    baslik = 'Excel ile Sipariş Yükleme Sayfası'
-    # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/sipexcelyukle.html', {'baslik': baslik, 'title': title})
+    firma_adi = request.user.username
+
+    if request.method == "POST":
+        if 'excel_file' in request.FILES:
+            excel_file = request.FILES['excel_file']
+            df = pd.read_excel(excel_file)
+            for index, row in df.iterrows():
+                sip = Siparis(
+                    Pazaryeri = row['Pazaryeri'],
+                    Tarih = row['Sipariş Tarihi'],
+                    Siparisno = row['Sipariş No'],
+                    Stokkodu = row['Stok Kodu'],
+                    Adet = row['Adet'],
+                    Satisfiyati = row['Satış Fiyatı'],
+                    Komisyon = row['Komisyon (%)'],
+                    Firmaadi = request.user
+                )
+                sip.save3()
+            
+            return redirect('siparislistesiurl')
+    
+    return render(request, 'etikom/sipexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 
 def stokexceliindir(request):

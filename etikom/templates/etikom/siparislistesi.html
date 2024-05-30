@@ -1,19 +1,57 @@
 {% extends 'etikom/base.html' %}
 
+{% block baslik %}
+<div class="col-12 col-sm-5">
+    <h1 class="h4">{{ firma_adi|title }} Özet Sipariş Raporu</h1>
+</div>
+<div>
+    <p>
+        Değiştirmek veya silmek istediğiniz satır için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, pazaryerine ait bilgiler için <strong>Pazaryeri</strong> adına, tarihe ait siparişler için <strong>Tarih</strong>'e ve aynı üründen alan siparişler içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+    </p>
+</div>  
+{% endblock %}
+
 {% block content %}
-<div class="siparislistesi">
-    <h6>
-        Değiştirmek istediğiniz satır için Sıra No sayısına, pazaryerine ait detaylar için Pazaryeri Adına, ürün detayı içinde Stok Kodu'na tıklayabilirsiniz. Sayfa Özeti bölümünden sayfaya ait durum raporlarını görebilirsiniz.
-    </h6>
-    <h4>
-        Ayrıntılı Sipariş Listeniz
-    </h4>
+<div class="stoklistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Pazaryeri Sayısı: <strong>{{ tpys|floatformat:"-3g" }}</strong></li>
+                <li>Sipariş Sayısı: <strong>{{ tsps|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Stok Çeşidi: <strong>{{ tsts|floatformat:"-3g" }}</strong></li>
+                <li>Stok Çıkışı: <strong>{{ tstc|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Dönem Sayısı: <strong>{{ tdns|floatformat:"-3g" }} Ay</strong></li>
+                <li>Sipariş Ort.: <strong>{{ orsp|floatformat:"-3g" }} Ürün</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Satış: <strong>{{ tstt|floatformat:"2g" }}</strong></li>
+                <li>Ort. Satış: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+        <h4>
+            Sipariş Listeniz;
+        </h4>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
+        </div>
+    </div>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead class="table-light">
                 <tr>
-                    <th scope="col">Sıra No<br>
-                        (<a href="{% url 'siparissiralama' sort='az-sira-no' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-sira-no' %}">Z</a>)
+                    <th scope="col">Detay<br>
                     </th>
                     <th scope="col">Pazaryeri<br>
                         (<a href="{% url 'siparissiralama' sort='az-pazaryeri' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-pazaryeri' %}">Z</a>)
@@ -48,39 +86,46 @@
                 {% for siparis in siparis %}
                 <tr>
                     <td>
-                        {{ siparis.id}}
+                        <form method="post" class="text-center" action="{% url 'stokduzeltmeurl' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="pk" value="{{ siparis.id }}">
+                            <button type="submit" class="btn"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></button>
+                        </form>
                     </td>
                     <td>
                         {{ siparis.Pazaryeri}}
                     </td>
-                    <td>
-                        {{ siparis.Tarih|date:"d/m/Y" }}
+                    <td class="text-center">
+                        {{ siparis.Tarih|date:"d.m.Y" }}
                     </td>
-                    <td>
+                    <td class="text-center">
                         {{ siparis.Siparisno }}
                     </td>
                     <td>
                         {{ siparis.Stokkodu }}
                     </td>
-                    <td id="tabloadet">
+                    <td class="text-center">
                         {{ siparis.Adet }}
                     </td>
-                    <td id="tablofiyat">
+                    <td class="text-end">
                         {{ siparis.Satisfiyati }}
                     </td>
-                    <td id="tablofiyat">
+                    <td class="text-end">
                         {{ siparis.Toplam }}
                     </td>
-                    <td id="tabloadet">
+                    <td class="text-center">
                         {{ siparis.Komisyon }}
                     </td>
-                    <td id="tablofiyat">
+                    <td class="text-end">
                         {{ siparis.Komisyontutari }}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="mb-2 px-3 border-bottom">
+        <p> stsys  Satır</p>
     </div>
 </div>
 {% endblock %}

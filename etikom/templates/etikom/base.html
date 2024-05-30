@@ -155,8 +155,8 @@
             <div class="row">
                 <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
                     <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="sidebarMenuLabel">{{ firma_adi|title }} Menü</h5>
+                        <div class="offcanvas-header mt-3">
+                            <h5 class="offcanvas-title" id="sidebarMenuLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
@@ -184,7 +184,9 @@
                                     </li>
                                 </ul>
                                 
-                                <hr class="my-3">
+                                <h6 class="sidebar-heading text-center align-items-center px-3 mt-4 text-body-secondary text-uppercase">
+                                    <span>{{ firma_adi|title }}</span><hr class="mt-0">
+                                </h6>
 
                                 <ul class="nav flex-column mb-auto">
                                     <li class="nav-item">
@@ -238,7 +240,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'siparislistesi' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'siparislistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                         <svg class="bi"><use xlink:href="#graph-up-arrow"></use></svg>Sipariş Listesi
                                                     </a>
                                                 </li>
@@ -280,7 +282,7 @@
                     <div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
                         {% block baslik %}
                         <div class="col-12 col-sm-5">
-                            <h1 class="h4">{{ firma_adi|title }} {{ baslik|title }}</h1>
+                            <h1 class="h4">{{ firma_adi|title }} İşlemleri</h1>
                         </div>
                         {% endblock %}
                     </div>
@@ -399,7 +401,7 @@
                                         <div class="d-flex gap-2 justify-content-center py-3">
                                             <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="sipekle">Sipariş Ekle</button>
                                             <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'sipexcelyukleurl' %}';">Excel Yükle</button>
-                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'siparislistesi' %}';">Sipariş Listesi</button>
+                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'siparislistesiurl' %}';">Sipariş Listesi</button>
                                         </div>
                                     </form>
                                     <p style="font-weight: bold;">Toplam Sipariş Sayısı:<span id="ts">{{ tss|floatformat:"-3g" }}</span></p>
