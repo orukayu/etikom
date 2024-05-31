@@ -45,7 +45,7 @@ class SiparisFormu(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
-            self.fields['Stokkodu'].queryset = Stok.objects.filter(Firmaadi=user).values_list('Stokkodu', flat=True).order_by('Stokkodu').distinct()
+            self.fields['Stokkodu'].queryset = Stok.objects.filter(Firmaadi=user.id).values_list('Stokkodu', flat=True).order_by('Stokkodu').distinct()
 
 
     def clean_Tarih(self):
