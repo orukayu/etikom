@@ -65,6 +65,6 @@ class StokFormu(forms.ModelForm):
             'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12'}),
             'Adet': forms.TextInput(attrs={'placeholder': '4'}),
             'Alisfiyati': forms.TextInput(attrs={'placeholder': '27.50'}),
-            'Toplam': forms.TextInput(attrs={'placeholder': '110'}),
+            'Toplam': forms.TextInput(attrs={'placeholder': '110.00'}),
         }
 

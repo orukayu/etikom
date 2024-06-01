@@ -131,7 +131,7 @@ def stokliste(request, sort=None):
     firma_adi_id = request.user.id
 
     tfta = Stok.objects.filter(Firmaadi=firma_adi_id).values('Afaturano').order_by('Afaturano').distinct().count()   # toplam fatura sayisi
-    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()      # Toplam stok cesidi
+    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()      # Toplam stok cesidi sayısı
 
     if tsc == 0:
         tstg = 0
@@ -155,12 +155,9 @@ def stokliste(request, sort=None):
             tstm = 0
             ostm = 0
 
-    # tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]   #firma id si giriş yapılan firmanın olan ve Adet sütunu 0 dan büyük olan satırların toplamı (top stk girisi)
-    # ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]        # Stok miktari
-    tstc = (ksa - tstg) * (-1)                                                                  # Stok cikisi
-    # tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok maliyeti
-    tsts = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]           # toplam stok satis bedeli
-    # ostm = tstm / tstg                                                                          # Ortalama stok maliyeti
+    tstc = (ksa - tstg) * (-1)                                                                                      # Stok cikisi
+
+    tsts = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok satis bedeli
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
@@ -599,3 +596,40 @@ def siparisekleme(request):
     title = 'Sipariş Ekle'
     
     return render(request, 'etikom/sipekle.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
+
+
+def stokfaturasi(request, sort):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Fatura Detayı'
+    fatura = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort)
+
+    tstc = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tsta = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).aggregate(Sum("Adet"))["Adet__sum"]
+
+    if tsta <= 0:
+        tip = 'Toptan Satış'
+    else:
+        tip = 'Alım'
+    
+    tsta = abs(tsta)
+
+    sftt = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).aggregate(Sum("Toplam"))["Toplam__sum"]
+
+    sftt = abs(sftt)
+
+    oafi = sftt / tsta
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+        'sort': sort,
+        'fatura': fatura,
+        'tstc': tstc,
+        'tsta': tsta,
+        'sftt': sftt,
+        'tip': tip,
+        'oafi': oafi,
+    }
+
+    return render(request, 'etikom/stokfaturasi.html', context)

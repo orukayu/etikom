@@ -1,14 +1,12 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<div class="col-12 col-sm-5">
-    <h1 class="h4">{{ firma_adi|title }} Özet Sipariş Raporu</h1>
-</div>
-<div>
-    <p>
+<dl class="row">
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Özet Sipariş Raporu</h4></dt>
+    <dd class="col-sm-9">
         Değiştirmek veya silmek istediğiniz satır için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, pazaryerine ait bilgiler için <strong>Pazaryeri</strong> adına, tarihe ait siparişler için <strong>Tarih</strong>'e ve aynı üründen alan siparişler içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
-    </p>
-</div>  
+    </dd>
+</dl>
 {% endblock %}
 
 {% block content %}
@@ -29,7 +27,7 @@
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
                 <li>Dönem Sayısı: <strong>{{ tdns|floatformat:"-3g" }} Ay</strong></li>
-                <li>Sipariş Ort.: <strong>{{ orsp|floatformat:"-3g" }} Ürün</strong></li>
+                <li>Sipariş Ort.: <strong>{{ orsp|floatformat:"g" }} Ürün</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
@@ -40,9 +38,9 @@
         </div>
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
-        <h4>
+        <h5>
             Sipariş Listeniz;
-        </h4>
+        </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
         </div>
@@ -124,7 +122,7 @@
             </tbody>
         </table>
     </div>
-    <div class="mb-2 px-3 border-bottom">
+    <div class="mb-2 px-3">
         <p>{{ stsys }} Satır</p>
     </div>
 </div>

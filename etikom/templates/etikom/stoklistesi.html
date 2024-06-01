@@ -1,14 +1,12 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<div class="col-12 col-sm-5">
-    <h1 class="h4">{{ firma_adi|title }} Özet Stok Raporu</h1>
-</div>
-<div>
-    <p>
+<dl class="row">
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Özet Stok Raporu</h4></dt>
+    <dd class="col-sm-9">
         Değiştirmek veya silmek istediğiniz satır için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, faturaya ait bilgiler için <strong>Fatura Numarasına</strong>, ürüne ait hareketler içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
-    </p>
-</div>  
+    </dd>
+</dl>
 {% endblock %}
 
 {% block content %}
@@ -40,9 +38,9 @@
         </div>
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
-        <h4>
+        <h5>
             Stok Hareketleriniz;
-        </h4>
+        </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
         </div>
@@ -81,7 +79,7 @@
                         </form>
                     </td>
                     <td>
-                        {{ stok.Afaturano }}
+                        <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>
                     </td>
                     <td>
                         {{ stok.Stokkodu }}
@@ -100,7 +98,7 @@
             </tbody>
         </table>
     </div>
-    <div class="mb-2 px-3 border-bottom">
+    <div class="mb-2 px-3">
         <p>{{ stsys }} Satır</p>
     </div>
 </div>
