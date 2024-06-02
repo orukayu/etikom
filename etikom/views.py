@@ -633,3 +633,47 @@ def stokfaturasi(request, sort):
     }
 
     return render(request, 'etikom/stokfaturasi.html', context)
+
+
+
+def stokgecmisi(request, sort):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Stok Geçmişi'
+
+    stok = Stok.objects.filter(Firmaadi=firma_adi_id, Stokkodu=sort)
+    
+    ma = Stok.objects.filter(Firmaadi=firma_adi_id, Stokkodu=sort).aggregate(Sum("Adet"))["Adet__sum"]
+    tstc = Stok.objects.filter(Firmaadi=firma_adi_id, Stokkodu=sort, Adet__lte=0).aggregate(Sum("Adet"))["Adet__sum"]
+    
+    if tstc == None:
+        tstc = 0
+    else:
+        tstc = abs(tstc)
+
+    tsaf = Stok.objects.filter(Firmaadi=firma_adi_id, Stokkodu=sort, Adet__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+    soaf = tsaf / (ma + tstc)
+
+    tssf = Stok.objects.filter(Firmaadi=firma_adi_id, Stokkodu=sort, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+    if tssf == None:
+        tssf = 0
+
+    if tstc != 0:
+        sosf = tssf / tstc
+        sosf = abs(sosf)
+    else:
+        sosf = 0
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+        'sort': sort,
+        'stok': stok,
+        'ma': ma,
+        'tstc': tstc,
+        'soaf': soaf,
+        'sosf': sosf,
+    }
+
+    return render(request, 'etikom/stokgecmisi.html', context)
+

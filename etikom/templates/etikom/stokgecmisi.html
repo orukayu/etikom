@@ -2,7 +2,7 @@
 
 {% block baslik %}
 <div class="col-12 col-sm-5">
-    <h4>{{ firma_adi|title }} Fatura Detayı</h4>
+    <h4>{{ firma_adi|title }} Stok Geçmişi</h4>
 </div>
 <div>
     <p>
@@ -15,28 +15,28 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Stok Çeşidi: <strong>{{ tstc|floatformat:"-3g" }}</strong></li>
+                <li>Mevcut Adet: <strong>{{ ma|floatformat:"-3g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Toplam Adet: <strong>{{ tsta|floatformat:"-3g" }}</strong></li>
+                <li>Toplam Çıkış: <strong>{{ tstc|floatformat:"-3g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Fatura Toplamı: <strong>{{ sftt|floatformat:"2g" }}</strong></li>
+                <li>Ort. Alış Fiyatı: <strong>{{ soaf|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Ort. Fiyat: <strong>{{ oafi|floatformat:"2g" }}</strong></li>
+                <li>Ort. Satış Fiyatı: <strong>{{ sosf|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Fatura No; {{ sort }} <small class="blockquote-footer">{{ tip }} Faturası</small>
+            Stok Kodu; {{ sort }}
         </h5>
     </div>
     <div class="table-responsive small">
@@ -45,7 +45,7 @@
                 <tr>
                     <th scope="col" class="pt-3 pb-3">Sıra No
                     </th>
-                    <th scope="col" class="pt-3 pb-3">Stok Kodu
+                    <th scope="col" class="pt-3 pb-3">Fatura No
                     </th>
                     <th scope="col" class="pt-3 pb-3">Adet
                     </th>
@@ -56,22 +56,22 @@
                 </tr>
             </thead>
             <tbody>
-                {% for fatura in fatura %}
+                {% for stok in stok %}
                 <tr>
                     <td class="text-center">
                         {{ forloop.counter }}
                     </td>
                     <td>
-                        <a href="{% url 'stokgecmisiurl' sort=fatura.Stokkodu %}">{{ fatura.Stokkodu }}</a>
+                        <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>
                     </td>
                     <td class="text-center">
-                        {{ fatura.Adet }}
+                        {{ stok.Adet }}
                     </td>
                     <td class="text-end">
-                        {{ fatura.Alisfiyati }}
+                        {{ stok.Alisfiyati }}
                     </td>
                     <td class="text-end">
-                        {{ fatura.Toplam }}
+                        {{ stok.Toplam }}
                     </td>
                 </tr>
                 {% endfor %}

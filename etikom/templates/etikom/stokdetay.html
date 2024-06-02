@@ -2,7 +2,7 @@
 
 {% block baslik %}
 <div class="col-12 col-sm-5">
-    <h1 class="h4">{{ firma_adi|title }} Stok Detayı</h1>
+    <h1 class="h4">{{ firma_adi|title }} Stok Düzeltme</h1>
 </div>
 {% endblock %}
 
@@ -10,7 +10,7 @@
 <div class="col-sm-6 col-lg-4 mb-4 mt-3">
     <div class="card mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
-            <h4 class="my-0 fw-normal text-center">Stok Detay İşlemleri</h4>
+            <h4 class="my-0 fw-normal text-center">Stok Düzeltme İşlemleri</h4>
         </div>
         <div class="card-body">
             <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Daha önce eklemiş olduğunuz aşağıda ki stok bilgilerini, değiştirerek tekrar ekleyebilir veya silebilirsiniz.</small></h5>
@@ -21,14 +21,14 @@
                     <form method="post">
         				{% csrf_token %}
         				<input type="hidden" name="pk" value="{{ form.instance.pk }}">
-        				<button type="submit" class="btn btn-primary rounded-pill px-3" name="stokekle"><small>Stok Ekle</small></button>
+        				<button type="submit" class="btn btn-primary rounded-pill px-3" name="stokekle">Stok Ekle</button>
     				</form>
                     <form method="post">
         				{% csrf_token %}
         				<input type="hidden" name="pk" value="{{ form.instance.pk }}">
-        				<button type="submit" class="btn btn-secondary rounded-pill px-3" name="stoksil"><small>Stok Sil</small></button>
+        				<button type="submit" class="btn btn-secondary rounded-pill px-3" name="stoksil">Stok Sil</button>
     				</form>
-                    <button class="btn btn-success rounded-pill px-3" type="button" onclick="window.location.href = '{% url 'stokhareketleriurl' %}';"><small>Stok Hareketleri</small></button>
+                    <button class="btn btn-success rounded-pill px-3" type="button" onclick="window.location.href = '{% url 'stokhareketleriurl' %}';">Stok Hareketleri</button>
                 </div>
             </form>
         </div>

@@ -28,7 +28,7 @@
                     </th>
                     <th scope="col" class="pt-3 pb-3">Stok Kodu
                     </th>
-                    <th scope="col" class="pt-3 pb-3">Toplam Adet
+                    <th scope="col" class="pt-3 pb-3">Mevcut Adet
                     </th>
                     <th scope="col" class="pt-3 pb-3">Ort. Alış Fiyatı
                     </th>
@@ -41,7 +41,7 @@
                         {{ forloop.counter }}
                     </td>
                     <td>
-                        {{ stok_kodu }}
+                        <a href="{% url 'stokgecmisiurl' sort=stok_kodu %}">{{ stok_kodu }}</a>
                     </td>
                     <td class="text-center">
                         {{ values.total_adet_all }}

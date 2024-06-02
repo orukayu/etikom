@@ -15,13 +15,13 @@ urlpatterns = [
     path('stok-hareketleri/', views.stokliste, name='stokhareketleriurl'),
     path('stok-hareketleri/<str:sort>/', views.stokliste, name='hareketsiralamaurl'),
 
-    path('stok-detayi/', views.stokduzeltme, name='stokduzeltmeurl'),
+    path('stok-duzeltme/', views.stokduzeltme, name='stokduzeltmeurl'),
     
     path('stok-exceli-indir/', views.stokexceliindir, name='stokexcelindirurl'),
     path('sayim-exceli-indir/', views.sayimexcelindir, name='sayimexcelindirurl'),
 
     path('fatura-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
-
+    path('stok-gecmisi/<str:sort>/', views.stokgecmisi, name='stokgecmisiurl'),
 
     path('siparis-ekle/', views.siparisekleme, name='siparisekleurl'),
     path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),

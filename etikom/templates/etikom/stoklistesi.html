@@ -4,7 +4,7 @@
 <dl class="row">
     <dt class="col-sm-3"><h4>{{ firma_adi|title }} Özet Stok Raporu</h4></dt>
     <dd class="col-sm-9">
-        Değiştirmek veya silmek istediğiniz satır için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, faturaya ait bilgiler için <strong>Fatura Numarasına</strong>, ürüne ait hareketler içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+        Değiştirmek veya silmek istediğiniz satır için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, faturaya ait bilgiler için <strong>Fatura Numarasına</strong>, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
     </dd>
 </dl>
 {% endblock %}
@@ -82,7 +82,7 @@
                         <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>
                     </td>
                     <td>
-                        {{ stok.Stokkodu }}
+                        <a href="{% url 'stokgecmisiurl' sort=stok.Stokkodu %}">{{ stok.Stokkodu }}</a>
                     </td>
                     <td class="text-center">
                         {{ stok.Adet }}
