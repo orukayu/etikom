@@ -588,7 +588,7 @@ def siparisekleme(request):
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
                 post.save3()
-                return redirect('siparislistesi')
+                return redirect('siparislistesiurl')
 
     else:
         siparis = SiparisFormu(user=request.user)
@@ -677,3 +677,31 @@ def stokgecmisi(request, sort):
 
     return render(request, 'etikom/stokgecmisi.html', context)
 
+def siparisduzeltme(request):
+
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    pk = request.POST.get('pk')
+
+    kontrol = get_object_or_404(Siparis, pk=pk)
+    siparis = SiparisFormu(instance=kontrol, user=request.user)
+
+    if request.method == "POST":
+        if 'siparissil' in request.POST:
+            kontrol.delete()
+            return redirect('siparislistesiurl')
+        elif 'siparisekle' in request.POST:
+            siparis = SiparisFormu(request.POST, instance=kontrol, user=request.user)
+            if siparis.is_valid():
+                post = siparis.save(commit=False)
+                post.Firmaadi = request.user
+                post.save3()
+                return redirect('siparislistesiurl')
+
+    else:
+        siparis = SiparisFormu(instance=kontrol, user=request.user)
+
+    title = 'Sipariş Detayı'
+    
+    return render(request, 'etikom/siparisdetay.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})

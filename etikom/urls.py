@@ -29,7 +29,7 @@ urlpatterns = [
     path('siparis-listesi/', views.siparisliste, name='siparislistesiurl'),
     path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
 
-    
+    path('siparis-duzeltme/', views.siparisduzeltme, name='siparisduzeltmeurl'),
 
 
     path('giris/', views.girisyap, name='girisurl'),

@@ -84,7 +84,7 @@
                 {% for siparis in siparis %}
                 <tr>
                     <td>
-                        <form method="post" class="text-center" action="{% url 'stokduzeltmeurl' %}">
+                        <form method="post" class="text-center" action="{% url 'siparisduzeltmeurl' %}">
                             {% csrf_token %}
                             <input type="hidden" name="pk" value="{{ siparis.id }}">
                             <button type="submit" class="btn"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></button>

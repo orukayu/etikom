@@ -30,7 +30,7 @@ class SiparisFormu(forms.ModelForm):
         labels = {"Komisyon" : "Komisyon (%)", "Siparisno" : "Sipariş No", "Tarih" : "Sipariş Tarihi", "Stokkodu" : "Stok Kodu", "Satisfiyati" : "Satış Fiyatı"}
         widgets = {            
             'Pazaryeri': forms.TextInput(attrs={'placeholder': 'Trendyol, HB, N11 vb.'}),
-            'Tarih': forms.DateInput(format='%d-%m-%Y', attrs={'placeholder': '28/04/2024'}),
+            'Tarih': forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': '28/04/2024'}),
             'Siparisno': forms.TextInput(attrs={'placeholder': '2155139405'}),
             'Adet': forms.TextInput(attrs={'placeholder': '4'}),
             'Satisfiyati': forms.TextInput(attrs={'placeholder': '137.50'}),
@@ -38,7 +38,7 @@ class SiparisFormu(forms.ModelForm):
         }
 
         input_formats = {
-            'Tarih': ['%d-%m-%Y'],
+            'Tarih': ['%d/%m/%Y'],
         }
 
     def __init__(self, *args, **kwargs):
@@ -46,6 +46,8 @@ class SiparisFormu(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if user:
             self.fields['Stokkodu'].queryset = Stok.objects.filter(Firmaadi=user.id).values_list('Stokkodu', flat=True).order_by('Stokkodu').distinct()
+        if self.instance and self.instance.pk:
+            self.fields['Stokkodu'].initial = self.instance.Stokkodu
 
 
     def clean_Tarih(self):
