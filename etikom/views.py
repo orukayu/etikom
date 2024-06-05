@@ -70,6 +70,18 @@ def demofirma(request):
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
                 post.save3()
+
+                # Stok modeline kaydedilecek verileri ayir
+                sipno = siparis.cleaned_data['Siparisno']
+                stokkodu = siparis.cleaned_data['Stokkodu']
+                sayi = siparis.cleaned_data['Adet']
+                adet = sayi * -1
+                satfiyat = siparis.cleaned_data['Satisfiyati']
+                Firmaadi = request.user
+
+                # Stok modelini olustur ve kaydet
+                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat)
+                stok.save1()
                 return redirect('demofirmaurl')
         else:
             giris = GirisFormu()
@@ -155,9 +167,14 @@ def stokliste(request, sort=None):
             tstm = 0
             ostm = 0
 
-    tstc = (ksa - tstg) * (-1)                                                                                      # Stok cikisi
+    tstc = abs(ksa - tstg)                                                                                      # Stok cikisi
 
-    tsts = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok satis bedeli
+    if tstc == 0:
+        tsatis = 0
+    else:
+        tsatis = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok satis bedeli
+
+    tsts = abs(tsatis)
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
@@ -173,9 +190,9 @@ def stokliste(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Adet').values()
     elif sort == 'za-adet':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Adet').values()
-    elif sort == 'az-alis-fiyati':
+    elif sort == 'az-fiyat':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Alisfiyati').values()
-    elif sort == 'za-alis-fiyati':
+    elif sort == 'za-fiyat':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Alisfiyati').values()
     elif sort == 'az-toplam':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
@@ -218,19 +235,23 @@ def siparisliste(request, sort=None):
         tstc = 0
 
     # En küçük ve en büyük tarihleri bulma
-    tarih_araligi = Siparis.objects.aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
+    tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
 
     en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
     en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
 
     # Tarihler arasındaki farkı hesaplama
-    if en_kucuk_tarih and en_buyuk_tarih:
+    if en_buyuk_tarih and en_kucuk_tarih:
         fark = relativedelta(en_buyuk_tarih, en_kucuk_tarih)
         fark_ay = fark.years * 12 + fark.months
+        if fark_ay == 0:
+            tdns = 1
+        elif fark_ay == None:
+            tdns = 0
+        else:
+            tdns = fark_ay + 1
     else:
-        fark_ay = 0  # Eğer tarihlerden biri None ise, fark 0 olarak ayarlanır
-
-    tdns = fark_ay
+        tdns = 0
 
     if tstc == 0:
         orsp = 0
@@ -240,6 +261,7 @@ def siparisliste(request, sort=None):
     tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
 
     if tstt is None:
+        tstt = 0
         ostt = 0
     else:
         ostt = tstt / tsps
@@ -409,7 +431,15 @@ def sipexcelyuklemeyap(request):
                     Firmaadi = request.user
                 )
                 sip.save3()
-            
+                stk = Stok(
+                    Firmaadi = request.user,
+                    Afaturano = row['Sipariş No'],
+                    Stokkodu = row['Stok Kodu'],
+                    Adet = row['Adet'] * -1,
+                    Alisfiyati = row['Satış Fiyatı'],
+                )
+                stk.save1()
+
             return redirect('siparislistesiurl')
     
     return render(request, 'etikom/sipexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
@@ -588,6 +618,17 @@ def siparisekleme(request):
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
                 post.save3()
+
+                sipno = siparis.cleaned_data['Siparisno']
+                stokkodu = siparis.cleaned_data['Stokkodu']
+                sayi = siparis.cleaned_data['Adet']
+                adet = sayi * -1
+                satfiyat = siparis.cleaned_data['Satisfiyati']
+                Firmaadi = request.user
+
+                # Book kaydet
+                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat)
+                stok.save1()
                 return redirect('siparislistesiurl')
 
     else:
