@@ -474,32 +474,44 @@ def stokexceliindir(request):
 
 
 
-def stokduzeltme(request):
-
+def stokduzeltme(request, sort, pk):
+    
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    pk = request.POST.get('pk')
-    kontrol = get_object_or_404(Stok, pk=pk)
-    form = StokFormu(instance=kontrol)
+    if firma_adi != sort:
+        return redirect('demofirmaurl')
 
-    if request.method == "POST":
-        if 'stoksil' in request.POST:
-            kontrol.delete()
-            return redirect('stoklistesiurl')
-        elif 'stokekle' in request.POST:
-            form = StokFormu(request.POST, instance=kontrol)
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.Firmaadi = request.user
-                post.save1()
+    fa = sort
+    pk = pk
+
+    sipbncek = Stok.objects.filter(id=pk).values_list('Afaturano', flat=True).first()
+    sipvarmi = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipbncek).exists()
+    
+    if not sipvarmi:
+        kontrolstok = get_object_or_404(Stok, pk=pk)
+
+        if request.method == "POST":
+            form = StokFormu(request.POST, instance=kontrolstok)
+            if 'stoksil' in request.POST:
+                kontrolstok.delete()
                 return redirect('stoklistesiurl')
-
+            elif 'stokekle' in request.POST:
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.Firmaadi = request.user
+                    post.save()
+                    return redirect('stoklistesiurl')
+        else:
+            form = StokFormu(instance=kontrolstok)
     else:
-        form = StokFormu(instance=kontrol)
+        sk = Stok.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+        pk = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipbncek, Stokkodu=sk).values_list('id', flat=True).first()
+
+        return redirect('siparisduzeltmeurl', sort, pk)
 
     title = 'Stok Detayı'
-    
+    form = StokFormu(instance=kontrolstok)
     return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 
@@ -649,9 +661,9 @@ def stokfaturasi(request, sort):
     tsta = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).aggregate(Sum("Adet"))["Adet__sum"]
 
     if tsta <= 0:
-        tip = 'Toptan Satış'
+        tip = 'ile Satış'
     else:
-        tip = 'Alım'
+        tip = 'ile Alım'
     
     tsta = abs(tsta)
 
@@ -718,19 +730,25 @@ def stokgecmisi(request, sort):
 
     return render(request, 'etikom/stokgecmisi.html', context)
 
-def siparisduzeltme(request):
+def siparisduzeltme(request, sort, pk):
 
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    pk = request.POST.get('pk')
+    if firma_adi != sort:
+        return redirect('demofirmaurl')
 
     kontrol = get_object_or_404(Siparis, pk=pk)
     siparis = SiparisFormu(instance=kontrol, user=request.user)
 
+    sinca = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
+    stkca = Siparis.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+    kstok = get_object_or_404(Stok, Afaturano=sinca, Stokkodu=stkca)
+
     if request.method == "POST":
         if 'siparissil' in request.POST:
             kontrol.delete()
+            kstok.delete()
             return redirect('siparislistesiurl')
         elif 'siparisekle' in request.POST:
             siparis = SiparisFormu(request.POST, instance=kontrol, user=request.user)
@@ -738,11 +756,22 @@ def siparisduzeltme(request):
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
                 post.save3()
+
+                kstok.delete()
+                sipno = siparis.cleaned_data['Siparisno']
+                stokkodu = siparis.cleaned_data['Stokkodu']
+                sayi = siparis.cleaned_data['Adet']
+                adet = sayi * -1
+                satfiyat = siparis.cleaned_data['Satisfiyati']
+                
+                kstok.Firmaadi = request.user
+                kstok.Afaturano = sipno
+                kstok.Stokkodu = stokkodu
+                kstok.Adet = adet
+                kstok.Alisfiyati = satfiyat
+                kstok.save1()
+
                 return redirect('siparislistesiurl')
 
-    else:
-        siparis = SiparisFormu(instance=kontrol, user=request.user)
-
     title = 'Sipariş Detayı'
-    
     return render(request, 'etikom/siparisdetay.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})

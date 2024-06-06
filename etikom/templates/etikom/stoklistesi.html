@@ -14,7 +14,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Fatura Sayısı: <strong>{{ tfta|floatformat:"-3g" }}</strong></li>
+                <li>Belge Sayısı: <strong>{{ tfta|floatformat:"-3g" }}</strong></li>
                 <li>Stok Çeşidi: <strong>{{ tsc|floatformat:"-3g" }}</strong></li>
             </ul>
         </div>
@@ -71,12 +71,8 @@
             <tbody>
                 {% for stok in stok %}
                 <tr>
-                    <td>
-                        <form method="post" class="text-center" action="{% url 'stokduzeltmeurl' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="pk" value="{{ stok.id }}">
-                            <button type="submit" class="btn"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></button>
-                        </form>
+                    <td class="text-center">
+                        <a href="{% url 'stokduzeltmeurl' sort=stok.Firmaadi pk=stok.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td>
                         <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>

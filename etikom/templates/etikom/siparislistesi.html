@@ -83,12 +83,8 @@
             <tbody>
                 {% for siparis in siparis %}
                 <tr>
-                    <td>
-                        <form method="post" class="text-center" action="{% url 'siparisduzeltmeurl' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="pk" value="{{ siparis.id }}">
-                            <button type="submit" class="btn"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></button>
-                        </form>
+                    <td class="text-center">
+                        <a href="{% url 'siparisduzeltmeurl' sort=siparis.Firmaadi pk=siparis.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td>
                         {{ siparis.Pazaryeri}}
