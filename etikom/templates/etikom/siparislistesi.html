@@ -84,7 +84,7 @@
                 {% for siparis in siparis %}
                 <tr>
                     <td class="text-center">
-                        <a href="{% url 'siparisduzeltmeurl' sort=siparis.Firmaadi pk=siparis.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                        <a href="{% url 'siparisduzeltmeurl' firma=firma pk=siparis.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td>
                         {{ siparis.Pazaryeri}}

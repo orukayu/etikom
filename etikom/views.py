@@ -201,6 +201,7 @@ def stokliste(request, sort=None):
     else:
         stok = Stok.objects.filter(Firmaadi=firma_adi_id)
 
+    firma = request.user.username
     title = 'Stok Hareketleri'
 
     context = {
@@ -216,6 +217,7 @@ def stokliste(request, sort=None):
         'tstg': tstg,
         'tstc': tstc,
         'ksa': ksa,
+        'firma': firma,
     }
     
 
@@ -307,6 +309,7 @@ def siparisliste(request, sort=None):
     else:
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
+    firma = request.user.username
     title = 'Sipariş Listesi'
 
     context = {
@@ -322,6 +325,7 @@ def siparisliste(request, sort=None):
         'tstt': tstt,
         'ostt': ostt,
         'stsys': stsys,
+        'firma': firma,
     }
 
     return render(request, 'etikom/siparislistesi.html', context)
@@ -453,10 +457,10 @@ def stokexceliindir(request):
 
     # Stok verilerini bir DataFrame'e dönüştür
     data = {
-        'Fatura No': [stok.Afaturano for stok in stoklar],
+        'Belge No': [stok.Afaturano for stok in stoklar],
         'Stok Kodu': [stok.Stokkodu for stok in stoklar],
         'Adet': [stok.Adet for stok in stoklar],
-        'Alış Fiyatı': [stok.Alisfiyati for stok in stoklar],
+        'Fiyat': [stok.Alisfiyati for stok in stoklar],
         'Toplam': [stok.Toplam for stok in stoklar],
     }
     df = pd.DataFrame(data)
@@ -474,15 +478,15 @@ def stokexceliindir(request):
 
 
 
-def stokduzeltme(request, sort, pk):
+def stokduzeltme(request, firma, pk):
     
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    if firma_adi != sort:
+    if firma_adi != firma:
         return redirect('demofirmaurl')
 
-    fa = sort
+    fa = firma
     pk = pk
 
     sipbncek = Stok.objects.filter(id=pk).values_list('Afaturano', flat=True).first()
@@ -508,7 +512,7 @@ def stokduzeltme(request, sort, pk):
         sk = Stok.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
         pk = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipbncek, Stokkodu=sk).values_list('id', flat=True).first()
 
-        return redirect('siparisduzeltmeurl', sort, pk)
+        return redirect('siparisduzeltmeurl', firma, pk)
 
     title = 'Stok Detayı'
     form = StokFormu(instance=kontrolstok)
@@ -580,7 +584,7 @@ def sayimexcelindir(request):
     # Stok verilerini bir DataFrame'e dönüştür
     data = {
         'Stok Kodu': [item['Stokkodu'] for item in stoklar],
-        'Toplam Adet': [item['total_adet'] for item in stoklar],
+        'Mevcut Adet': [item['total_adet'] for item in stoklar],
     }
     df = pd.DataFrame(data)
 
@@ -730,12 +734,12 @@ def stokgecmisi(request, sort):
 
     return render(request, 'etikom/stokgecmisi.html', context)
 
-def siparisduzeltme(request, sort, pk):
+def siparisduzeltme(request, firma, pk):
 
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    if firma_adi != sort:
+    if firma_adi != firma:
         return redirect('demofirmaurl')
 
     kontrol = get_object_or_404(Siparis, pk=pk)
@@ -757,7 +761,6 @@ def siparisduzeltme(request, sort, pk):
                 post.Firmaadi = request.user
                 post.save3()
 
-                kstok.delete()
                 sipno = siparis.cleaned_data['Siparisno']
                 stokkodu = siparis.cleaned_data['Stokkodu']
                 sayi = siparis.cleaned_data['Adet']
