@@ -20,7 +20,7 @@ urlpatterns = [
     path('stok-exceli-indir/', views.stokexceliindir, name='stokexcelindirurl'),
     path('sayim-exceli-indir/', views.sayimexcelindir, name='sayimexcelindirurl'),
 
-    path('fatura-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
+    path('islem-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
     path('stok-gecmisi/<str:sort>/', views.stokgecmisi, name='stokgecmisiurl'),
 
     path('siparis-ekle/', views.siparisekleme, name='siparisekleurl'),
@@ -30,6 +30,10 @@ urlpatterns = [
     path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
 
     path('siparis-duzeltme/<str:firma>/<int:pk>/', views.siparisduzeltme, name='siparisduzeltmeurl'),
+    path('siparis-exceli-indir/', views.sipexceliindir, name='sipexcelindirurl'),
+
+    path('pazaryeri-detayi/<str:pzr>/', views.pazaryeridetay, name='pazaryeridetayurl'),
+
 
 
     path('giris/', views.girisyap, name='girisurl'),

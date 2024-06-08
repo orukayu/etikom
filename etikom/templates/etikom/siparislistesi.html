@@ -2,9 +2,9 @@
 
 {% block baslik %}
 <dl class="row">
-    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Özet Sipariş Raporu</h4></dt>
+    <dt class="col-sm-3 pt-2"><h4>{{ firma_adi|title }} Özet Sipariş Raporu</h4></dt>
     <dd class="col-sm-9">
-        Değiştirmek veya silmek istediğiniz satır detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, pazaryerine ait bilgiler için <strong>Pazaryeri</strong> adına, tarihe ait siparişler için <strong>Tarih</strong>'e ve aynı üründen alan siparişler içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, tek bir pazaryerine ait detay bilgileri için <strong>Pazaryeri</strong> adına ve aynı üründen alan siparişler içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
     </dd>
 </dl>
 {% endblock %}
@@ -42,7 +42,7 @@
             Sipariş Listeniz;
         </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'sipexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
     <div class="table-responsive small">
@@ -87,7 +87,7 @@
                         <a href="{% url 'siparisduzeltmeurl' firma=firma pk=siparis.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td>
-                        {{ siparis.Pazaryeri}}
+                        <a href="{% url 'pazaryeridetayurl' pzr=siparis.Pazaryeri %}">{{ siparis.Pazaryeri }}</a>
                     </td>
                     <td class="text-center">
                         {{ siparis.Tarih|date:"d.m.Y" }}
@@ -96,7 +96,7 @@
                         {{ siparis.Siparisno }}
                     </td>
                     <td>
-                        {{ siparis.Stokkodu }}
+                        <a href="{% url 'stokgecmisiurl' sort=siparis.Stokkodu %}">{{ siparis.Stokkodu }}</a>
                     </td>
                     <td class="text-center">
                         {{ siparis.Adet }}

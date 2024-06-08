@@ -16,6 +16,8 @@ from django.contrib.auth import logout
 
 import pandas as pd         # pip install pandas ile excel yukleme icin pandas kuruldu ve pd kisaltma adi verildi, ayrıca pip install openpyxl ında kurulması gerekıyor.
 from django.http import HttpResponse
+from openpyxl import load_workbook
+from openpyxl.styles import numbers
 import os
 from io import BytesIO
 from django.conf import settings
@@ -460,8 +462,8 @@ def stokexceliindir(request):
         'Belge No': [stok.Afaturano for stok in stoklar],
         'Stok Kodu': [stok.Stokkodu for stok in stoklar],
         'Adet': [stok.Adet for stok in stoklar],
-        'Fiyat': [stok.Alisfiyati for stok in stoklar],
-        'Toplam': [stok.Toplam for stok in stoklar],
+        'Fiyat': [str(stok.Alisfiyati).replace('.', ',') for stok in stoklar],
+        'Toplam': [str(stok.Toplam).replace('.', ',') for stok in stoklar],
     }
     df = pd.DataFrame(data)
 
@@ -504,7 +506,7 @@ def stokduzeltme(request, firma, pk):
                 if form.is_valid():
                     post = form.save(commit=False)
                     post.Firmaadi = request.user
-                    post.save()
+                    post.save1()
                     return redirect('stoklistesiurl')
         else:
             form = StokFormu(instance=kontrolstok)
@@ -778,3 +780,68 @@ def siparisduzeltme(request, firma, pk):
 
     title = 'Sipariş Detayı'
     return render(request, 'etikom/siparisdetay.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
+
+
+def sipexceliindir(request):
+    firma_adi_id = request.user.id
+
+    # Siparis modelinden tüm verileri al
+    sipler = Siparis.objects.filter(Firmaadi=firma_adi_id)
+
+    # Siparis verilerini bir DataFrame'e dönüştür
+    data = {
+        'Pazaryeri': [siparis.Pazaryeri for siparis in sipler],
+        'Tarih': [siparis.Tarih.strftime('%d.%m.%Y') for siparis in sipler],
+        'Sipariş No': [siparis.Siparisno for siparis in sipler],
+        'Stok Kodu': [siparis.Stokkodu for siparis in sipler],
+        'Adet': [str(siparis.Adet).replace('.', ',') for siparis in sipler],
+        'Satış Fiyatı': [str(siparis.Satisfiyati).replace('.', ',') for siparis in sipler],
+        'Toplam': [str(siparis.Toplam).replace('.', ',') for siparis in sipler],
+        'Komisyon %': [str(siparis.Komisyon).replace('.', ',') for siparis in sipler],
+        'Komisyon Tutarı': [str(siparis.Komisyontutari).replace('.', ',') for siparis in sipler],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_buffer = BytesIO()
+    with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Siparisler')
+    excel_buffer.seek(0)  # Buffer'ın başına git
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_siparisler.xlsx"'
+
+    return response
+
+
+def pazaryeridetay(request, pzr):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Pazaryeri Detayı'
+
+    pazaryeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Pazaryeri=pzr)
+
+    tstc = Siparis.objects.filter(Firmaadi=firma_adi_id, Pazaryeri=pzr).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tsta = Siparis.objects.filter(Firmaadi=firma_adi_id, Pazaryeri=pzr).aggregate(Sum("Adet"))["Adet__sum"]
+    
+    tsta = abs(tsta)
+
+    sftt = Siparis.objects.filter(Firmaadi=firma_adi_id, Pazaryeri=pzr).aggregate(Sum("Toplam"))["Toplam__sum"]
+
+    sftt = abs(sftt)
+
+    oafi = sftt / tsta
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+        'pazaryeri': pazaryeri,
+        'tstc': tstc,
+        'tsta': tsta,
+        'sftt': sftt,
+        'oafi': oafi,
+        'pzr': pzr,
+    }
+
+    return render(request, 'etikom/pazaryeridetay.html', context)
