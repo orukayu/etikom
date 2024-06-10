@@ -26,11 +26,12 @@
         <meta name="apple-touch-fullscreen" content="yes">
 
         <meta property="og:url" content="https://www.etikom.net">
-        <meta property="og:title" content="E-ticaretin Kolay Muhasebesi «» ETİKOM «»">
+        <meta property="og:title" content="E-ticaretin Kolay Muhasebesi « ETİKOM »">
         <meta property="og:description" content="E-ticaret yapan şahıs ve işletmelerin vazgeçemediği muhasebe programı.">
         <meta property="og:type" content="website">
         <meta property="og:image" content="https://www.etikom.net/static/media/social.jpg">
         <meta property="og:image:type" content="image/jpg">
+        <meta property="og:image:alt" content="Laptop, notebook, price information, logo and statistics report page." />
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:locale" content="tr_TR">
@@ -43,6 +44,9 @@
         <link rel="icon" href="{% static '/media/favicon-16x16.png' %}" sizes="16x16" type="image/png">
         <link rel="icon" href="{% static '/media/favicon.svg' %}" sizes="any" type="image/svg+xml">
         <link rel="icon" href="{% static '/media/favicon.ico' %}">
+
+        <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
         
         {% block copy %}
         {% endblock %}
@@ -421,10 +425,6 @@
                     </div>
                     {% endblock %}
                 </main>
-                <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
-                <script src="https://getbootstrap.com/docs/5.3/examples/dashboard/dashboard.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
             </div>
         </div>
     </body>

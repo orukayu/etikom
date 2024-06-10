@@ -25,6 +25,9 @@ from django.conf import settings
 from django.db.models import Min, Max
 from dateutil.relativedelta import relativedelta
 
+from django.db.models.functions import ExtractWeek
+import json
+
 
 # Create your views here.
 
@@ -332,7 +335,68 @@ def siparisliste(request, sort=None):
 
     return render(request, 'etikom/siparislistesi.html', context)
 
+def girisyap(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
 
+    title = 'Raporlar'    
+
+    kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+    if kont_tststt == None:
+        tststt = 0
+    else:
+        tststt = abs(kont_tststt)
+
+    kont_tsistt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
+    if kont_tsistt == None:
+        tsistt = 0
+    else:
+        tsistt = abs(kont_tsistt)
+
+    ts = tststt + tsistt
+
+    # En küçük ve en büyük tarihleri bulma
+    tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
+
+    en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
+    en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
+
+    # Tarihler arasındaki farkı hesaplama
+    if en_buyuk_tarih and en_kucuk_tarih:
+        fark = relativedelta(en_buyuk_tarih, en_kucuk_tarih)
+        fark_ay = fark.years * 12 + fark.months
+        if fark_ay == 0:
+            tdns = 1
+        elif fark_ay == None:
+            tdns = 0
+        else:
+            tdns = fark_ay + 1
+    else:
+        tdns = 0
+
+
+    weekly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id).annotate(week=ExtractWeek('Tarih')).values('week').annotate(total=Sum('Toplam')).order_by('week')
+
+    # Haftaları ve toplam satışları ayrı listelere ayır
+    weeks = [entry['week'] for entry in weekly_sales]
+    totals = [float(entry['total']) for entry in weekly_sales]
+
+
+
+
+
+    context = {
+        'title': title,
+        'firma_adi': firma_adi,
+        'tdns': tdns,
+        'tsistt': tsistt,
+        'tststt': tststt,
+        'ts': ts,
+        'weeks': json.dumps(weeks),
+        'totals': json.dumps(totals)
+    }
+
+    return render(request, 'etikom/giris.html', context)
 
 def kayitol(request):
     title = 'Kayıt Ol'
@@ -372,14 +436,6 @@ def iletisimyap(request):
     title = 'İletişim'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/iletisim.html', {'title': title, 'firma_adi': firma_adi})
-
-def girisyap(request):
-    firma_adi = request.user.username
-    firma_adi_id = request.user.id
-    title = 'Raporlar'
-    baslik = ' Rapor Sayfası'
-    # ... anasayfa içeriğini oluşturun
-    return render(request, 'etikom/giris.html', {'baslik': baslik, 'title': title, 'firma_adi': firma_adi})
 
 def hakkimizdayap(request):
     firma_adi = request.user.username
@@ -845,3 +901,4 @@ def pazaryeridetay(request, pzr):
     }
 
     return render(request, 'etikom/pazaryeridetay.html', context)
+
