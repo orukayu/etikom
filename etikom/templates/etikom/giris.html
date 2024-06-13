@@ -17,34 +17,47 @@
 {% block content %}
 <div class="mt-3">
     <div class="row">
-        <p>Dönem Sayısı :<span>{{ tdns }} Ay</span></p>
-        <p>Toplam Siparis Tutari :<span>{{ tsistt|floatformat:"2g" }}</span></p>
-        <p>Toptan Satis Tutari :<span>{{ tststt|floatformat:"2g" }}</span></p>
-        <p>Toplam Satis Tutari :<span>{{ ts|floatformat:"2g" }}</span></p>
+        <p>Toplam Satış Dönemi :<span class="m-2">{{ tdns }} Ay</span></p>
+        <p>Toplam Sipariş Tutarı :<span class="m-2">{{ tsistt|floatformat:"2g" }}</span></p>
+        <p>Toptan Satış Tutarı :<span class="m-4">{{ tststt|floatformat:"2g" }}</span></p>
+        <p>Toplam Satış Tutarı :<span class="m-4">{{ ts|floatformat:"2g" }}</span></p>
 
-        <h4>Haftalık Satışlar</h4>
-        <canvas id="salesChart" width="400" height="200"></canvas>
+        <h1>Weekly and Monthly Sales</h1>
+
+
+
+        <!-- Aylık Satışlar Grafiği -->
+        <h2>Last 2 Years Monthly Sales</h2>
+        <canvas id="monthlySalesChart" height="150"></canvas>
         <script>
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            const salesData = {
-                labels: JSON.parse('{{ weeks|escapejs }}'),
+            const monthlyCtx = document.getElementById('monthlySalesChart').getContext('2d');
+            const monthlySalesData = {
+                labels: JSON.parse('{{ months|escapejs }}'),
                 datasets: [{
-                    label: 'Total Sales',
-                    data: JSON.parse('{{ totals|escapejs }}'),
-                    lineTension: 0,
-                    backgroundColor: 'transparent',
-                    borderColor: '#007bff',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#007bff',
+                    label: 'Total Monthly Sales',
+                    data: JSON.parse('{{ monthly_totals|escapejs }}'),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
                 }]
             };
-            const salesChart = new Chart(ctx, {
+            const monthlySalesChart = new Chart(monthlyCtx, {
                 type: 'line',
-                data: salesData,
+                data: monthlySalesData,
                 options: {
                     scales: {
                         y: {
                             beginAtZero: true
+                        },
+                        x: {
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                                    const parts = value.split('-');
+                                    const year = parts[0];
+                                    const month = parseInt(parts[1]);
+                                    return monthNames[month - 1] + ' ' + year;
+                                }
+                            }
                         }
                     }
                 }

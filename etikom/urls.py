@@ -26,8 +26,11 @@ urlpatterns = [
     path('siparis-ekle/', views.siparisekleme, name='siparisekleurl'),
     path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),
 
-    path('siparis-listesi/', views.siparisliste, name='siparislistesiurl'),
-    path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
+    path('siparis-listesi/<int:sira>', views.siparistopla, name='siparisleritoplaurl'),
+    path('siparis-topla-exceli/<int:sira>', views.siparistoplaexceli, name='siptoplaexcelindirurl'),
+
+    path('siparis-hareketleri/', views.siparisliste, name='siparislistesiurl'),
+    path('siparis-hareketleri/<str:sort>/', views.siparisliste, name='siparissiralama'),
 
     path('siparis-duzeltme/<str:firma>/<int:pk>/', views.siparisduzeltme, name='siparisduzeltmeurl'),
     path('siparis-exceli-indir/', views.sipexceliindir, name='sipexcelindirurl'),

@@ -1,0 +1,64 @@
+{% extends 'etikom/base.html' %}
+
+{% block baslik %}
+<dl class="row align-items-center">
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Günlük Siparişler</h4></dt>
+    <dd class="col-sm-9">
+        Bu sayfada, aynı güne ait siparişlerde ki ürünlerin stok kodları ve toplam adetleri listelenmektedir. Gitmek istediğiniz tarihe <strong>"Önceki Gün"</strong> veya <strong>"Sonraki Gün"</strong> butonlarını kullanarak gidip o güne ait hangi üründen kaç adet sipariş verildiğini görebilirsiniz.
+    </dd>
+</dl>
+{% endblock %}
+
+
+{% block content %}
+<div class="sayimlistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+        <h5>
+            <sort class="text-warning">{{ en_son_tarih|date:"d.m.Y" }}</sort> <small class="blockquote-footer">Siparişlerinin Ürünleri</small>
+        </h5>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href = '{% url 'siparisleritoplaurl' sira=sira|add:1 %}';" {% if sira >= liste_sayisi %}disabled{% endif %}>Önceki Gün</button>
+            </div>
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href = '{% url 'siparisleritoplaurl' sira=sira|add:-1 %}';" {% if sira <= 1 %}disabled{% endif %}>Sonraki Gün</button>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'siptoplaexcelindirurl' sira=sira %}';">Excel İndir</button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" class="pt-3 pb-3">Sıra No
+                    </th>
+                    <th scope="col" class="pt-3 pb-3">Stok Kodu
+                    </th>
+                    <th scope="col" class="pt-3 pb-3">Toplam Adet
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stok in stok_toplamlari %}
+                <tr>
+                    <td class="text-center">
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                        <a href="{% url 'stokgecmisiurl' sort=stok.Stokkodu %}">{{ stok.Stokkodu }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ stok.total_quantity }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-2 px-3">
+        <p></p>
+    </div>
+</div>
+{% endblock %}

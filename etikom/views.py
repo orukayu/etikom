@@ -26,6 +26,9 @@ from django.db.models import Min, Max
 from dateutil.relativedelta import relativedelta
 
 from django.db.models.functions import ExtractWeek
+from django.db.models.functions import ExtractMonth
+from django.db.models.functions import ExtractYear
+from datetime import datetime, timedelta
 import json
 
 
@@ -315,7 +318,7 @@ def siparisliste(request, sort=None):
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
     firma = request.user.username
-    title = 'Sipariş Listesi'
+    title = 'Sipariş Hareketleri'
 
     context = {
         'siparis': siparis,
@@ -375,25 +378,40 @@ def girisyap(request):
         tdns = 0
 
 
-    weekly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id).annotate(week=ExtractWeek('Tarih')).values('week').annotate(total=Sum('Toplam')).order_by('week')
+    # Şu anki tarih
+    today = datetime.today()
 
-    # Haftaları ve toplam satışları ayrı listelere ayır
+    # Son 6 ay
+    six_months_ago = today - timedelta(days=6*30)
+    # Son 2 yıl
+    two_years_ago = today - timedelta(days=2*365)
+
+    # Son 6 ayın haftalık satışları
+    weekly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=six_months_ago).annotate(
+        week=ExtractWeek('Tarih')
+    ).values('week').annotate(total=Sum('Toplam')).order_by('week')
     weeks = [entry['week'] for entry in weekly_sales]
-    totals = [float(entry['total']) for entry in weekly_sales]
+    weekly_totals = [float(entry['total']) for entry in weekly_sales]
 
-
-
-
+    # Son 2 yılın aylık satışları
+    monthly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=two_years_ago).annotate(
+        year=ExtractYear('Tarih'),
+        month=ExtractMonth('Tarih')
+    ).values('year', 'month').annotate(total=Sum('Toplam')).order_by('year', 'month')
+    months = [f"{entry['year']}-{entry['month']:02d}" for entry in monthly_sales]
+    monthly_totals = [float(entry['total']) for entry in monthly_sales]
 
     context = {
+        'weeks': json.dumps(weeks),
+        'weekly_totals': json.dumps(weekly_totals),
+        'months': json.dumps(months),
+        'monthly_totals': json.dumps(monthly_totals),
         'title': title,
         'firma_adi': firma_adi,
         'tdns': tdns,
         'tsistt': tsistt,
         'tststt': tststt,
         'ts': ts,
-        'weeks': json.dumps(weeks),
-        'totals': json.dumps(totals)
     }
 
     return render(request, 'etikom/giris.html', context)
@@ -902,3 +920,62 @@ def pazaryeridetay(request, pzr):
 
     return render(request, 'etikom/pazaryeridetay.html', context)
 
+def siparistopla(request, sira):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Siparişler'
+
+    tarihler = list(Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values_list('Tarih', flat=True).distinct())
+    en_son_tarih = tarihler[sira-1]
+
+    liste_sayisi = len(tarihler)
+
+    if en_son_tarih is not None:
+        # En son tarihe ait siparişleri filtreleyin
+        en_son_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih=en_son_tarih)
+        
+        # Stok kodlarını ve adet toplamlarını gruplayın ve hesaplayın
+        stok_toplamlari = en_son_sipler.values('Stokkodu').annotate(total_quantity=Sum('Adet'))
+    else:
+        stok_toplamlari = []
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+        'en_son_tarih': en_son_tarih,
+        'stok_toplamlari': stok_toplamlari,
+        'sira': sira,
+        'liste_sayisi': liste_sayisi,
+    }
+
+    return render(request, 'etikom/siparistopla.html', context)
+
+
+def siparistoplaexceli(request, sira):
+    firma_adi_id = request.user.id
+
+    # Tarihleri sıralı ve benzersiz hale getirin
+    tarihler = list(Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values_list('Tarih', flat=True).distinct())
+    en_son_tarih = tarihler[sira-1]
+
+    sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih=en_son_tarih)
+    stok_toplamlari = sipler.values('Stokkodu').annotate(total_quantity=Sum('Adet'))
+
+    # Siparis verilerini bir DataFrame'e dönüştür
+    data = {
+        'Stok Kodu': [stok['Stokkodu'] for stok in stok_toplamlari],
+        'Toplam Adet': [stok['total_quantity'] for stok in stok_toplamlari],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_buffer = BytesIO()
+    with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sayfa1')
+    excel_buffer.seek(0)  # Buffer'ın başına git
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_{en_son_tarih}_sevkiyat.xlsx"'
+
+    return response
