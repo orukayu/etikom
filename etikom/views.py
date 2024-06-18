@@ -17,6 +17,8 @@ from django.contrib.auth import logout
 import pandas as pd         # pip install pandas ile excel yukleme icin pandas kuruldu ve pd kisaltma adi verildi, ayrıca pip install openpyxl ında kurulması gerekıyor.
 from django.http import HttpResponse
 from openpyxl import load_workbook
+from openpyxl import Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import numbers
 import os
 from io import BytesIO
@@ -448,6 +450,11 @@ def cikisyap(request):
     logout(request)
     return redirect('anasayfa')
 
+def blogyap(request):
+    firma_adi = request.user.username
+    title = 'blog'
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/blog.html', {'title': title, 'firma_adi': firma_adi})
 
 def iletisimyap(request):
     firma_adi = request.user.username
@@ -958,6 +965,9 @@ def siparistoplaexceli(request, sira):
     tarihler = list(Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values_list('Tarih', flat=True).distinct())
     en_son_tarih = tarihler[sira-1]
 
+    # Tarihi d.m.y formatında biçimlendirin
+    en_son_tarih_str = en_son_tarih.strftime("%d.%m.%Y")
+
     sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih=en_son_tarih)
     stok_toplamlari = sipler.values('Stokkodu').annotate(total_quantity=Sum('Adet'))
 
@@ -971,11 +981,25 @@ def siparistoplaexceli(request, sira):
     # DataFrame'i Excel dosyasına dönüştür
     excel_buffer = BytesIO()
     with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False, sheet_name='Sayfa1')
+        df.to_excel(writer, index=False, startrow=1)
     excel_buffer.seek(0)  # Buffer'ın başına git
 
+    # openpyxl ile çalışma kitabını yükleyin
+    workbook = load_workbook(excel_buffer)
+    sheet = workbook.active
+
+    # A1 hücresine en son tarihi yazın
+    sheet.merge_cells('A1:B1')
+    sheet['A1'] = f"{en_son_tarih_str} Tarihli Sipariş İçerikleri"
+
+    # Dosyayı tekrar buffer'a kaydet
+    response_buffer = BytesIO()
+    workbook.save(response_buffer)
+    response_buffer.seek(0)
+
+
     # HTTP yanıtı olarak Excel dosyasını döndür
-    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_{en_son_tarih}_sevkiyat.xlsx"'
+    response = HttpResponse(response_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_{en_son_tarih_str}_sevkiyat.xlsx"'
 
     return response

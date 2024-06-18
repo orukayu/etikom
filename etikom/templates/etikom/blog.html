@@ -1,0 +1,57 @@
+{% extends 'etikom/base.html' %}
+
+{% block baslik %}
+<div class="d-flex align-items-center col-12 col-sm-5 gap-2">
+    <img src="/static/media/etikom-logo.png" width="30" height="30"/>
+    <h4 style="margin-bottom: 5px;">Etikom Blog</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="metin mt-3">
+    <h5>
+        E-Ticaret Terimleri ve Uygulama Klavuzu
+    </h5>
+    <p>
+        Blog sayfamızda, hali hazırda e-ticaret yapan veya yapmayı düşünen şahıs yada firmalar için ihtiyaç duyacakları bilgilerin açıklamaları ve önerileri yazmaktadır.
+    </p>
+</div>
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+    <div class="col d-flex align-items-start">
+        <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <svg width="1em" height="1em"><use xlink:href="#info"></use></svg>
+        </div>
+        <div>
+            <h3 class="fs-2 text-body-emphasis">Varyant</h3>
+            <p>Ürünlerinizi renk, beden, ölçü gibi özelliklerine göre sınıflandırdığınız terimdir. Müşterileriniz bu şekilde tek bir ürün satış sayfasında ürünlerinizin diğer varyantlarınıda görebilmektedir. Fakat bir çok pazaryeri veya e-ticaret satış sitesi kategori sayfasında ürününüzün bir varyantına yer vermektedir. İdeal olan, Trendyol'un kategori sayfası gibi ürüne ait varyant sınıflarının her birine yer verilmesi ve her hangi bir renge tıklandığında o ürüne ait satış sayfasına gidilmesidir. Yani üç rengi olan bir elbisenin kategori sayfasında her rengine ait bir görünümü olmasıdır, yoksa müşteri tek renk görüp satış sayfasına girinceye kadar diğer renklerinden habersiz olacaktır.</p>
+        </div>
+    </div>
+    <div class="col d-flex align-items-start">
+        <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <svg width="1em" height="1em"><use xlink:href="#info"></use></svg>
+        </div>
+        <div>
+            <h3 class="fs-2 text-body-emphasis">Stok Kodu</h3>
+            <p>Ürünün her bir varyant çeşidi için ayrı ayrı oluşturduğunuz koddur. Sipariş takibi, depo yönetimi gibi işlerin idaresini kolaylaştırır. Yanlış ürünün sevk edilmesini önlemek için en kolay yöntemdir. Örnek, 3 renkli bir elbisenin her rengine farklı ve bu renklere ait S,M,L gibi beden varyantı varsada onlar içinde ayrı ayrı belirlemeniz gereken koddur.</p>
+        </div>
+    </div>
+    <div class="col d-flex align-items-start">
+        <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <svg width="1em" height="1em"><use xlink:href="#info"></use></svg>
+        </div>
+        <div>
+            <h3 class="fs-2 text-body-emphasis">Barkod</h3>
+            <p>Direkt olarak o ürünü temsil eden ortak koddur. Trendyol ve Hepsiburada gibi katalog sistemi ile satış yapan pazaryerlerinde sizde ürünün barkodunu aratarak, satışını yapan firmalar arasına hızlıca dahil olabilirsiniz. Şayet daha önce bu sitelerin kataloğuna eklenmemişse, ürün açma talebi oluştururken sizden bu kodda istenecektir. Her bir rengin her bir bedenine göre nasıl stok kodu belirlediyseniz, barkodu olmayan ürününüz için genelde 11 karakter olan bir barkodda belirlemeniz gerekecektir.</p>
+        </div>
+    </div>
+    <div class="col d-flex align-items-start">
+        <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <svg width="1em" height="1em"><use xlink:href="#info"></use></svg>
+        </div>
+        <div>
+            <h3 class="fs-2 text-body-emphasis">Model Kodu</h3>
+            <p>Amazon gibi pazaryerlerinde Anaürün Kodu olarak tanımlanan ve hangi stok kodlarının aynı modelin altında listeleneceğini belirten koddur. Bu şekilde ürününüzün varyantlarını tek bir satış sayfasında listeyebilirsiniz. Ayrıca belirleyeceğiniz Varyant, Stok Kodları ve Barkodlar için de size referans olacak koddur.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.views.generic.base import TemplateView
 
 
 urlpatterns = [
@@ -43,7 +44,10 @@ urlpatterns = [
     path('hakkimizda/', views.hakkimizdayap, name='hakkimizdaurl'),
     path('fiyatlandirma/', views.fiyatlamayap, name='fiyatlamaurl'),
     path('iletisim/', views.iletisimyap, name='iletisimurl'),
+    path('blog/', views.blogyap, name='blogurl'),
     
     path('kayit-ol/', views.kayitol, name='kayitolurl'),
     path('cikis-yap/', views.cikisyap, name='cikisurl'),
+
+    path("robots.txt", TemplateView.as_view(template_name="etikom/robots.txt", content_type="text/plain")),
 ]
