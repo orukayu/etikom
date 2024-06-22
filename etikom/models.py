@@ -54,3 +54,14 @@ class Stok(models.Model):
 
     def __str__(self):
         return self.Stokkodu
+
+class Blog(models.Model):
+    Baslik = models.TextField()
+    Metin = models.TextField()
+    Url = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ['Baslik',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+
+    def __str__(self):
+        return self.Baslik

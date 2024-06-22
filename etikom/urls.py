@@ -45,6 +45,7 @@ urlpatterns = [
     path('fiyatlandirma/', views.fiyatlamayap, name='fiyatlamaurl'),
     path('iletisim/', views.iletisimyap, name='iletisimurl'),
     path('blog/', views.blogyap, name='blogurl'),
+    path('blog/<str:url>/', views.blogdetayyap, name='blogdetayurl'),
     
     path('kayit-ol/', views.kayitol, name='kayitolurl'),
     path('cikis-yap/', views.cikisyap, name='cikisurl'),

@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from .models import Stok
 from .models import Siparis
+from .models import Blog
 from .forms import StokFormu
 from .forms import KayitFormu
 from .forms import GirisFormu
@@ -41,7 +42,7 @@ def anasayfa(request):
         user = authenticate(username='demo firma', password='demofirma')
         if user:
             login(request, user)
-            return redirect('demofirmaurl')
+            return redirect('girisurl')
 
     return redirect('demofirmaurl')
 
@@ -344,7 +345,7 @@ def girisyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    title = 'Raporlar'    
+    title = 'E-ticaretin Kolay Muhasebesi'    
 
     kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]
     if kont_tststt == None:
@@ -452,9 +453,17 @@ def cikisyap(request):
 
 def blogyap(request):
     firma_adi = request.user.username
-    title = 'blog'
+    title = 'Blog'
+    blog = Blog.objects.all()
     # ... iletişim sayfası içeriğini oluşturun
-    return render(request, 'etikom/blog.html', {'title': title, 'firma_adi': firma_adi})
+    return render(request, 'etikom/blog.html', {'title': title, 'firma_adi': firma_adi, 'blog': blog})
+
+def blogdetayyap(request, url):
+    firma_adi = request.user.username
+    title = 'Blog Detayı'
+    blog = Blog.objects.filter(Url=url)
+    # ... iletişim sayfası içeriğini oluşturun
+    return render(request, 'etikom/blogdetay.html', {'title': title, 'firma_adi': firma_adi, 'blog': blog})
 
 def iletisimyap(request):
     firma_adi = request.user.username

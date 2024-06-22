@@ -3,19 +3,11 @@
 {% block baslik %}
 <div class="d-flex align-items-center col-12 col-sm-5 gap-2">
     <img src="/static/media/etikom-logo.png" width="30" height="30"/>
-    <h4 style="margin-bottom: 5px;">Etikom Blog</h4>
+    <h4 style="margin-bottom: 5px;">Etikom Blog Detayı</h4>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="metin mt-3">
-    <h5>
-        E-Ticaret Terimleri ve Uygulama Klavuzu
-    </h5>
-    <p>
-        Blog sayfamızda, hali hazırda e-ticaret yapan veya yapmayı düşünen şahıs yada firmalar için ihtiyaç duyacakları bilgilerin açıklamaları ve önerileri yazmaktadır.
-    </p>
-</div>
 <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
     {% for blog in blog %}
     <div class="col d-flex align-items-start">
@@ -24,7 +16,7 @@
         </div>
         <div>
             <h3 class="fs-2 text-body-emphasis">{{ blog.Baslik }}</h3>
-            <p>{{ blog.Metin|truncatewords:30 }} <a href="{% url 'blogdetayurl' url=blog.Url %}" class="icon-link">Devamını Oku<svg class="bi"><use xlink:href="#chevron-right"></use></svg></a></p>
+            <p>{{ blog.Metin }}</p>
         </div>
     </div>
     {% endfor %}
