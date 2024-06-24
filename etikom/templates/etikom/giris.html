@@ -21,52 +21,33 @@
         <p>Toplam Sipariş Tutarı :<span class="m-2">{{ tsistt|floatformat:"2g" }}</span></p>
         <p>Toptan Satış Tutarı :<span class="m-4">{{ tststt|floatformat:"2g" }}</span></p>
         <p>Toplam Satış Tutarı :<span class="m-4">{{ ts|floatformat:"2g" }}</span></p>
-
-        <h1>Weekly and Monthly Sales</h1>
-
-
-
-        <!-- Aylık Satışlar Grafiği -->
-        <h2>Last 2 Years Monthly Sales</h2>
-        <canvas id="monthlySalesChart" height="150"></canvas>
-        <script>
-            const monthlyCtx = document.getElementById('monthlySalesChart').getContext('2d');
-            const monthlySalesData = {
-                labels: JSON.parse('{{ months|escapejs }}'),
-                datasets: [{
-                    label: 'Total Monthly Sales',
-                    data: JSON.parse('{{ monthly_totals|escapejs }}'),
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            };
-            const monthlySalesChart = new Chart(monthlyCtx, {
-                type: 'line',
-                data: monthlySalesData,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        },
-                        x: {
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                                    const parts = value.split('-');
-                                    const year = parts[0];
-                                    const month = parseInt(parts[1]);
-                                    return monthNames[month - 1] + ' ' + year;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        </script>
-
-
-
     </div>
-
+</div>
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+    <div class="col d-flex align-items-start">
+        <div>
+            <h5 class="text-body-emphasis">En Çok Satılan 5 Ürün</h5>
+            <ul class="list-group">
+            {% for n_s_t in n_s_t %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ n_s_t.Stokkodu }}
+                <span class="badge text-bg-primary rounded-pill">{{ n_s_t.total_cikis }}</span>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col d-flex align-items-start">
+        <div>
+            <h5 class="text-body-emphasis">En Az Satılan 5 Ürün</h5>
+            <ul class="list-group">
+                {% for n_s_y in n_s_y %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ n_s_y.Stokkodu }}
+                    <span class="badge text-bg-primary rounded-pill">{{ n_s_y.total_cikis }}</span>
+                </li>
+                {% endfor %}
+            </ul>            
+        </div>
+    </div>
 </div>
 {% endblock %}

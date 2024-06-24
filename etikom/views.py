@@ -380,6 +380,8 @@ def girisyap(request):
     else:
         tdns = 0
 
+    n_s_t = Stok.objects.filter(Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
+    n_s_y = Stok.objects.filter(Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5]
 
     # Şu anki tarih
     today = datetime.today()
@@ -415,6 +417,8 @@ def girisyap(request):
         'tsistt': tsistt,
         'tststt': tststt,
         'ts': ts,
+        'n_s_t': n_s_t,
+        'n_s_y': n_s_y,
     }
 
     return render(request, 'etikom/giris.html', context)
@@ -616,19 +620,13 @@ def sayimliste(request, sort=None):
     firma_adi_id = request.user.id
 
     # Adet > 0 olan satırlardan Toplam sütunlarının toplamını hesaplama
-    toplam_toplam = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(
-        total_toplam=Sum('Toplam')
-    ).order_by('Stokkodu')
+    toplam_toplam = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(total_toplam=Sum('Toplam')).order_by('Stokkodu')
 
     # Adet > 0 olan satırlardan Adet sütunlarının toplamını hesaplama
-    toplam_adet_filtered = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(
-        total_adet_filtered=Sum('Adet')
-    ).order_by('Stokkodu')
+    toplam_adet_filtered = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(total_adet_filtered=Sum('Adet')).order_by('Stokkodu')
 
     # Stok Kodu'na göre tüm Adet sütunlarının toplamını hesaplama (Adet değerine bakmaksızın)
-    toplam_adet_all = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(
-        total_adet_all=Sum('Adet')
-    ).order_by('Stokkodu')
+    toplam_adet_all = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet_all=Sum('Adet')).order_by('Stokkodu')
 
     # Sonuçları birleştirerek tek bir yapı oluşturma
     etopla = {}
@@ -654,8 +652,6 @@ def sayimliste(request, sort=None):
         total_adet_filtered = values['total_adet_filtered']
         values['ortalama_alisfiyati'] = total_toplam / total_adet_filtered if total_adet_filtered else 0
 
-
-    # stsys = etopla.count()
     title = 'Stok Listesi'
 
     context = {
@@ -672,10 +668,12 @@ def sayimexcelindir(request):
 
     # Stok modelinden tüm verileri al
     stoklar = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet'))
+    toplam_giris = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(toplam_giris=Sum('Adet')).order_by('Stokkodu')
 
     # Stok verilerini bir DataFrame'e dönüştür
     data = {
         'Stok Kodu': [item['Stokkodu'] for item in stoklar],
+        'Toplam Giriş': [item['toplam_giris'] for item in toplam_giris],
         'Mevcut Adet': [item['total_adet'] for item in stoklar],
     }
     df = pd.DataFrame(data)
