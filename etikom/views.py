@@ -11,6 +11,7 @@ from .forms import GirisFormu
 from .forms import SiparisFormu
 
 from django.db.models import Sum
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -361,7 +362,7 @@ def girisyap(request):
 
     ts = tststt + tsistt
 
-    # En küçük ve en büyük tarihleri bulma
+    # Donem sayisi icin en küçük ve en büyük tarihleri bulma
     tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
 
     en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
@@ -380,8 +381,13 @@ def girisyap(request):
     else:
         tdns = 0
 
-    n_s_t = Stok.objects.filter(Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
-    n_s_y = Stok.objects.filter(Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5]
+    n_s_t = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
+    n_s_y = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en az satilan 5 urun
+    s_t_u= Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__lte=0)[:5] #stok 0 olan urunler
+    s_a_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(Q(total_adet__gt=0) & Q(total_adet__lt=11)).order_by('total_adet')[:5] #stogu azalan urunler
+    c_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct()  # pazaryerleri listesi
+    b_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').annotate(total_satis=Sum('Toplam')).order_by('-total_satis')[:5] #en çok satılan 5 ürün
+
 
     # Şu anki tarih
     today = datetime.today()
@@ -419,6 +425,10 @@ def girisyap(request):
         'ts': ts,
         'n_s_t': n_s_t,
         'n_s_y': n_s_y,
+        's_t_u': s_t_u,
+        's_a_u': s_a_u,
+        'c_p_y': c_p_y,
+        'b_p_y': b_p_y,
     }
 
     return render(request, 'etikom/giris.html', context)

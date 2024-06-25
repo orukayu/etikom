@@ -15,38 +15,143 @@
 
 
 {% block content %}
-<div class="mt-3">
-    <div class="row">
-        <p>Toplam Satış Dönemi :<span class="m-2">{{ tdns }} Ay</span></p>
-        <p>Toplam Sipariş Tutarı :<span class="m-2">{{ tsistt|floatformat:"2g" }}</span></p>
-        <p>Toptan Satış Tutarı :<span class="m-4">{{ tststt|floatformat:"2g" }}</span></p>
-        <p>Toplam Satış Tutarı :<span class="m-4">{{ ts|floatformat:"2g" }}</span></p>
-    </div>
-</div>
-<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-    <div class="col d-flex align-items-start">
-        <div>
-            <h5 class="text-body-emphasis">En Çok Satılan 5 Ürün</h5>
-            <ul class="list-group">
-            {% for n_s_t in n_s_t %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ n_s_t.Stokkodu }}
-                <span class="badge text-bg-primary rounded-pill">{{ n_s_t.total_cikis }}</span>
-            </li>
-            {% endfor %}
+<div class="metin mt-3">
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Toplam Satış Bilgileri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Satış Dönemi :
+                            <span class="badge text-bg-primary rounded-pill">{{ tdns }} Ay</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Sipariş Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ tsistt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toptan Satış Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ tststt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Satış Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ ts|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col d-flex align-items-start">
-        <div>
-            <h5 class="text-body-emphasis">En Az Satılan 5 Ürün</h5>
-            <ul class="list-group">
-                {% for n_s_y in n_s_y %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ n_s_y.Stokkodu }}
-                    <span class="badge text-bg-primary rounded-pill">{{ n_s_y.total_cikis }}</span>
-                </li>
-                {% endfor %}
-            </ul>            
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">En Çok Satılan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for n_s_t in n_s_t %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ n_s_t.Stokkodu }}
+                            <span class="badge text-bg-primary rounded-pill">{{ n_s_t.total_cikis }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">En Az Satılan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for n_s_y in n_s_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ n_s_y.Stokkodu }}
+                            <span class="badge text-bg-primary rounded-pill">{{ n_s_y.total_cikis }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Stoğu Tükenen 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for s_t_u in s_t_u %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ s_t_u.Stokkodu }}
+                            <span class="badge text-bg-primary rounded-pill">{{ s_t_u.total_adet }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Stoğu Azalan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for s_a_u in s_a_u %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ s_a_u.Stokkodu }}
+                            <span class="badge text-bg-primary rounded-pill">{{ s_a_u.total_adet }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Çalışılan Pazaryerleri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for c_p_y in c_p_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="badge text-bg-primary rounded-pill">{{ forloop.counter }}</span>
+                            {{ c_p_y.Pazaryeri }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">En Büyük 5 Pazaryeri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for b_p_y in b_p_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ b_p_y.Pazaryeri }}
+                            <span class="badge text-bg-primary rounded-pill">{{ b_p_y.total_satis|floatformat:"2g" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
