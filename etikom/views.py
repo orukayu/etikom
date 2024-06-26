@@ -382,6 +382,8 @@ def girisyap(request):
     else:
         tdns = 0
 
+    ort_dnm_sts = ts / tdns
+
     n_s_t = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
     n_s_y = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en az satilan 5 urun
     s_t_u= Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__lte=0)[:5] #stok 0 olan urunler
@@ -401,6 +403,12 @@ def girisyap(request):
     buhaftaki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[haftabasi, haftasonu])
     bh_siplerin_toplami = buhaftaki_sipler.aggregate(bhsip_tt=Sum('Toplam'))['bhsip_tt']
 
+    # Gecen haftanın siparişlerini filtreleme
+    gecen_haftasonu = today - timedelta(days=bugun)
+    gecen_haftabasi = gecen_haftasonu - timedelta(days=6)
+    gcn_haftaki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gecen_haftabasi, gecen_haftasonu])
+    gh_siplerin_toplami = gcn_haftaki_sipler.aggregate(ghsip_tt=Sum('Toplam'))['ghsip_tt']
+
     # Bu ayın siparişlerini filtreleme
     aybasi = datetime(buyil, buay, 1)
     ayinsongunu = calendar.monthrange(buyil, buay)[1]
@@ -408,52 +416,60 @@ def girisyap(request):
     buayki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[aybasi, aysonu])
     ba_sipler_toplami = buayki_sipler.aggregate(basip_tt=Sum('Toplam'))['basip_tt']
 
+    # Gecen ayın siparişlerini filtreleme
+    gcn_aybasi = datetime(buyil, buay-1, 1)
+    gcn_ayinsongunu = calendar.monthrange(buyil, buay-1)[1]
+    gcn_aysonu = datetime(buyil, buay-1, gcn_ayinsongunu)
+    gcn_ayki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gcn_aybasi, gcn_aysonu])
+    ga_sipler_toplami = gcn_ayki_sipler.aggregate(gasip_tt=Sum('Toplam'))['gasip_tt']
+
     # Bu yılın siparişlerini filtreleme
     yilbasi = datetime(buyil, 1, 1)
     yilsonu = datetime(buyil, 12, 31)
     buyilki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[yilbasi, yilsonu])
     by_sipler_toplami = buyilki_sipler.aggregate(bysip_tt=Sum('Toplam'))['bysip_tt']
 
-    # Son 6 ay
-    six_months_ago = today - timedelta(days=6*30)
-    # Son 2 yıl
-    two_years_ago = today - timedelta(days=2*365)
+    # Gecen yılın siparişlerini filtreleme
+    gcn_yilbasi = datetime(buyil-1, 1, 1)
+    gcn_yilsonu = datetime(buyil-1, 12, 31)
+    gcn_yilki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gcn_yilbasi, gcn_yilsonu])
+    gy_sipler_toplami = gcn_yilki_sipler.aggregate(gysip_tt=Sum('Toplam'))['gysip_tt']
 
-    # Son 6 ayın haftalık satışları
-    weekly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=six_months_ago).annotate(
-        week=ExtractWeek('Tarih')
-    ).values('week').annotate(total=Sum('Toplam')).order_by('week')
-    weeks = [entry['week'] for entry in weekly_sales]
-    weekly_totals = [float(entry['total']) for entry in weekly_sales]
-
-    # Son 2 yılın aylık satışları
-    monthly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=two_years_ago).annotate(
-        year=ExtractYear('Tarih'),
-        month=ExtractMonth('Tarih')
-    ).values('year', 'month').annotate(total=Sum('Toplam')).order_by('year', 'month')
-    months = [f"{entry['year']}-{entry['month']:02d}" for entry in monthly_sales]
-    monthly_totals = [float(entry['total']) for entry in monthly_sales]
+    # Javascript ile 6 aylik satis grafigi hazirlama
+    # six_months_ago = today - timedelta(days=6*30) # Son 6 ay
+    # two_years_ago = today - timedelta(days=2*365) # Son 2 yıl
+    # weekly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=six_months_ago).annotate(week=ExtractWeek('Tarih')).values('week').annotate(total=Sum('Toplam')).order_by('week') # Son 6 ayın haftalık satışları
+    # weeks = [entry['week'] for entry in weekly_sales]
+    # weekly_totals = [float(entry['total']) for entry in weekly_sales]
+    # monthly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=two_years_ago).annotate(year=ExtractYear('Tarih'),month=ExtractMonth('Tarih')).values('year', 'month').annotate(total=Sum('Toplam')).order_by('year', 'month') # Son 2 yılın aylık satışları
+    # months = [f"{entry['year']}-{entry['month']:02d}" for entry in monthly_sales]
+    # monthly_totals = [float(entry['total']) for entry in monthly_sales]
 
     context = {
-        'weeks': json.dumps(weeks),
-        'weekly_totals': json.dumps(weekly_totals),
-        'months': json.dumps(months),
-        'monthly_totals': json.dumps(monthly_totals),
+        # 'weeks': json.dumps(weeks),
+        # 'weekly_totals': json.dumps(weekly_totals),
+        # 'months': json.dumps(months),
+        # 'monthly_totals': json.dumps(monthly_totals),
         'title': title,
         'firma_adi': firma_adi,
         'tdns': tdns,
         'tsistt': tsistt,
         'tststt': tststt,
         'ts': ts,
+        'ort_dnm_sts': ort_dnm_sts,
         'n_s_t': n_s_t,
         'n_s_y': n_s_y,
         's_t_u': s_t_u,
         's_a_u': s_a_u,
         'c_p_y': c_p_y,
         'b_p_y': b_p_y,
+        'today': today,
         'bh_siplerin_toplami': bh_siplerin_toplami,
+        'gh_siplerin_toplami': gh_siplerin_toplami,
         'ba_sipler_toplami': ba_sipler_toplami,
+        'ga_sipler_toplami': ga_sipler_toplami,
         'by_sipler_toplami': by_sipler_toplami,
+        'gy_sipler_toplami': gy_sipler_toplami,
     }
 
     return render(request, 'etikom/giris.html', context)

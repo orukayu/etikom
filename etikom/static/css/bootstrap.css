@@ -242,3 +242,8 @@ form.stok-edit {
   width: 3rem;
   height: 3rem;
 }
+
+.yesil:hover {
+    color: white !important;
+    background-color: green !important;
+}
