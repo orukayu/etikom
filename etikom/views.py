@@ -33,6 +33,7 @@ from django.db.models.functions import ExtractWeek
 from django.db.models.functions import ExtractMonth
 from django.db.models.functions import ExtractYear
 from datetime import datetime, timedelta
+import calendar
 import json
 
 
@@ -389,8 +390,29 @@ def girisyap(request):
     b_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').annotate(total_satis=Sum('Toplam')).order_by('-total_satis')[:5] #en çok satılan 5 ürün
 
 
-    # Şu anki tarih
-    today = datetime.today()
+    today = datetime.today()    # Şu anki tarih
+    buay = today.month
+    buyil = today.year
+    bugun = today.weekday()   # Pazartesi=0, Pazar=6 olacak şekilde bugünün rakamı
+
+    # Bu haftanın siparişlerini filtreleme
+    haftabasi = today - timedelta(days=today.weekday())  # Haftanın başlangıcı (Pazartesi)
+    haftasonu = haftabasi + timedelta(days=6)  # Haftanın bitişi (Pazar)
+    buhaftaki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[haftabasi, haftasonu])
+    bh_siplerin_toplami = buhaftaki_sipler.aggregate(bhsip_tt=Sum('Toplam'))['bhsip_tt']
+
+    # Bu ayın siparişlerini filtreleme
+    aybasi = datetime(buyil, buay, 1)
+    ayinsongunu = calendar.monthrange(buyil, buay)[1]
+    aysonu = datetime(buyil, buay, ayinsongunu)
+    buayki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[aybasi, aysonu])
+    ba_sipler_toplami = buayki_sipler.aggregate(basip_tt=Sum('Toplam'))['basip_tt']
+
+    # Bu yılın siparişlerini filtreleme
+    yilbasi = datetime(buyil, 1, 1)
+    yilsonu = datetime(buyil, 12, 31)
+    buyilki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[yilbasi, yilsonu])
+    by_sipler_toplami = buyilki_sipler.aggregate(bysip_tt=Sum('Toplam'))['bysip_tt']
 
     # Son 6 ay
     six_months_ago = today - timedelta(days=6*30)
@@ -429,6 +451,9 @@ def girisyap(request):
         's_a_u': s_a_u,
         'c_p_y': c_p_y,
         'b_p_y': b_p_y,
+        'bh_siplerin_toplami': bh_siplerin_toplami,
+        'ba_sipler_toplami': ba_sipler_toplami,
+        'by_sipler_toplami': by_sipler_toplami,
     }
 
     return render(request, 'etikom/giris.html', context)

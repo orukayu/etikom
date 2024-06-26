@@ -20,6 +20,41 @@
         <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Toplam Sipariş Bilgileri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bu Haftaki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ bh_siplerin_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bu Ayki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ ba_sipler_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bu Yılki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ by_sipler_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Geçen Haftaki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ tsistt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Geçen Ayki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ tsistt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Geçen Yılki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ tsistt|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
                     <h4 class="my-0 fw-normal">Toplam Satış Bilgileri</h4>
                 </div>
                 <div class="card-body">
@@ -29,11 +64,11 @@
                             <span class="badge text-bg-primary rounded-pill">{{ tdns }} Ay</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Toplam Sipariş Tutarı :
+                            Toplam Siparişler :
                             <span class="badge text-bg-primary rounded-pill">{{ tsistt|floatformat:"2g" }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Toptan Satış Tutarı :
+                            Toptan Satışlar :
                             <span class="badge text-bg-primary rounded-pill">{{ tststt|floatformat:"2g" }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -41,7 +76,6 @@
                             <span class="badge text-bg-primary rounded-pill">{{ ts|floatformat:"2g" }}</span>
                         </li>
                     </ul>
-                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
                 </div>
             </div>
         </div>
@@ -131,7 +165,6 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
                 </div>
             </div>
         </div>
@@ -149,7 +182,6 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button>
                 </div>
             </div>
         </div>
