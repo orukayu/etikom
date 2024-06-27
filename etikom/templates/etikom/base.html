@@ -187,7 +187,7 @@
                         </div>
                         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                             <div class="fixed-sol">
-                                <ul class="nav flex-column border-bottom">
+                                <ul class="nav flex-column border-bottom pb-2">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" aria-current="page" href="/">
                                             <svg class="bi"><use xlink:href="#house"></use></svg>Anasayfa
@@ -216,10 +216,10 @@
                                 </ul>
                                 
                                 <h6 class="sidebar-heading text-center align-items-center px-3 mt-3 text-body-secondary text-uppercase">
-                                    <span>{{ firma_adi|title }}</span>
+                                    <span class="text-primary">{{ firma_adi|title }}</span>
                                 </h6>
 
-                                <ul class="nav flex-column border-bottom mb-3">
+                                <ul class="nav flex-column border-bottom pb-2">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'girisurl' %}">
                                             <svg class="bi"><use xlink:href="#signpost"></use></svg>Genel Raporlar
@@ -300,7 +300,7 @@
                                     </li>
                                 </ul>
 
-                                <ul class="nav flex-column">
+                                <ul class="nav flex-column pt-2">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
                                             <svg class="bi"><use xlink:href="#people-circle"></use></svg>Kayıt Ol

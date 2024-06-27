@@ -1,31 +1,29 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<div class="d-flex align-items-center col-12 col-sm-5 gap-2">
-    <img src="/static/media/etikom-logo.png" width="30" height="30"/>
-    <h4 style="margin-bottom: 5px;">Etikom Hakkında</h4>
+<div class="d-flex align-items-center col-12 col-sm-5">
+    <h4>Etikom Hakkında</h4>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="metin mt-3">
-    <h5>
-        E-Ticaretin Kolay Muhasebesi
-    </h5>
-    <p>
-        Uygulamamız, özellikle e-ticaret yapan şahıslar yada işletmeler için takibi zor süreçleri kolaylıkla takip edip, yönetebilmeleri için ortaya çıkmıştır. Çünkü, ileri seviye Excel bilgisi yada günümüz pahalı muhasebe programları bile bu işlemler için yetersiz kalmaktır. Etikom ile fiyatlama, kâr/zarar, kritik stok hatta sipariş ödemeleri gibi raporlara sadece bir tıklamayla ulaşabilirsiniz.
-    </p>
-    <p>
-        Etikom'da sadece e-ticaretinizin gereksinim duyduğu alanlar düşünülmüş ve bunlara kolay çözümler üretilmiştir. Dilerseniz hızlıca ürününüz için satış fiyatı hesaplayabilir, bu ürünler için excel ile stok girişi yapıp takip edebilir, stoklarınıza ait ihtiyacınız olan raporlarınızı ve stok detaylarını bir tıklamayla görebilirsiniz.
-    </p>
-    <p>
-        Siparişlerinizi ve diğer etkenleri excel ile topluca girebilirsiniz, böylece her sipariş için kâr/zarar durumunuzu görebilirsiniz. İadelerinizi, hizmet ve işlem bedellerinizi kolayca takip edebilir, platformların fatura ve ödemelerini kolay bir şekilde kontrol edebilirsiniz. Mükerrer kesinlen komisyon, işlem faturası veya eksik yatırılan ödemelerinizi görebilirsiniz.
-    </p>
-    <p>
-        Geleneksel ticaret için hazırlanmış olan manuel programların e-ticaretin hızına veya takibine yetişmesi mümkün olmadığından sizde şimdi Etikom'a giriş yaparak, 24 saat hizmetinizde olacak bu online yönetici asistanınızla ticaretinizde sağlam ve emin adımlarla ilerleyebilirsiniz.
-    </p>
-    <p class="fs-4">
-        <a class="float-end fw-bold" href="{% url 'iletisimurl' %}">ETİKOM</a>
-    </p>
+<div class="px-4 pt-3 my-5 text-center border-bottom">
+    <img class="d-block mx-auto mb-4" src="/static/media/etikom-logo.png" alt="" width="72" height="72">
+    <h1 class="display-4 fw-bold text-body-emphasis">E-Ticaretin Kolay Muhasebesi</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Uygulamamız, özellikle e-ticaret yapan şahıslar yada işletmeler için takibi zor süreçleri kolaylıkla takip edip, yönetebilmeleri için ortaya çıkmıştır. Çünkü, ileri seviye Excel bilgisi yada günümüz pahalı muhasebe programları bile bu işlemler için yetersiz kalmaktır. Etikom ile fiyatlama, kâr/zarar, kritik stok hatta sipariş ödemeleri gibi raporlara sadece bir tıklamayla ulaşabilirsiniz.</p>
+        <p class="lead mb-4">Etikom'da sadece e-ticaretinizin gereksinim duyduğu alanlar düşünülmüş ve bunlara kolay çözümler üretilmiştir. Dilerseniz hızlıca ürününüz için satış fiyatı hesaplayabilir, bu ürünler için excel ile stok girişi yapıp takip edebilir, stoklarınıza ait ihtiyacınız olan raporlarınızı ve stok detaylarını görebilirsiniz.</p>
+        <p class="lead mb-4">Siparişlerinizi ve diğer etkenleri excel ile topluca girebilirsiniz, böylece her sipariş için kâr/zarar durumunuzu görebilirsiniz. İadelerinizi, hizmet ve işlem bedellerinizi kolayca takip edebilir, platformların fatura ve ödemelerini kolay bir şekilde kontrol edebilirsiniz. Mükerrer kesinlen komisyon, işlem faturası veya eksik yatırılan ödemelerinizi görebilirsiniz.</p>
+        <p class="lead mb-4">Geleneksel ticaret için hazırlanmış olan manuel programların e-ticaretin hızına veya takibine yetişmesi mümkün olmadığından sizde şimdi Etikom'a giriş yaparak, 24 saat hizmetinizde olacak bu online yönetici asistanınızla ticaretinizde sağlam ve emin adımlarla ilerleyebilirsiniz.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <button type="button" class="btn btn-success btn-lg px-4 me-sm-3" onclick="window.location.href = '/fiyatlandirma';">Premium</button>
+            <button type="button" class="btn btn-primary btn-lg px-4" onclick="window.location.href = '/iletisim';">İletişim</button>
+        </div>
+    </div>
+    <div class="overflow-hidden" style="max-height: 30vh;">
+        <div class="container px-5">
+            <img src="https://www.etikom.net/static/media/social.jpg" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" width="700" height="500" loading="lazy">
+        </div>
+    </div>
 </div>
 {% endblock %}
