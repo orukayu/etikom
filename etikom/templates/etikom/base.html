@@ -152,6 +152,10 @@
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
             <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
           </symbol>
+          <symbol id="bookmark" viewBox="0 0 16 16">
+            <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.18.18 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.18.18 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.18.18 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.18.18 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.18.18 0 0 0 .134-.098z"/>
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+          </symbol>
         </svg>
         <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
             <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="/">
@@ -183,7 +187,7 @@
                         </div>
                         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                             <div class="fixed-sol">
-                                <ul class="nav flex-column">
+                                <ul class="nav flex-column border-bottom">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" aria-current="page" href="/">
                                             <svg class="bi"><use xlink:href="#house"></use></svg>Anasayfa
@@ -211,11 +215,11 @@
                                     </li>
                                 </ul>
                                 
-                                <h6 class="sidebar-heading text-center align-items-center px-3 mt-4 text-body-secondary text-uppercase">
-                                    <span>{{ firma_adi|title }}</span><hr class="mt-0">
+                                <h6 class="sidebar-heading text-center align-items-center px-3 mt-3 text-body-secondary text-uppercase">
+                                    <span>{{ firma_adi|title }}</span>
                                 </h6>
 
-                                <ul class="nav flex-column mb-auto">
+                                <ul class="nav flex-column border-bottom mb-3">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'girisurl' %}">
                                             <svg class="bi"><use xlink:href="#signpost"></use></svg>Genel Raporlar
@@ -296,9 +300,7 @@
                                     </li>
                                 </ul>
 
-                                <hr class="my-3">
-
-                                <ul class="nav flex-column mb-auto">
+                                <ul class="nav flex-column">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
                                             <svg class="bi"><use xlink:href="#people-circle"></use></svg>Kayıt Ol

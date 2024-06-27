@@ -247,3 +247,10 @@ form.stok-edit {
     color: white !important;
     background-color: green !important;
 }
+
+svg.fav {
+    height: 2rem !important;
+    width: 2rem !important;
+    margin-top: -7px;
+    color: darkseagreen;
+}
