@@ -5,10 +5,12 @@ from django.urls import reverse
 from .models import Stok
 from .models import Siparis
 from .models import Blog
+from .models import Kargo
 from .forms import StokFormu
 from .forms import KayitFormu
 from .forms import GirisFormu
 from .forms import SiparisFormu
+from .forms import KargoFormu
 
 from django.db.models import Sum
 from django.db.models import Q
@@ -36,10 +38,12 @@ from datetime import datetime, timedelta
 import calendar
 import json
 
+from django.contrib import messages
 
 # Create your views here.
 
 def anasayfa(request):
+    title = 'Etikom'
     if not request.user.is_authenticated:
         user = authenticate(username='demo firma', password='demofirma')
         if user:
@@ -50,13 +54,16 @@ def anasayfa(request):
 
 
 def demofirma(request):
-    title = 'Etikom'
+    title = 'Anasayfa'
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
 
     if request.method == 'POST':
         if 'girisyap' in request.POST:
             giris = GirisFormu(request.POST)
             stok = StokFormu()
             siparis = SiparisFormu()
+            kargo = KargoFormu()
             if giris.is_valid():
                 firma_adi = giris.cleaned_data['firma_adi']
                 password1 = giris.cleaned_data['password1']
@@ -79,6 +86,7 @@ def demofirma(request):
             siparis = SiparisFormu(request.POST, user=request.user)
             giris = GirisFormu()
             stok = StokFormu()
+            kargo = KargoFormu()
             if siparis.is_valid():
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
@@ -96,18 +104,42 @@ def demofirma(request):
                 stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat)
                 stok.save1()
                 return redirect('demofirmaurl')
+
+        elif 'kargoekle' in request.POST:
+            kargo = KargoFormu(request.POST)
+            if kargo.is_valid():
+                sip_no = kargo.cleaned_data['Siparisno']
+                kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
+                if kontrol > 0:
+                    kntrl = Kargo.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
+                    if kntrl == 0:
+                        post = kargo.save(commit=False)
+                        post.Firmaadi = request.user
+                        post.save()
+                        return redirect('demofirmaurl')
+                    else:
+                        kargo.add_error('Siparisno', 'Bu siparişin kargo bilgisi girilmiş.')
+                        giris = GirisFormu()
+                        stok = StokFormu()
+                        siparis = SiparisFormu(user=request.user)
+                else:
+                    kargo.add_error('Siparisno', 'Sipariş No mevcut değil.')
+                    giris = GirisFormu()
+                    stok = StokFormu()
+                    siparis = SiparisFormu(user=request.user)
+
         else:
             giris = GirisFormu()
             stok = StokFormu()
             siparis = SiparisFormu(user=request.user)
+            kargo = KargoFormu()
     else:
         giris = GirisFormu()
         stok = StokFormu()
         siparis = SiparisFormu(user=request.user)
+        kargo = KargoFormu()
 
     mesaj = ''
-    firma_adi = request.user.username
-    firma_adi_id = request.user.id
 
     stv = Stok.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
 
@@ -132,11 +164,27 @@ def demofirma(request):
         tsm = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
         osm = tsm / tss
 
+    kargolar = Kargo.objects.filter(Firmaadi=firma_adi_id).count()
+    if kargolar is None:
+        kargo_sayisi = 0
+    else:
+        kargo_sayisi = kargolar
+
+    desiler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]
+    tutarlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
+
+    if kargo_sayisi == 0:
+        ort_desi = 0
+        top_tutar = 0
+    else:
+        ort_desi = desiler / kargolar
+        top_tutar = tutarlar
 
     context = {
         'giris': giris,
         'stok': stok,
         'siparis': siparis,
+        'kargo': kargo,
         'mesaj': mesaj,
         'firma_adi': firma_adi,
         'title': title,
@@ -146,6 +194,9 @@ def demofirma(request):
         'tss': tss,
         'osm': osm,
         'tsm': tsm,
+        'kargo_sayisi': kargo_sayisi,
+        'ort_desi': ort_desi,
+        'top_tutar': top_tutar,
     }
 
     return render(request, 'etikom/base.html', context)
@@ -343,6 +394,62 @@ def siparisliste(request, sort=None):
 
     return render(request, 'etikom/siparislistesi.html', context)
 
+def kargoliste(request, sort=None):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).count()
+    if kargo is None:
+        kargo_sayisi = 0
+    else:
+        kargo_sayisi = kargo
+
+    desiler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]
+    tutarlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
+
+    if kargo_sayisi == 0:
+        ort_desi = 0
+        top_tutar = 0
+        ort_tutar = 0
+    else:
+        ort_desi = desiler / kargo
+        top_tutar = tutarlar
+        ort_tutar = top_tutar / kargo_sayisi
+    
+
+    if sort == 'az-siparis-no':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Siparisno').values()
+    elif sort == 'za-siparis-no':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Siparisno').values()
+    elif sort == 'az-desi':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Desi').values()
+    elif sort == 'za-desi':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Desi').values()
+    elif sort == 'az-kargo-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Kargotutari').values()
+    elif sort == 'za-kargo-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Kargotutari').values()
+    else:
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id)
+
+    firma = request.user.username
+    title = 'Kargo Listesi'
+
+    context = {
+        'kargo': kargo,
+        'firma_adi': firma_adi,
+        'firma': firma,
+        'title': title,
+        'kargo_sayisi': kargo_sayisi,
+        'desiler': desiler,
+        'ort_desi': ort_desi,
+        'top_tutar': top_tutar,
+        'ort_tutar': ort_tutar,
+    }
+    
+
+    return render(request, 'etikom/kargolistesi.html', context)
+
 def girisyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
@@ -387,10 +494,10 @@ def girisyap(request):
     n_s_t = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
     n_s_y = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en az satilan 5 urun
     s_t_u= Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__lte=0)[:5] #stok 0 olan urunler
-    s_a_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(Q(total_adet__gt=0) & Q(total_adet__lt=11)).order_by('total_adet')[:5] #stogu azalan urunler
+    s_a_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__gt=0).order_by('total_adet')[:5] #stogu azalan urunler
     c_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct()  # pazaryerleri listesi
     b_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').annotate(total_satis=Sum('Toplam')).order_by('-total_satis')[:5] #en çok satılan 5 ürün
-
+    s_y_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__gt=0).order_by('-total_adet')[:5] #stogu azalan urunler
 
     today = datetime.today()    # Şu anki tarih
     buay = today.month
@@ -463,6 +570,7 @@ def girisyap(request):
         's_a_u': s_a_u,
         'c_p_y': c_p_y,
         'b_p_y': b_p_y,
+        's_y_u': s_y_u,
         'today': today,
         'bh_siplerin_toplami': bh_siplerin_toplami,
         'gh_siplerin_toplami': gh_siplerin_toplami,
@@ -505,6 +613,7 @@ def kayitol(request):
 def cikisyap(request):
     logout(request)
     return redirect('anasayfa')
+
 
 def blogyap(request):
     firma_adi = request.user.username
@@ -594,6 +703,32 @@ def sipexcelyuklemeyap(request):
             return redirect('siparislistesiurl')
     
     return render(request, 'etikom/sipexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+
+def kargoexcelyuklemeyap(request):
+    title = 'Excel Yükle'
+    firma_adi = request.user.username
+
+    if request.method == "POST":
+        if 'excel_file' in request.FILES:
+            excel_file = request.FILES['excel_file']
+            df = pd.read_excel(excel_file)
+            for index, row in df.iterrows():
+                siparis_no = row['Sipariş No']
+                if isinstance(siparis_no, int):
+                    siparis = str(siparis_no)
+                else:
+                    siparis = siparis_no
+                kargo = Kargo(
+                    Desi = row['Desi'],
+                    Kargotutari = row['Kargo Tutarı'],
+                    Siparisno = siparis,
+                    Firmaadi = request.user,
+                )
+                kargo.save()
+            
+            return redirect('kargolistesiurl')
+
+    return render(request, 'etikom/kargoexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 
 def stokexceliindir(request):
@@ -1059,5 +1194,89 @@ def siparistoplaexceli(request, sira):
     # HTTP yanıtı olarak Excel dosyasını döndür
     response = HttpResponse(response_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_{en_son_tarih_str}_sevkiyat.xlsx"'
+
+    return response
+
+def kargoeklemeyap(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Kargo'
+    
+    if request.method == "POST":
+        if 'kargoekle' in request.POST:
+            form = KargoFormu(request.POST)
+            if form.is_valid():
+                sip_no = form.cleaned_data['Siparisno']
+                kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
+                if kontrol > 0:
+                    kntrl = Kargo.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
+                    if kntrl == 0:
+                        post = form.save(commit=False)
+                        post.Firmaadi = request.user
+                        post.save()
+                        return redirect('kargolistesiurl')
+                    else:
+                        form.add_error('Siparisno', 'Bu siparişin kargo bilgisi girilmiş.')
+                else:
+                    form.add_error('Siparisno', 'Sipariş No mevcut değil.')
+                    
+    else:
+        form = KargoFormu()
+
+    return render(request, 'etikom/kargoekle.html', {'title': title, 'firma_adi': firma_adi, 'form': form})
+
+def kargoduzeltme(request, firma, pk):
+    
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    if firma_adi != firma:
+        return redirect('demofirmaurl')
+
+    fa = firma
+    pk = pk
+
+    kontrolkargo = get_object_or_404(Kargo, pk=pk)
+
+    if request.method == "POST":
+        form = KargoFormu(request.POST, instance=kontrolkargo)
+        if 'kargosil' in request.POST:
+            kontrolkargo.delete()
+            return redirect('kargolistesiurl')
+        elif 'kargoekle' in request.POST:
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.Firmaadi = request.user
+                post.save()
+                return redirect('kargolistesiurl')
+    else:
+        form = KargoFormu(instance=kontrolkargo)
+
+    title = 'Kargo Detayı'
+    form = KargoFormu(instance=kontrolkargo)
+    return render(request, 'etikom/kargodetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+
+def kargoexceliindir(request):
+    firma_adi_id = request.user.id
+
+    # Kargo modelinden tüm verileri al
+    kargolar = Kargo.objects.filter(Firmaadi=firma_adi_id)
+
+    # Kargo verilerini bir DataFrame'e dönüştür
+    data = {
+        'Sipariş No': [kargo.Siparisno for kargo in kargolar],
+        'Desi': [kargo.Desi for kargo in kargolar],
+        'Kargo Tutarı': [str(kargo.Kargotutari).replace('.', ',') for kargo in kargolar],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_buffer = BytesIO()
+    df.to_excel(excel_buffer, index=False)
+    excel_buffer.seek(0)  # Buffer'ın başına git
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_giden_kargo_listesi.xlsx"'
 
     return response

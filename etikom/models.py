@@ -3,6 +3,18 @@ from django.db import models
 from django.utils import timezone
 import datetime
 
+class Kargo(models.Model):
+    Siparisno = models.CharField(max_length=25)
+    Desi = models.DecimalField(max_digits=4, decimal_places=2)
+    Kargotutari = models.DecimalField(max_digits=10, decimal_places=2)
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['Siparisno']  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+
+    def __str__(self):
+        return str(self.Siparisno)
+
 class Siparis(models.Model):
     Siparisno = models.CharField(max_length=25)
     Pazaryeri = models.CharField(max_length=25)

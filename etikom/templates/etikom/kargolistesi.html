@@ -1,0 +1,85 @@
+{% extends 'etikom/base.html' %}
+
+{% block baslik %}
+<dl class="row align-items-center">
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }}<br>Özet Kargo Raporu</h4></dt>
+    <dd class="col-sm-9">
+        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Sipariş No</strong>'su eklediğiniz siparişlerden birinin no'su olmalıdır. Aksi takdirde kargo raporlarınızda maliyetiniz fazla çıkacaktır.
+    </dd>
+</dl>
+{% endblock %}
+
+{% block content %}
+<div class="stoklistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Kargo Sayısı: <strong>{{ kargo_sayisi|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Ortalama Desi: <strong>{{ ort_desi|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Ortalama Tutar: <strong>{{ ort_tutar|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Tutar: <strong>{{ top_tutar|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+        <h5>
+            Giden Kargo Listesi;
+        </h5>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'kargoexcelindirurl' %}';">Excel İndir</button>
+        </div>
+    </div>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Detay<br>
+                    </th>
+                    <th scope="col">Sipariş No<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-siparis-no' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-siparis-no' %}">Z</a>)
+                    </th>
+                    <th scope="col">Desi<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-desi' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-desi' %}">Z</a>)
+                    </th>
+                    <th scope="col">Kargo Tutarı<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-kargo-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-kargo-tutari' %}">Z</a>)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kargo in kargo %}
+                <tr>
+                    <td class="text-center">
+                        <a href="{% url 'kargoduzeltmeurl' firma=firma pk=kargo.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                    </td>
+                    <td>
+                        {{ kargo.Siparisno }}
+                    </td>
+                    <td class="text-center">
+                        {{ kargo.Desi }}
+                    </td>
+                    <td class="text-end">
+                        {{ kargo.Kargotutari }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-2 px-3">
+        <p>{{ kargo_sayisi }} Satır</p>
+    </div>
+</div>
+{% endblock %}

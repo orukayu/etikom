@@ -9,7 +9,6 @@
         <meta name="description" content="E-ticaret yapan şahıs ve işletmelerin vazgeçemediği muhasebe programı.">
         <meta name="author" content="Oktay BAYRAM">
         <meta name="generator" content="Python">
-        <meta name="publisher" content="Etikom.Net"/>
 
         <link rel="canonical" href="https://www.etikom.net/"/>
 
@@ -123,6 +122,9 @@
           </symbol>
           <symbol id="columns-gap" viewBox="0 0 16 16">
             <path d="M6 1v3H1V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zm14 12v3h-5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zM6 8v7H1V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm14-6v7h-5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1z"/>
+          </symbol>
+          <symbol id="bi-ui-checks" viewBox="0 0 16 16">
+            <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
           </symbol>
           <symbol id="receipt" viewBox="0 0 16 16">
             <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27m.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0z"/>
@@ -277,16 +279,35 @@
                                                 </li>
                                                 <li>
                                                     <a class="nav-link d-flex align-items-center gap-2" href="{% url 'siparislistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                        <svg class="bi"><use xlink:href="#graph-up-arrow"></use></svg>Sipariş Hareketleri
+                                                        <svg class="bi"><use xlink:href="#graph-up-arrow"></use></svg>Sipariş Listesi
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
-                                            <svg class="bi"><use xlink:href="#truck"></use></svg>Kargo İşlemleri
-                                        </a>
+                                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#kargo-collapse" aria-expanded="false">
+                                          Kargo İşlemleri
+                                        </button>
+                                        <div class="collapse" id="kargo-collapse" style="">
+                                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'kargoekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#truck"></use></svg>Kargo Ekle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'kargoexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'kargolistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#bi-ui-checks"></use></svg>Kargo Listesi
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </li>
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
@@ -446,6 +467,28 @@
                                     <p style="font-weight: bold;">Toplam Sipariş Sayısı:<span id="ts">{{ tss|floatformat:"-3g" }}</span></p>
                                     <p style="font-weight: bold;">Ortalama Sipariş Tutarı:<span id="ts">{{ osm|floatformat:"2g" }}</span></p>
                                     <p style="font-weight: bold;">Toplam Sipariş Tutarı:<span id="ts">{{ tsm|floatformat:"2g" }}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="card mb-4 rounded-3 shadow-sm">
+                                <div class="card-header py-3">
+                                    <h4 class="my-0 fw-normal text-center">Kargo Ekle</h4>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Siparişleriniz için giden kargo bilgisi ekleyebilir yada Excel ile toplu kargo bilgisi yükleyebilirsiniz.</small></h5>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        {{ kargo.as_p }}
+                                        <div class="d-flex gap-2 justify-content-center py-3">
+                                            <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="kargoekle">Kargo Ekle</button>
+                                            <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'kargoexcelyukleurl' %}';">Excel Yükle</button>
+                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'kargolistesiurl' %}';">Kargo Listesi</button>
+                                        </div>
+                                    </form>
+                                    <p style="font-weight: bold;">Toplam Kargo Sayısı:<span id="ts">{{ kargo_sayisi|floatformat:"-3g" }}</span></p>
+                                    <p style="font-weight: bold;">Ortalama Desi:<span id="ts">{{ ort_desi|floatformat:"2g" }}</span></p>
+                                    <p style="font-weight: bold;">Toplam Kargo Tutarı:<span id="ts">{{ top_tutar|floatformat:"2g" }}</span></p>
                                 </div>
                             </div>
                         </div>

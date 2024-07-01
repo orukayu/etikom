@@ -1,7 +1,21 @@
 from django import forms
 from .models import Stok
 from .models import Siparis
+from .models import Kargo
 from django.utils.dateparse import parse_date
+
+
+
+class KargoFormu(forms.ModelForm):
+    class Meta:
+        model = Kargo
+        fields = ['Siparisno', 'Desi', 'Kargotutari']
+        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı"}
+        widgets = {
+            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
+            'Desi': forms.TextInput(attrs={'placeholder': '1'}),
+            'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50'}),
+        }
 
 
 class GirisFormu(forms.Form):

@@ -2,9 +2,9 @@
 
 {% block baslik %}
 <dl class="row align-items-center">
-    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Özet Stok Raporu</h4></dt>
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }}<br>Özet Stok Raporu</h4></dt>
     <dd class="col-sm-9">
-        Değiştirmek veya silmek istediğiniz satır detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait bilgiler için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait bilgiler için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
     </dd>
 </dl>
 {% endblock %}
@@ -39,7 +39,7 @@
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Stok Hareketleriniz;
+            Stok Hareketleri;
         </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>

@@ -24,14 +24,16 @@ urlpatterns = [
     path('islem-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
     path('stok-gecmisi/<str:sort>/', views.stokgecmisi, name='stokgecmisiurl'),
 
+
+
     path('siparis-ekle/', views.siparisekleme, name='siparisekleurl'),
     path('siparis-exceli-yukle/', views.sipexcelyuklemeyap, name='sipexcelyukleurl'),
 
-    path('siparis-listesi/<int:sira>', views.siparistopla, name='siparisleritoplaurl'),
+    path('siparis-icerikleri/<int:sira>', views.siparistopla, name='siparisleritoplaurl'),
     path('siparis-topla-exceli/<int:sira>', views.siparistoplaexceli, name='siptoplaexcelindirurl'),
 
-    path('siparis-hareketleri/', views.siparisliste, name='siparislistesiurl'),
-    path('siparis-hareketleri/<str:sort>/', views.siparisliste, name='siparissiralama'),
+    path('siparis-listesi/', views.siparisliste, name='siparislistesiurl'),
+    path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
 
     path('siparis-duzeltme/<str:firma>/<int:pk>/', views.siparisduzeltme, name='siparisduzeltmeurl'),
     path('siparis-exceli-indir/', views.sipexceliindir, name='sipexcelindirurl'),
@@ -39,6 +41,16 @@ urlpatterns = [
     path('pazaryeri-detayi/<str:pzr>/', views.pazaryeridetay, name='pazaryeridetayurl'),
 
 
+
+    path('kargo-ekle/', views.kargoeklemeyap, name='kargoekleurl'),
+    path('kargo-exceli-yukle/', views.kargoexcelyuklemeyap, name='kargoexcelyukleurl'),
+
+    path('kargo-listesi/', views.kargoliste, name='kargolistesiurl'),
+    path('kargo-listesi/<str:sort>/', views.kargoliste, name='kargosiralamaurl'),
+
+    path('kargo-duzeltme/<str:firma>/<int:pk>/', views.kargoduzeltme, name='kargoduzeltmeurl'),
+
+    path('kargo-exceli-indir/', views.kargoexceliindir, name='kargoexcelindirurl'),
 
     path('giris/', views.girisyap, name='girisurl'),
     path('hakkimizda/', views.hakkimizdayap, name='hakkimizdaurl'),

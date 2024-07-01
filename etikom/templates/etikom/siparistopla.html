@@ -2,7 +2,7 @@
 
 {% block baslik %}
 <dl class="row align-items-center">
-    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Sipariş İçerikleri</h4></dt>
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }}<br>Sipariş İçerikleri</h4></dt>
     <dd class="col-sm-9">
         Bu sayfada, aynı güne ait siparişlerde ki ürünlerin stok kodları ve toplam adetleri listelenmektedir. Gitmek istediğiniz tarihe <strong>"Önceki Gün"</strong> veya <strong>"Sonraki Gün"</strong> butonlarını kullanarak gidip o güne ait hangi üründen kaç adet sipariş verildiğini görebilirsiniz.
     </dd>
@@ -14,7 +14,7 @@
 <div class="sayimlistesi">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            <sort class="text-warning">{{ en_son_tarih|date:"d.m.Y" }}</sort> <small class="blockquote-footer">Siparişlerinin Ürünleri</small>
+            <sort class="text-warning">{{ en_son_tarih|date:"d.m.Y" }}</sort> <small class="blockquote-footer">Tarihli Siparişlerin Ürünleri</small>
         </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
