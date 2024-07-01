@@ -511,7 +511,7 @@ def girisyap(request):
     bh_siplerin_toplami = buhaftaki_sipler.aggregate(bhsip_tt=Sum('Toplam'))['bhsip_tt']
 
     # Gecen haftanın siparişlerini filtreleme
-    gecen_haftasonu = today - timedelta(days=bugun)
+    gecen_haftasonu = today - timedelta(days=bugun+1)
     gecen_haftabasi = gecen_haftasonu - timedelta(days=6)
     gcn_haftaki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gecen_haftabasi, gecen_haftasonu])
     gh_siplerin_toplami = gcn_haftaki_sipler.aggregate(ghsip_tt=Sum('Toplam'))['ghsip_tt']
@@ -578,6 +578,8 @@ def girisyap(request):
         'ga_sipler_toplami': ga_sipler_toplami,
         'by_sipler_toplami': by_sipler_toplami,
         'gy_sipler_toplami': gy_sipler_toplami,
+        'gecen_haftasonu': gecen_haftasonu,
+        'gecen_haftabasi': gecen_haftabasi,
     }
 
     return render(request, 'etikom/giris.html', context)
