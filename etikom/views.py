@@ -542,6 +542,33 @@ def girisyap(request):
     gcn_yilki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gcn_yilbasi, gcn_yilsonu])
     gy_sipler_toplami = gcn_yilki_sipler.aggregate(gysip_tt=Sum('Toplam'))['gysip_tt']
 
+
+    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()      # Toplam stok cesidi sayısı
+
+    if tsc == 0:
+        tstg = 0
+        ksa = 0
+        tstm = 0
+        ostm = 0
+    else:
+        tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
+        ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
+        tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+        ostm = tstm / tstg
+
+        # None kontrolü
+        if tstg is None:
+            tstg = 0
+            ostm = 0
+        if ksa is None:
+            ksa = 0
+            ostm = 0
+        if tstm is None:
+            tstm = 0
+            ostm = 0
+
+    tstc = abs(ksa - tstg)
+
     # Javascript ile 6 aylik satis grafigi hazirlama
     # six_months_ago = today - timedelta(days=6*30) # Son 6 ay
     # two_years_ago = today - timedelta(days=2*365) # Son 2 yıl
@@ -578,8 +605,10 @@ def girisyap(request):
         'ga_sipler_toplami': ga_sipler_toplami,
         'by_sipler_toplami': by_sipler_toplami,
         'gy_sipler_toplami': gy_sipler_toplami,
-        'gecen_haftasonu': gecen_haftasonu,
-        'gecen_haftabasi': gecen_haftabasi,
+        'tsc': tsc,
+        'tstg': tstg,
+        'tstc': tstc,
+        'ksa': ksa,
     }
 
     return render(request, 'etikom/giris.html', context)
