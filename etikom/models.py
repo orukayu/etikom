@@ -1,11 +1,10 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 import datetime
 
 class Kargo(models.Model):
-    Siparisno = models.CharField(max_length=25)
-    Desi = models.DecimalField(max_digits=4, decimal_places=2)
+    Siparisno = models.CharField(max_length=25, null=True)
+    Desi = models.IntegerField()
     Kargotutari = models.DecimalField(max_digits=10, decimal_places=2)
     Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -20,7 +19,7 @@ class Siparis(models.Model):
     Pazaryeri = models.CharField(max_length=25)
     Tarih = models.DateField()
     Stokkodu = models.CharField(max_length=25)
-    Adet = models.IntegerField()
+    Adet = models.PositiveIntegerField()
     Satisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Komisyon = models.DecimalField(max_digits=10, decimal_places=2)
