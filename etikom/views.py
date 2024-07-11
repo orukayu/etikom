@@ -29,7 +29,6 @@ from io import BytesIO
 from django.conf import settings
 
 from django.db.models import Min, Max
-from dateutil.relativedelta import relativedelta
 
 from django.db.models.functions import ExtractWeek
 from django.db.models.functions import ExtractMonth
@@ -473,27 +472,47 @@ def girisyap(request):
     # Donem sayisi icin en küçük ve en büyük tarihleri bulma
     tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
 
-    en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
-    en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
+    if tsistt == 0:
+        en_kucuk_tarih = datetime.today()
+        en_buyuk_tarih = datetime.today()
+    else:
+        en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
+        en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
 
     # Tarihler arasındaki farkı hesaplama
-    if en_buyuk_tarih and en_kucuk_tarih:
-        fark = relativedelta(en_buyuk_tarih, en_kucuk_tarih)
-        fark_ay = fark.years * 12 + fark.months
-        if fark_ay == 0:
-            tdns = 1
-        elif fark_ay == None:
-            tdns = 0
-        else:
-            tdns = fark_ay + 1
-    else:
-        tdns = 0
+    ekt = en_kucuk_tarih
+    ekt_ay = ekt.month
+    ekt_yil = ekt.year
 
-    ort_dnm_sts = ts / tdns
+    ebt = en_buyuk_tarih
+    ebt_ay = ebt.month
+    ebt_yil = ebt.year
+
+    if ebt_yil - ekt_yil == 0:
+        tdns = ebt.month - ekt.month + 1
+    elif ebt_yil - ekt_yil == 1:
+        tdns = (12 - ekt_ay) + ebt_ay
+    else:
+        tdns = (12 - ekt_ay) + ebt_ay + (12 * (ebt_yil - ekt_yil - 1))
+    
+    ort_dnm_sts = ts / tdns  # Aylik ortalama satis
 
     n_s_t = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
     n_s_y = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en az satilan 5 urun
-    s_t_u= Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__lte=0)[:5] #stok 0 olan urunler
+    s_t_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__lte=0)[:5] #stok 0 olan urunler
+    s_t_u = list(s_t_u)  # QuerySet'i listeye çevir
+
+    # Eksik sayıda item varsa, boş item ekle
+    s_t_u_count = len(s_t_u)
+    if s_t_u_count < 5:
+        for _ in range(5 - s_t_u_count):
+            s_t_u.append({'Stokkodu': None, 'total_adet': 0})
+
+
+
+
+
+
     s_a_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__gt=0).order_by('total_adet')[:5] #stogu azalan urunler
     c_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct()  # pazaryerleri listesi
     b_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').annotate(total_satis=Sum('Toplam')).order_by('-total_satis')[:5] #en çok satılan 5 ürün
