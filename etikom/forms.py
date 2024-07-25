@@ -9,12 +9,13 @@ from django.utils.dateparse import parse_date
 class KargoFormu(forms.ModelForm):
     class Meta:
         model = Kargo
-        fields = ['Siparisno', 'Desi', 'Kargotutari']
-        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı"}
+        fields = ['Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli']
+        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet+Islem Bedeli"}
         widgets = {
             'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
             'Desi': forms.TextInput(attrs={'placeholder': '1'}),
             'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50'}),
+            'Hizmetbedeli': forms.TextInput(attrs={'placeholder': '5.99'}),
         }
 
 

@@ -377,7 +377,7 @@
                                     <h4 class="my-0 fw-normal text-center">Fiyat Hesaplama</h4>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Ürününüz için pazaryeri satış fiyatını hızlıca hesaplayabilirsiniz.</small></h5>
+                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Ürününüz için pazaryeri satış fiyatını kolayca hesaplayabilirsiniz.</small></h5>
                                     <script>
                                     window.onload = function() {
                                         toplama(); // Sayfa yüklendiğinde toplama fonksiyonunu tetikle
@@ -433,7 +433,7 @@
                                     <h4 class="my-0 fw-normal">Stok Ekle</h4>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Ürünleriniz için stok bilgisi ekleyebilir yada Excel ile toplu stok yüklemede yapabilirsiniz.</small></h5>
+                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Ürünlerinizin stok bilgisini ekleyiniz. Hazır, Excel dosyası ile toplu halde stok girişide yapabilirsiniz.</small></h5>
                                     <form method="POST">
                                         {% csrf_token %}
                                         {{ stok.as_p }}
@@ -455,7 +455,7 @@
                                     <h4 class="my-0 fw-normal text-center">Sipariş Ekle</h4>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Stok girişi yapılan ürünleriniz için sipariş bilgisi ekleyebilir yada Excel ile toplu sipariş yükleme işlemide yapabilirsiniz.</small></h5>
+                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Stok girdiğiniz ürünler için sipariş bilgisi ekleyiniz. Excel ile toplu yükleme işlemide yapabilirsiniz.</small></h5>
                                     <form method="POST">
                                         {% csrf_token %}
                                         {{ siparis.as_p }}
@@ -477,7 +477,7 @@
                                     <h4 class="my-0 fw-normal text-center">Kargo Ekle</h4>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Siparişleriniz için giden kargo bilgisi ekleyebilir yada Excel ile toplu kargo bilgisi yükleyebilirsiniz.</small></h5>
+                                    <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Siparişlerin giden kargo bilgisini ekleyiniz. Excel dosyası ile toplu kargo bilgisi yükleyebilirsiniz.</small></h5>
                                     <form method="POST">
                                         {% csrf_token %}
                                         {{ kargo.as_p }}

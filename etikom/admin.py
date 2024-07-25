@@ -13,13 +13,13 @@ class StokAdmin(admin.ModelAdmin):
 
 class SiparisAdmin(admin.ModelAdmin):
     form = SiparisFormu
-    list_display = ('id', 'Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Toplam', 'Komisyon', 'Komisyontutari', 'Firmaadi')
+    list_display = ('id', 'Firmaadi', 'Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Toplam', 'Komisyon', 'Komisyontutari')
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'Baslik', 'Metin', 'Url')
 
 class KargoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Siparisno', 'Desi', 'Kargotutari', 'Firmaadi')
+    list_display = ('id', 'Firmaadi', 'Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Toplam')
 
 admin.site.register(Stok,StokAdmin)
 admin.site.register(Siparis,SiparisAdmin)

@@ -56,6 +56,12 @@
                     <th scope="col">Kargo Tutarı<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-kargo-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-kargo-tutari' %}">Z</a>)
                     </th>
+                    <th scope="col">Hizmet+Islem Bedeli<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-hizmet-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-hizmet-tutari' %}">Z</a>)
+                    </th>
+                    <th scope="col">Toplam<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-toplam-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-toplam-tutari' %}">Z</a>)
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -72,6 +78,12 @@
                     </td>
                     <td class="text-end">
                         {{ kargo.Kargotutari }}
+                    </td>
+                    <td class="text-end">
+                        {{ kargo.Hizmetbedeli }}
+                    </td>
+                    <td class="text-end">
+                        {{ kargo.Toplam }}
                     </td>
                 </tr>
                 {% endfor %}

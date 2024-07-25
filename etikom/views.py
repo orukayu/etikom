@@ -110,17 +110,10 @@ def demofirma(request):
                 sip_no = kargo.cleaned_data['Siparisno']
                 kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
                 if kontrol > 0:
-                    kntrl = Kargo.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
-                    if kntrl == 0:
-                        post = kargo.save(commit=False)
-                        post.Firmaadi = request.user
-                        post.save()
-                        return redirect('demofirmaurl')
-                    else:
-                        kargo.add_error('Siparisno', 'Bu siparişin kargo bilgisi girilmiş.')
-                        giris = GirisFormu()
-                        stok = StokFormu()
-                        siparis = SiparisFormu(user=request.user)
+                    post = kargo.save(commit=False)
+                    post.Firmaadi = request.user
+                    post.save5()
+                    return redirect('demofirmaurl')
                 else:
                     kargo.add_error('Siparisno', 'Sipariş No mevcut değil.')
                     giris = GirisFormu()
@@ -292,36 +285,45 @@ def siparisliste(request, sort=None):
     firma_adi_id = request.user.id
 
     tpys = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct().count()
-    tsps = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Siparisno').order_by('Siparisno').distinct().count()
+    tsps = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Siparisno').order_by('Siparisno').distinct().count()   # toplam siparis sayisi
     tsts = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
-    tstc = Siparis.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
+    tstc = Siparis.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]                # tum siparislerdeki toplam urun adedi
 
     if tstc is None:
         tstc = 0
 
-    # En küçük ve en büyük tarihleri bulma
-    tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
-
-    en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
-    en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
-
-    # Tarihler arasındaki farkı hesaplama
-    if en_buyuk_tarih and en_kucuk_tarih:
-        fark = relativedelta(en_buyuk_tarih, en_kucuk_tarih)
-        fark_ay = fark.years * 12 + fark.months
-        if fark_ay == 0:
-            tdns = 1
-        elif fark_ay == None:
-            tdns = 0
-        else:
-            tdns = fark_ay + 1
-    else:
-        tdns = 0
-
-    if tstc == 0:
+    if tstc == 0:                   
         orsp = 0
     else:
-        orsp = tstc / tsps
+        orsp = tstc / tsps          # siparis basina dusen urun sayisi
+
+
+    # Donem sayisi icin en küçük ve en büyük tarihleri bulma
+    tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
+
+    if tsps == 0:
+        en_kucuk_tarih = datetime.today()
+        en_buyuk_tarih = datetime.today()
+    else:
+        en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
+        en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
+
+    # Tarihler arasındaki farkı hesaplama
+    ekt = en_kucuk_tarih
+    ekt_ay = ekt.month
+    ekt_yil = ekt.year
+
+    ebt = en_buyuk_tarih
+    ebt_ay = ebt.month
+    ebt_yil = ebt.year
+
+    if ebt_yil - ekt_yil == 0:
+        tdns = ebt.month - ekt.month + 1
+    elif ebt_yil - ekt_yil == 1:
+        tdns = (12 - ekt_ay) + ebt_ay
+    else:
+        tdns = (12 - ekt_ay) + ebt_ay + (12 * (ebt_yil - ekt_yil - 1))
+
 
     tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
 
@@ -428,6 +430,14 @@ def kargoliste(request, sort=None):
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Kargotutari').values()
     elif sort == 'za-kargo-tutari':
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Kargotutari').values()
+    elif sort == 'az-hizmet-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Hizmetbedeli').values()
+    elif sort == 'za-hizmet-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Hizmetbedeli').values()
+    elif sort == 'az-toplam-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
+    elif sort == 'za-toplam-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Toplam').values()
     else:
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id)
 
@@ -455,13 +465,13 @@ def girisyap(request):
 
     title = 'E-ticaretin Kolay Muhasebesi'    
 
-    kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+    kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]       # toptan satis tutari
     if kont_tststt == None:
         tststt = 0
     else:
         tststt = abs(kont_tststt)
 
-    kont_tsistt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
+    kont_tsistt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]     # toplam siparis tutari
     if kont_tsistt == None:
         tsistt = 0
     else:
@@ -1259,14 +1269,10 @@ def kargoeklemeyap(request):
                 sip_no = form.cleaned_data['Siparisno']
                 kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
                 if kontrol > 0:
-                    kntrl = Kargo.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
-                    if kntrl == 0:
-                        post = form.save(commit=False)
-                        post.Firmaadi = request.user
-                        post.save()
-                        return redirect('kargolistesiurl')
-                    else:
-                        form.add_error('Siparisno', 'Bu siparişin kargo bilgisi girilmiş.')
+                    post = form.save(commit=False)
+                    post.Firmaadi = request.user
+                    post.save5()
+                    return redirect('kargolistesiurl')
                 else:
                     form.add_error('Siparisno', 'Sipariş No mevcut değil.')
                     
