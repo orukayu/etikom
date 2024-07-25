@@ -6,8 +6,8 @@ class Kargo(models.Model):
     Siparisno = models.CharField(max_length=25, null=True)
     Desi = models.IntegerField()
     Kargotutari = models.DecimalField(max_digits=10, decimal_places=2)
-    Hizmetbedeli = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    Toplam = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Hizmetbedeli = models.DecimalField(max_digits=10, decimal_places=2)
+    Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def save5(self, *args, **kwargs):

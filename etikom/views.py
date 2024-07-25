@@ -1323,6 +1323,8 @@ def kargoexceliindir(request):
         'Sipariş No': [kargo.Siparisno for kargo in kargolar],
         'Desi': [kargo.Desi for kargo in kargolar],
         'Kargo Tutarı': [str(kargo.Kargotutari).replace('.', ',') for kargo in kargolar],
+        'Hizmet İşlem Bedeli': [str(kargo.Hizmetbedeli).replace('.', ',') for kargo in kargolar],
+        'Toplam': [str(kargo.Toplam).replace('.', ',') for kargo in kargolar],
     }
     df = pd.DataFrame(data)
 

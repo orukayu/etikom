@@ -10,7 +10,7 @@ class KargoFormu(forms.ModelForm):
     class Meta:
         model = Kargo
         fields = ['Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli']
-        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet+Islem Bedeli"}
+        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet+İşlem Bedeli"}
         widgets = {
             'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
             'Desi': forms.TextInput(attrs={'placeholder': '1'}),
