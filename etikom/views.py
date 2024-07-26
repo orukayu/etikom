@@ -781,10 +781,11 @@ def kargoexcelyuklemeyap(request):
                 kargo = Kargo(
                     Desi = row['Desi'],
                     Kargotutari = row['Kargo Tutarı'],
+                    Hizmetbedeli = row['Hizmet + İşlem Bedeli'],
                     Siparisno = siparis,
                     Firmaadi = request.user,
                 )
-                kargo.save()
+                kargo.save5()
             
             return redirect('kargolistesiurl')
 
@@ -1303,7 +1304,7 @@ def kargoduzeltme(request, firma, pk):
             if form.is_valid():
                 post = form.save(commit=False)
                 post.Firmaadi = request.user
-                post.save()
+                post.save5()
                 return redirect('kargolistesiurl')
     else:
         form = KargoFormu(instance=kontrolkargo)
@@ -1323,7 +1324,7 @@ def kargoexceliindir(request):
         'Sipariş No': [kargo.Siparisno for kargo in kargolar],
         'Desi': [kargo.Desi for kargo in kargolar],
         'Kargo Tutarı': [str(kargo.Kargotutari).replace('.', ',') for kargo in kargolar],
-        'Hizmet İşlem Bedeli': [str(kargo.Hizmetbedeli).replace('.', ',') for kargo in kargolar],
+        'Hizmet + İşlem Bedeli': [str(kargo.Hizmetbedeli).replace('.', ',') for kargo in kargolar],
         'Toplam': [str(kargo.Toplam).replace('.', ',') for kargo in kargolar],
     }
     df = pd.DataFrame(data)
