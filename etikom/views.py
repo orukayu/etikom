@@ -234,7 +234,11 @@ def stokliste(request, sort=None):
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
-    if sort == 'az-fatura-no':
+    if sort == 'az-tur':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Tur').values()
+    elif sort == 'za-tur':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Tur').values()
+    elif sort == 'az-fatura-no':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Afaturano').values()
     elif sort == 'za-fatura-no':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Afaturano').values()
@@ -335,7 +339,11 @@ def siparisliste(request, sort=None):
 
     stsys = Siparis.objects.filter(Firmaadi=firma_adi_id).count()
 
-    if sort == 'az-pazaryeri':
+    if sort == 'az-tur':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Tur').values()
+    elif sort == 'za-tur':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tur').values()
+    elif sort == 'az-pazaryeri':
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Pazaryeri').values()
     elif sort == 'za-pazaryeri':
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Pazaryeri').values()
@@ -405,20 +413,33 @@ def kargoliste(request, sort=None):
     else:
         kargo_sayisi = kargo
 
-    desiler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]
-    tutarlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
+    desiler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]                       # toplam desi
+    tutarlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Kargotutari"))["Kargotutari__sum"]        # toplam kargo
+    hizmetler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Hizmetbedeli"))["Hizmetbedeli__sum"]     # toplam hizmet
+    toplamlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]                 # genel toplam
+
 
     if kargo_sayisi == 0:
         ort_desi = 0
         top_tutar = 0
         ort_tutar = 0
+        ort_hizmet = 0
+        top_hizmet = 0
+        gen_toplam = 0
     else:
         ort_desi = desiler / kargo
         top_tutar = tutarlar
         ort_tutar = top_tutar / kargo_sayisi
+        top_hizmet = hizmetler
+        ort_hizmet = top_hizmet / kargo_sayisi
+        gen_toplam = toplamlar
     
 
-    if sort == 'az-siparis-no':
+    if sort == 'az-tur':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Tur').values()
+    elif sort == 'za-tur':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Tur').values()
+    elif sort == 'az-siparis-no':
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Siparisno').values()
     elif sort == 'za-siparis-no':
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Siparisno').values()
@@ -454,6 +475,9 @@ def kargoliste(request, sort=None):
         'ort_desi': ort_desi,
         'top_tutar': top_tutar,
         'ort_tutar': ort_tutar,
+        'top_hizmet': top_hizmet,
+        'ort_hizmet': ort_hizmet,
+        'gen_toplam': gen_toplam,
     }
     
 
@@ -517,11 +541,6 @@ def girisyap(request):
     if s_t_u_count < 5:
         for _ in range(5 - s_t_u_count):
             s_t_u.append({'Stokkodu': None, 'total_adet': 0})
-
-
-
-
-
 
     s_a_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__gt=0).order_by('total_adet')[:5] #stogu azalan urunler
     c_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct()  # pazaryerleri listesi

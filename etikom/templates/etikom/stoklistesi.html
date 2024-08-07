@@ -51,6 +51,9 @@
                 <tr>
                     <th scope="col">Detay<br>
                     </th>
+                    <th scope="col">Tür<br>
+                        (<a href="{% url 'hareketsiralamaurl' sort='az-tur' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-tur' %}">Z</a>)
+                    </th>
                     <th scope="col">Belge No<br>
                         (<a href="{% url 'hareketsiralamaurl' sort='az-fatura-no' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-fatura-no' %}">Z</a>)
                     </th>
@@ -73,6 +76,9 @@
                 <tr>
                     <td class="text-center">
                         <a href="{% url 'stokduzeltmeurl' firma=firma pk=stok.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                    </td>
+                    <td class="text-center">
+                        {{ stok.Tur }}
                     </td>
                     <td>
                         <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>

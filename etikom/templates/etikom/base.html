@@ -156,14 +156,16 @@
             <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
           </symbol>
           <symbol id="bookmark" viewBox="0 0 16 16">
-            <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.18.18 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.18.18 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.18.18 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.18.18 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.18.18 0 0 0 .134-.098z"/>
-            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+            <path d="M2 15.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2zM8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+          </symbol>
+          <symbol id="iadeekle" viewBox="0 0 16 16">
+            <path d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z"/>
           </symbol>
         </svg>
         <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
             <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="/">
                 <h3>ETİKOM.NET</h3>
-                <small>E-ticaretin Kolay Muhasebesi</small>
+                <small>E-Ticaretin Kolay Muhasebesi</small>
             </a>
             <ul class="navbar-nav flex-row d-md-none">
                 <li class="nav-item text-nowrap">
@@ -311,9 +313,28 @@
                                         </div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">
-                                            <svg class="bi"><use xlink:href="#graph-down-arrow"></use></svg>İade İşlemleri
-                                        </a>
+                                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#iade-collapse" aria-expanded="false">
+                                          İade İşlemleri
+                                        </button>
+                                        <div class="collapse" id="iade-collapse" style="">
+                                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'kargoekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#iadeekle"></use></svg>İade Ekle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'kargoexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'kargolistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                        <svg class="bi"><use xlink:href="#graph-down-arrow"></use></svg>İade Listesi
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </li>
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'anasayfa' %}">

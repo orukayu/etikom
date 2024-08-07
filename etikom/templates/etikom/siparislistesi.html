@@ -51,6 +51,9 @@
                 <tr>
                     <th scope="col">Detay<br>
                     </th>
+                    <th scope="col">Tür<br>
+                        (<a href="{% url 'siparissiralama' sort='az-tur' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-tur' %}">Z</a>)
+                    </th>
                     <th scope="col">Pazaryeri<br>
                         (<a href="{% url 'siparissiralama' sort='az-pazaryeri' %}">A</a>↔<a href="{% url 'siparissiralama' sort='za-pazaryeri' %}">Z</a>)
                     </th>
@@ -85,6 +88,9 @@
                 <tr>
                     <td class="text-center">
                         <a href="{% url 'siparisduzeltmeurl' firma=firma pk=siparis.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                    </td>
+                    <td class="text-center">
+                        {{ siparis.Tur }}
                     </td>
                     <td>
                         <a href="{% url 'pazaryeridetayurl' pzr=siparis.Pazaryeri %}">{{ siparis.Pazaryeri }}</a>

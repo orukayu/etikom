@@ -9,17 +9,17 @@ from .forms import SiparisFormu
 
 
 class StokAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Firmaadi', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
+    list_display = ('id', 'Firmaadi', 'Tur', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
 
 class SiparisAdmin(admin.ModelAdmin):
     form = SiparisFormu
-    list_display = ('id', 'Firmaadi', 'Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Toplam', 'Komisyon', 'Komisyontutari')
+    list_display = ('id', 'Firmaadi', 'Tur', 'Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Toplam', 'Komisyon', 'Komisyontutari')
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'Baslik', 'Metin', 'Url')
 
 class KargoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Firmaadi', 'Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Toplam')
+    list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Toplam')
 
 admin.site.register(Stok,StokAdmin)
 admin.site.register(Siparis,SiparisAdmin)

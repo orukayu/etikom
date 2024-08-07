@@ -15,21 +15,25 @@
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
                 <li>Kargo Sayısı: <strong>{{ kargo_sayisi|floatformat:"-3g" }}</strong></li>
-            </ul>
-        </div>
-        <div class="rapor col-6 col-md">
-            <ul class="list-unstyled mt-3">
                 <li>Ortalama Desi: <strong>{{ ort_desi|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Ortalama Tutar: <strong>{{ ort_tutar|floatformat:"2g" }}</strong></li>
+                <li>Ort. Kargo Tutarı: <strong>{{ ort_tutar|floatformat:"2g" }}</strong></li>
+                <li>Toplam Kargo Tutarı: <strong>{{ top_tutar|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Toplam Tutar: <strong>{{ top_tutar|floatformat:"2g" }}</strong></li>
+                <li>Ort. Hizmet Bedeli: <strong>{{ ort_hizmet|floatformat:"2g" }}</strong></li>
+                <li>Toplam Hizmet Bedeli: <strong>{{ top_hizmet|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Genel Toplam: <strong>{{ gen_toplam|floatformat:"2g" }}</strong></li>
+                <li>-<strong></strong></li>
             </ul>
         </div>
     </div>
@@ -47,6 +51,9 @@
                 <tr>
                     <th scope="col">Detay<br>
                     </th>
+                    <th scope="col">Tür<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-tur' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-tur' %}">Z</a>)
+                    </th>
                     <th scope="col">Sipariş No<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-siparis-no' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-siparis-no' %}">Z</a>)
                     </th>
@@ -56,7 +63,7 @@
                     <th scope="col">Kargo Tutarı<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-kargo-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-kargo-tutari' %}">Z</a>)
                     </th>
-                    <th scope="col">Hizmet+Islem Bedeli<br>
+                    <th scope="col">Hizmet+İşlem Bedeli<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-hizmet-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-hizmet-tutari' %}">Z</a>)
                     </th>
                     <th scope="col">Toplam<br>
@@ -69,6 +76,9 @@
                 <tr>
                     <td class="text-center">
                         <a href="{% url 'kargoduzeltmeurl' firma=firma pk=kargo.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                    </td>
+                    <td class="text-center">
+                        {{ kargo.Tur }}
                     </td>
                     <td>
                         {{ kargo.Siparisno }}
