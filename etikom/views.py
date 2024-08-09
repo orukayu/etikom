@@ -78,6 +78,10 @@ def demofirma(request):
             if stok.is_valid():
                 post = stok.save(commit=False)
                 post.Firmaadi = request.user
+                if post.Adet > 0:
+                    post.Tur = 'A'
+                else:
+                    post.Tur = 'T'
                 post.save1()
                 return redirect('demofirmaurl')
 
@@ -89,6 +93,7 @@ def demofirma(request):
             if siparis.is_valid():
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
+                post.Tur = 'S'
                 post.save3()
 
                 # Stok modeline kaydedilecek verileri ayir
@@ -100,7 +105,7 @@ def demofirma(request):
                 Firmaadi = request.user
 
                 # Stok modelini olustur ve kaydet
-                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat)
+                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat, Tur='S')
                 stok.save1()
                 return redirect('demofirmaurl')
 
@@ -112,10 +117,11 @@ def demofirma(request):
                 if kontrol > 0:
                     post = kargo.save(commit=False)
                     post.Firmaadi = request.user
+                    post.Tur = 'K'
                     post.save5()
                     return redirect('demofirmaurl')
                 else:
-                    kargo.add_error('Siparisno', 'Sipariş No mevcut değil.')
+                    kargo.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
                     giris = GirisFormu()
                     stok = StokFormu()
                     siparis = SiparisFormu(user=request.user)
@@ -735,12 +741,14 @@ def stokexcelyuklemeyap(request):
             excel_file = request.FILES['excel_file']
             df = pd.read_excel(excel_file)
             for index, row in df.iterrows():
+                tur = 'A' if row['Adet'] > 0 else 'T'
                 stok = Stok(
                     Afaturano = row['Fatura No'],
                     Stokkodu = row['Stok Kodu'],
                     Adet = row['Adet'],
                     Alisfiyati = row['Fiyat'],
                     Toplam = row['Toplam'],
+                    Tur = tur,
                     Firmaadi = request.user
                 )
                 stok.save1()
@@ -767,7 +775,8 @@ def sipexcelyuklemeyap(request):
                     Adet = row['Adet'],
                     Satisfiyati = row['Satış Fiyatı'],
                     Komisyon = row['Komisyon (%)'],
-                    Firmaadi = request.user
+                    Firmaadi = request.user,
+                    Tur = 'S'
                 )
                 sip.save3()
                 stk = Stok(
@@ -776,6 +785,7 @@ def sipexcelyuklemeyap(request):
                     Stokkodu = row['Stok Kodu'],
                     Adet = row['Adet'] * -1,
                     Alisfiyati = row['Satış Fiyatı'],
+                    Tur = 'S'
                 )
                 stk.save1()
 
@@ -803,6 +813,7 @@ def kargoexcelyuklemeyap(request):
                     Hizmetbedeli = row['Hizmet + İşlem Bedeli'],
                     Siparisno = siparis,
                     Firmaadi = request.user,
+                    Tur = 'K'
                 )
                 kargo.save5()
             
@@ -866,6 +877,10 @@ def stokduzeltme(request, firma, pk):
                 if form.is_valid():
                     post = form.save(commit=False)
                     post.Firmaadi = request.user
+                    if post.Adet > 0:
+                        post.Tur = 'A'
+                    else:
+                        post.Tur = 'T'
                     post.save1()
                     return redirect('stoklistesiurl')
         else:
@@ -967,6 +982,10 @@ def stokeklemeyap(request):
             if form.is_valid():
                 post = form.save(commit=False)
                 post.Firmaadi = request.user
+                if post.Adet > 0:
+                    post.Tur = 'A'
+                else:
+                    post.Tur = 'T'
                 post.save1()
                 return redirect('stoklistesiurl')
 
@@ -989,6 +1008,7 @@ def siparisekleme(request):
             if siparis.is_valid():
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
+                post.Tur = 'S'
                 post.save3()
 
                 sipno = siparis.cleaned_data['Siparisno']
@@ -999,7 +1019,7 @@ def siparisekleme(request):
                 Firmaadi = request.user
 
                 # Book kaydet
-                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat)
+                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat, Tur='S')
                 stok.save1()
                 return redirect('siparislistesiurl')
 
@@ -1115,6 +1135,7 @@ def siparisduzeltme(request, firma, pk):
             if siparis.is_valid():
                 post = siparis.save(commit=False)
                 post.Firmaadi = request.user
+                post.Tur = 'S'
                 post.save3()
 
                 sipno = siparis.cleaned_data['Siparisno']
@@ -1128,6 +1149,7 @@ def siparisduzeltme(request, firma, pk):
                 kstok.Stokkodu = stokkodu
                 kstok.Adet = adet
                 kstok.Alisfiyati = satfiyat
+                kstok.Tur = 'S'
                 kstok.save1()
 
                 return redirect('siparislistesiurl')
@@ -1291,10 +1313,11 @@ def kargoeklemeyap(request):
                 if kontrol > 0:
                     post = form.save(commit=False)
                     post.Firmaadi = request.user
+                    post.Tur = 'K'
                     post.save5()
                     return redirect('kargolistesiurl')
                 else:
-                    form.add_error('Siparisno', 'Sipariş No mevcut değil.')
+                    form.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
                     
     else:
         form = KargoFormu()
@@ -1323,6 +1346,7 @@ def kargoduzeltme(request, firma, pk):
             if form.is_valid():
                 post = form.save(commit=False)
                 post.Firmaadi = request.user
+                post.Tur = 'K'
                 post.save5()
                 return redirect('kargolistesiurl')
     else:
