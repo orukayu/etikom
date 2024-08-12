@@ -3,13 +3,13 @@ from django.db import models
 import datetime
 
 class Kargo(models.Model):
-    Siparisno = models.CharField(max_length=25, null=True)
+    Siparisno = models.CharField(max_length=25)
     Desi = models.IntegerField()
     Kargotutari = models.DecimalField(max_digits=10, decimal_places=2)
-    Hizmetbedeli = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    Toplam = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Hizmetbedeli = models.DecimalField(max_digits=10, decimal_places=2)
+    Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    Tur = models.CharField(max_length=20, null=True)
+    Tur = models.CharField(max_length=20)
 
     def save5(self, *args, **kwargs):
         self.Toplam = self.Kargotutari + self.Hizmetbedeli
@@ -32,7 +32,7 @@ class Siparis(models.Model):
     Komisyon = models.DecimalField(max_digits=10, decimal_places=2)
     Komisyontutari = models.DecimalField(max_digits=10, decimal_places=2)
     Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    Tur = models.CharField(max_length=20, null=True)
+    Tur = models.CharField(max_length=20)
     
     def save3(self, *args, **kwargs):
         self.Toplam = self.Adet * self.Satisfiyati
@@ -58,7 +58,7 @@ class Stok(models.Model):
     Adet = models.IntegerField()
     Alisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
-    Tur = models.CharField(max_length=20, null=True)
+    Tur = models.CharField(max_length=20)
     
     def save1(self, *args, **kwargs):
         self.Toplam = self.Adet * self.Alisfiyati
