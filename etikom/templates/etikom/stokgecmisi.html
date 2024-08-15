@@ -4,7 +4,7 @@
 <dl class="row">
     <dt class="col-sm-3 pt-2"><h4>{{ firma_adi|title }} Stok Geçmişi</h4></dt>
     <dd class="col-sm-9">
-        Adetleri <strong>Eksi "-"</strong> olan satırlar, sipariş veya toptan satış işlemlerine aittir. <strong>Artı "+"</strong> olan satırlar ise alım işlemlerine ait bilgileri listelemektedir.
+        Adetleri <strong>Eksi "-"</strong> olan satırlar, sipariş veya toptan satış işlemlerine aittir. <strong>Artı "+"</strong> olan satırlar ise alım veya iade işlemlerine ait bilgileri listelemektedir. Tür sütununda kısa kodlarını görebilirsiniz.
     </dd>
 </dl>
 {% endblock %}
@@ -44,6 +44,8 @@
                 <tr>
                     <th scope="col" class="pt-3 pb-3">Sıra No
                     </th>
+                    <th scope="col" class="pt-3 pb-3">Tür
+                    </th>
                     <th scope="col" class="pt-3 pb-3">Belge No
                     </th>
                     <th scope="col" class="pt-3 pb-3">Adet
@@ -59,6 +61,9 @@
                 <tr>
                     <td class="text-center">
                         {{ forloop.counter }}
+                    </td>
+                    <td class="text-center">
+                        {{ stok.Tur }}
                     </td>
                     <td>
                         <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>

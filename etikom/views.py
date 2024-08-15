@@ -6,11 +6,13 @@ from .models import Stok
 from .models import Siparis
 from .models import Blog
 from .models import Kargo
+from .models import Iade
 from .forms import StokFormu
 from .forms import KayitFormu
 from .forms import GirisFormu
 from .forms import SiparisFormu
 from .forms import KargoFormu
+from .forms import IadeFormu
 
 from django.db.models import Sum
 from django.db.models import Q
@@ -1382,3 +1384,134 @@ def kargoexceliindir(request):
     response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_giden_kargo_listesi.xlsx"'
 
     return response
+
+
+def iadeeklemeyap(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'İade Kargo'
+    
+    if request.method == "POST":
+        if 'iadeekle' in request.POST:
+            form = IadeFormu(request.POST)
+            if form.is_valid():
+                sip_no = form.cleaned_data['Siparisno']
+                sip_kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
+                if sip_kontrol > 0:
+                    stk_no = form.cleaned_data['Stokkodu']
+                    stk_kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).count()
+                    if stk_kontrol > 0:
+                        post = form.save(commit=False)
+                        post.Firmaadi = request.user
+                        post.Tur = 'İ'
+                        post.save6()
+
+                        Firmaadi = request.user
+                        adet = form.cleaned_data['Adet']
+                        fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Satisfiyati').first()
+                        fiyat = fyt['Satisfiyati']
+
+                        # Book kaydet
+                        stok = Stok(Firmaadi=Firmaadi, Afaturano=sip_no, Stokkodu=stk_no, Adet=adet, Alisfiyati=fiyat, Tur='İ')
+                        stok.save1()
+
+                        pzr_yeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Pazaryeri').first()
+                        pazaryeri = pzr_yeri['Pazaryeri']
+                        trh = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Tarih').first()
+                        tarih = trh['Tarih']
+                        kmsyn = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Komisyon').first()
+                        komisyon = kmsyn['Komisyon']
+                        siparis = Siparis(Firmaadi=Firmaadi, Pazaryeri=pazaryeri, Tarih=tarih, Siparisno=sip_no, Stokkodu=stk_no, Adet=adet, Komisyon=komisyon, Satisfiyati=fiyat, Tur='İ')
+                        siparis.save4()
+
+                        return redirect('iadelistesiurl')
+                    else:
+                        form.add_error('Stokkodu', 'Stok Kodu Siparişe Ait Değil !')
+                else:
+                    form.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
+                    
+    else:
+        form = IadeFormu()
+
+    return render(request, 'etikom/iadeekle.html', {'title': title, 'firma_adi': firma_adi, 'form': form})
+
+def iadeliste(request, sort=None):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    iade = Iade.objects.filter(Firmaadi=firma_adi_id).count()
+    if iade is None:
+        iade_sayisi = 0
+    else:
+        iade_sayisi = iade
+
+    desiler = Iade.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]                            # toplam desi
+    tutarlar = Iade.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Iadetutari"))["Iadetutari__sum"]               # toplam kargo
+    stoklar = Iade.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()     # stok çeşidi
+    adetler = Iade.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]                            # toplam adet
+    #toplamlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]                    # genel toplam
+
+
+    if iade_sayisi == 0:
+        ort_desi = 0
+        top_tutar = 0
+        ort_tutar = 0
+        top_stok = 0
+        top_hizmet = 0
+        gen_toplam = 0
+        top_adet = 0
+    else:
+        ort_desi = desiler / iade
+        top_tutar = tutarlar
+        ort_tutar = top_tutar / iade_sayisi
+        top_stok = stoklar
+        top_adet = adetler
+    #    ort_hizmet = top_hizmet / kargo_sayisi
+    #    gen_toplam = toplamlar
+    
+
+    if sort == 'az-tur':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Tur').values()
+    elif sort == 'za-tur':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Tur').values()
+    elif sort == 'az-siparis-no':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Siparisno').values()
+    elif sort == 'za-siparis-no':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Siparisno').values()
+    elif sort == 'az-desi':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Desi').values()
+    elif sort == 'za-desi':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Desi').values()
+    elif sort == 'az-kargo-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Kargotutari').values()
+    elif sort == 'za-kargo-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Kargotutari').values()
+    elif sort == 'az-hizmet-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Hizmetbedeli').values()
+    elif sort == 'za-hizmet-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Hizmetbedeli').values()
+    elif sort == 'az-toplam-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
+    elif sort == 'za-toplam-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Toplam').values()
+    else:
+        iade = Iade.objects.filter(Firmaadi=firma_adi_id)
+
+    firma = request.user.username
+    title = 'İade Listesi'
+
+    context = {
+        'iade': iade,
+        'firma_adi': firma_adi,
+        'firma': firma,
+        'title': title,
+        'iade_sayisi': iade_sayisi,
+        'ort_desi': ort_desi,
+        'ort_tutar': ort_tutar,
+        'top_tutar': top_tutar,
+        'top_stok': top_stok,
+        'top_adet': top_adet,
+    }
+    
+
+    return render(request, 'etikom/iadelistesi.html', context)

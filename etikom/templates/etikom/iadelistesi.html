@@ -1,0 +1,107 @@
+{% extends 'etikom/base.html' %}
+
+{% block baslik %}
+<dl class="row align-items-center">
+    <dt class="col-sm-3"><h4>{{ firma_adi|title }}<br>Özet İade Raporu</h4></dt>
+    <dd class="col-sm-9">
+        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Sipariş No</strong>'su eklediğiniz siparişlerden birinin no'su olmalıdır. Aksi takdirde iade edilen ürün için stok bilgisi değişmeyecektir.
+    </dd>
+</dl>
+{% endblock %}
+
+{% block content %}
+<div class="stoklistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>İade Sayısı: <strong>{{ iade_sayisi|floatformat:"-3g" }}</strong></li>
+                <li>Ortalama Desi: <strong>{{ ort_desi|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Ort. İade Tutarı: <strong>{{ ort_tutar|floatformat:"2g" }}</strong></li>
+                <li>Toplam İade Tutarı: <strong>{{ top_tutar|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Stok Çeşidi: <strong>{{ top_stok|floatformat:"-3g" }}</strong></li>
+                <li>Toplam İade: <strong>{{ top_adet|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>-<strong></strong></li>
+                <li>-<strong></strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+        <h5>
+            İade Kargo Listesi;
+        </h5>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'kargoexcelindirurl' %}';">Excel İndir</button>
+        </div>
+    </div>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Detay<br>
+                    </th>
+                    <th scope="col">Tür<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-tur' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-tur' %}">Z</a>)
+                    </th>
+                    <th scope="col">Sipariş No<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-siparis-no' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-siparis-no' %}">Z</a>)
+                    </th>
+                    <th scope="col">Adet<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-hizmet-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-hizmet-tutari' %}">Z</a>)
+                    </th>
+                    <th scope="col">Stok Kodu<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-toplam-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-toplam-tutari' %}">Z</a>)
+                    </th>
+                    <th scope="col">Desi<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-desi' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-desi' %}">Z</a>)
+                    </th>
+                    <th scope="col">İade Tutarı<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-kargo-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-kargo-tutari' %}">Z</a>)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for iade in iade %}
+                <tr>
+                    <td class="text-center">
+                        <a href="{% url 'kargoduzeltmeurl' firma=firma pk=iade.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                    </td>
+                    <td class="text-center">
+                        {{ iade.Tur }}
+                    </td>
+                    <td>
+                        {{ iade.Siparisno }}
+                    </td>
+                    <td class="text-center">
+                        {{ iade.Adet }}
+                    </td>
+                    <td class="text-end">
+                        {{ iade.Stokkodu }}
+                    </td>
+                    <td class="text-center">
+                        {{ iade.Desi }}
+                    </td>
+                    <td class="text-end">
+                        {{ iade.Iadetutari }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-2 px-3">
+        <p>{{ iade_sayisi }} Satır</p>
+    </div>
+</div>
+{% endblock %}

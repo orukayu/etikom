@@ -2,8 +2,21 @@ from django import forms
 from .models import Stok
 from .models import Siparis
 from .models import Kargo
+from .models import Iade
 from django.utils.dateparse import parse_date
 
+class IadeFormu(forms.ModelForm):
+    class Meta:
+        model = Iade
+        fields = ['Siparisno', 'Stokkodu', 'Adet', 'Desi', 'Iadetutari']
+        labels = {"Siparisno" : "Sipariş No", "Stokkodu" : "Stok Kodu", "Adet" : "Adet", "Desi" : "Desi", "Iadetutari" : "İade Tutarı"}
+        widgets = {
+            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
+            'Stokkodu': forms.TextInput(attrs={'placeholder': 'Sipariş içeriğinden ...'}),
+            'Adet': forms.TextInput(attrs={'placeholder': '1'}),
+            'Desi': forms.TextInput(attrs={'placeholder': '3'}),
+            'Iadetutari': forms.TextInput(attrs={'placeholder': '27.50'}),
+        }
 
 
 class KargoFormu(forms.ModelForm):
@@ -13,7 +26,7 @@ class KargoFormu(forms.ModelForm):
         labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet+İşlem Bedeli"}
         widgets = {
             'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
-            'Desi': forms.TextInput(attrs={'placeholder': '1'}),
+            'Desi': forms.TextInput(attrs={'placeholder': '3'}),
             'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50'}),
             'Hizmetbedeli': forms.TextInput(attrs={'placeholder': '5.99'}),
         }

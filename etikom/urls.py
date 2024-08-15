@@ -52,6 +52,21 @@ urlpatterns = [
 
     path('kargo-exceli-indir/', views.kargoexceliindir, name='kargoexcelindirurl'),
 
+
+
+
+    path('iade-ekle/', views.iadeeklemeyap, name='iadeekleurl'),
+
+
+    path('iade-listesi/', views.iadeliste, name='iadelistesiurl'),
+
+    
+
+
+
+
+
+
     path('giris/', views.girisyap, name='girisurl'),
     path('hakkimizda/', views.hakkimizdayap, name='hakkimizdaurl'),
     path('fiyatlandirma/', views.fiyatlamayap, name='fiyatlamaurl'),
