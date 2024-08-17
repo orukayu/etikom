@@ -56,10 +56,10 @@ urlpatterns = [
 
 
     path('iade-ekle/', views.iadeeklemeyap, name='iadeekleurl'),
-
+    path('iade-exceli-yukle/', views.iadeexcelyuklemeyap, name='iadeexcelyukleurl'),
 
     path('iade-listesi/', views.iadeliste, name='iadelistesiurl'),
-
+    path('iade-listesi/<str:sort>/', views.iadeliste, name='iadesiralamaurl'),
     
 
 

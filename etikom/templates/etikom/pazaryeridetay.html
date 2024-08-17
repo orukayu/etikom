@@ -44,6 +44,7 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col" class="pt-3 pb-3">Sıra No</th>
+                    <th scope="col" class="pt-3 pb-3">Tür</th>
                     <th scope="col" class="pt-3 pb-3">Tarih</th>
                     <th scope="col" class="pt-3 pb-3">Sipariş No</th>
                     <th scope="col" class="pt-3 pb-3">Stok Kodu</th>
@@ -59,6 +60,9 @@
                 <tr>
                     <td class="text-center">
                         {{ forloop.counter }}
+                    </td>
+                    <td class="text-center">
+                        {{ pazaryeri.Tur }}
                     </td>
                     <td class="text-center">
                         {{ pazaryeri.Tarih|date:"d.m.Y" }}</a>

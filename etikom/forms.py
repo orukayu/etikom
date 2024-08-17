@@ -9,7 +9,7 @@ class IadeFormu(forms.ModelForm):
     class Meta:
         model = Iade
         fields = ['Siparisno', 'Stokkodu', 'Adet', 'Desi', 'Iadetutari']
-        labels = {"Siparisno" : "Sipariş No", "Stokkodu" : "Stok Kodu", "Adet" : "Adet", "Desi" : "Desi", "Iadetutari" : "İade Tutarı"}
+        labels = {"Siparisno" : "Sipariş No", "Stokkodu" : "Stok Kodu", "Adet" : "Adet", "Desi" : "Desi", "Iadetutari" : "İade Kargo Tutarı"}
         widgets = {
             'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
             'Stokkodu': forms.TextInput(attrs={'placeholder': 'Sipariş içeriğinden ...'}),
