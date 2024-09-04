@@ -21,7 +21,7 @@ urlpatterns = [
     path('stok-exceli-indir/', views.stokexceliindir, name='stokexcelindirurl'),
     path('sayim-exceli-indir/', views.sayimexcelindir, name='sayimexcelindirurl'),
 
-    path('islem-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
+    path('belge-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
     path('stok-gecmisi/<str:sort>/', views.stokgecmisi, name='stokgecmisiurl'),
 
 
@@ -61,7 +61,7 @@ urlpatterns = [
     path('iade-listesi/', views.iadeliste, name='iadelistesiurl'),
     path('iade-listesi/<str:sort>/', views.iadeliste, name='iadesiralamaurl'),
     
-
+    path('iade-duzeltme/<str:firma>/<int:pk>/', views.iadeduzeltme, name='iadeduzeltmeurl'),
 
 
 

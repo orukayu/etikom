@@ -57,11 +57,11 @@
                     <th scope="col">Sipariş No<br>
                         (<a href="{% url 'iadesiralamaurl' sort='az-siparis-no' %}">A</a>↔<a href="{% url 'iadesiralamaurl' sort='za-siparis-no' %}">Z</a>)
                     </th>
-                    <th scope="col">Adet<br>
-                        (<a href="{% url 'iadesiralamaurl' sort='az-adet' %}">A</a>↔<a href="{% url 'iadesiralamaurl' sort='za-adet' %}">Z</a>)
-                    </th>
                     <th scope="col">Stok Kodu<br>
                         (<a href="{% url 'iadesiralamaurl' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'iadesiralamaurl' sort='za-stok-kodu' %}">Z</a>)
+                    </th>
+                    <th scope="col">Adet<br>
+                        (<a href="{% url 'iadesiralamaurl' sort='az-adet' %}">A</a>↔<a href="{% url 'iadesiralamaurl' sort='za-adet' %}">Z</a>)
                     </th>
                     <th scope="col">Desi<br>
                         (<a href="{% url 'iadesiralamaurl' sort='az-desi' %}">A</a>↔<a href="{% url 'iadesiralamaurl' sort='za-desi' %}">Z</a>)
@@ -75,19 +75,19 @@
                 {% for iade in iade %}
                 <tr>
                     <td class="text-center">
-                        <a href="{% url 'kargoduzeltmeurl' firma=firma pk=iade.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                        <a href="{% url 'iadeduzeltmeurl' firma=firma pk=iade.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td class="text-center">
                         {{ iade.Tur }}
                     </td>
                     <td>
-                        {{ iade.Siparisno }}
+                        <a href="{% url 'stokfaturasiurl' sort=iade.Siparisno %}">{{ iade.Siparisno }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'stokgecmisiurl' sort=iade.Stokkodu %}">{{ iade.Stokkodu }}</a>
                     </td>
                     <td class="text-center">
                         {{ iade.Adet }}
-                    </td>
-                    <td class="text-end">
-                        {{ iade.Stokkodu }}
                     </td>
                     <td class="text-center">
                         {{ iade.Desi }}

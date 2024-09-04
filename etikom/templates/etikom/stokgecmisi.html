@@ -2,9 +2,9 @@
 
 {% block baslik %}
 <dl class="row">
-    <dt class="col-sm-3 pt-2"><h4>{{ firma_adi|title }} Stok Geçmişi</h4></dt>
+    <dt class="col-sm-3 pt-2"><h4>{{ firma_adi|title }} Stok Detayı</h4></dt>
     <dd class="col-sm-9">
-        Adetleri <strong>Eksi "-"</strong> olan satırlar, sipariş veya toptan satış işlemlerine aittir. <strong>Artı "+"</strong> olan satırlar ise alım veya iade işlemlerine ait bilgileri listelemektedir. Tür sütununda kısa kodlarını görebilirsiniz.
+        Adetleri <strong>Eksi "-"</strong> olan satırlar, sipariş veya toptan satış işlemlerine aittir. <strong>Artı "+"</strong> olan satırlar ise alım veya iade işlemlerine ait bilgileri listelemektedir. Tür sütununda işleme ait kısa kodları görebilirsiniz.
     </dd>
 </dl>
 {% endblock %}
@@ -35,7 +35,7 @@
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Stok Kodu; <sort class="text-warning">{{ sort }}</sort>
+            Stok Kodu; <sort class="text-warning">{{ sort }}</sort> <small class="blockquote-footer">İşlemleri</small>
         </h5>
     </div>
     <div class="table-responsive small">

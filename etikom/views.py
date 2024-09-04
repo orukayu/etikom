@@ -127,17 +127,60 @@ def demofirma(request):
                     giris = GirisFormu()
                     stok = StokFormu()
                     siparis = SiparisFormu(user=request.user)
+        elif 'iadeekle' in request.POST:
+            iade = IadeFormu(request.POST)
+            if iade.is_valid():
+                sip_no = iade.cleaned_data['Siparisno']
+                sip_kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
+                if sip_kontrol > 0:
+                    stk_no = iade.cleaned_data['Stokkodu']
+                    stk_kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).count()
+                    if stk_kontrol > 0:
+                        post = iade.save(commit=False)
+                        post.Firmaadi = request.user
+                        post.Tur = 'İ'
+                        post.save6()
+
+                        Firmaadi = request.user
+                        adet = iade.cleaned_data['Adet']
+                        fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Satisfiyati').first()
+                        fiyat = fyt['Satisfiyati']
+                        stok = Stok(Firmaadi=Firmaadi, Afaturano=sip_no, Stokkodu=stk_no, Adet=adet, Alisfiyati=fiyat, Tur='İ')
+                        stok.save1()
+
+                        pzr_yeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Pazaryeri').first()
+                        pazaryeri = pzr_yeri['Pazaryeri']
+                        adt = iade.cleaned_data['Adet'] * -1
+                        trh = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Tarih').first()
+                        tarih = trh['Tarih']
+                        kmsyn = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Komisyon').first()
+                        komisyon = kmsyn['Komisyon']
+                        siparis = Siparis(Firmaadi=Firmaadi, Pazaryeri=pazaryeri, Tarih=tarih, Siparisno=sip_no, Stokkodu=stk_no, Adet=adt, Komisyon=komisyon, Satisfiyati=fiyat, Tur='İ')
+                        siparis.save4()
+
+                        desi = iade.cleaned_data['Desi']
+                        iade_ttr = iade.cleaned_data['Iadetutari']
+                        kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Stokkodu=stk_no, Desi=desi, Hizmetbedeli=0, Kargotutari=iade_ttr)
+                        kargo.save5()
+
+                        return redirect('iadelistesiurl')
+                    else:
+                        form.add_error('Stokkodu', 'Stok Kodu Siparişe Ait Değil !')
+                else:
+                    form.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
 
         else:
             giris = GirisFormu()
             stok = StokFormu()
             siparis = SiparisFormu(user=request.user)
             kargo = KargoFormu()
+            iade = IadeFormu()
     else:
         giris = GirisFormu()
         stok = StokFormu()
         siparis = SiparisFormu(user=request.user)
         kargo = KargoFormu()
+        iade = IadeFormu()
 
     mesaj = ''
 
@@ -185,6 +228,7 @@ def demofirma(request):
         'stok': stok,
         'siparis': siparis,
         'kargo': kargo,
+        'iade': iade,
         'mesaj': mesaj,
         'firma_adi': firma_adi,
         'title': title,
@@ -304,38 +348,17 @@ def siparisliste(request, sort=None):
     if tstc is None:
         tstc = 0
 
+    tsius = Siparis.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum('Adet'))["Adet__sum"]                # tum siparislerdeki iade urun sayısı
+
+    if tsius is None:
+        ius = 0
+    else:
+        ius = abs(tsius)
+
     if tstc == 0:                   
         orsp = 0
     else:
         orsp = tstc / tsps          # siparis basina dusen urun sayisi
-
-
-    # Donem sayisi icin en küçük ve en büyük tarihleri bulma
-    tarih_araligi = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(en_kucuk_tarih=Min('Tarih'), en_buyuk_tarih=Max('Tarih'))
-
-    if tsps == 0:
-        en_kucuk_tarih = datetime.today()
-        en_buyuk_tarih = datetime.today()
-    else:
-        en_kucuk_tarih = tarih_araligi['en_kucuk_tarih']
-        en_buyuk_tarih = tarih_araligi['en_buyuk_tarih']
-
-    # Tarihler arasındaki farkı hesaplama
-    ekt = en_kucuk_tarih
-    ekt_ay = ekt.month
-    ekt_yil = ekt.year
-
-    ebt = en_buyuk_tarih
-    ebt_ay = ebt.month
-    ebt_yil = ebt.year
-
-    if ebt_yil - ekt_yil == 0:
-        tdns = ebt.month - ekt.month + 1
-    elif ebt_yil - ekt_yil == 1:
-        tdns = (12 - ekt_ay) + ebt_ay
-    else:
-        tdns = (12 - ekt_ay) + ebt_ay + (12 * (ebt_yil - ekt_yil - 1))
-
 
     tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
 
@@ -401,7 +424,7 @@ def siparisliste(request, sort=None):
         'tsps': tsps,
         'tsts': tsts,
         'tstc': tstc,
-        'tdns': tdns,
+        'ius': ius,
         'orsp': orsp,
         'tstt': tstt,
         'ostt': ostt,
@@ -497,7 +520,7 @@ def girisyap(request):
 
     title = 'E-ticaretin Kolay Muhasebesi'    
 
-    kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]       # toptan satis tutari
+    kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Tur='T', Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]       # toptan satis tutari
     if kont_tststt == None:
         tststt = 0
     else:
@@ -540,7 +563,23 @@ def girisyap(request):
     ort_dnm_sts = ts / tdns  # Aylik ortalama satis
 
     n_s_t = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
+    n_s_t = list(n_s_t)  # QuerySet'i listeye çevir
+
+    # Eksik sayıda item varsa, boş item ekle
+    n_s_t_count = len(n_s_t)
+    if n_s_t_count < 5:
+        for _ in range(5 - n_s_t_count):
+            n_s_t.append({'Stokkodu': None, 'total_adet': 0})
+
     n_s_y = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en az satilan 5 urun
+    n_s_y = list(n_s_y)  # QuerySet'i listeye çevir
+
+    # Eksik sayıda item varsa, boş item ekle
+    n_s_y_count = len(n_s_y)
+    if n_s_y_count < 5:
+        for _ in range(5 - n_s_y_count):
+            n_s_y.append({'Stokkodu': None, 'total_adet': 0})
+
     s_t_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__lte=0)[:5] #stok 0 olan urunler
     s_t_u = list(s_t_u)  # QuerySet'i listeye çevir
 
@@ -625,21 +664,7 @@ def girisyap(request):
 
     tstc = abs(ksa - tstg)
 
-    # Javascript ile 6 aylik satis grafigi hazirlama
-    # six_months_ago = today - timedelta(days=6*30) # Son 6 ay
-    # two_years_ago = today - timedelta(days=2*365) # Son 2 yıl
-    # weekly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=six_months_ago).annotate(week=ExtractWeek('Tarih')).values('week').annotate(total=Sum('Toplam')).order_by('week') # Son 6 ayın haftalık satışları
-    # weeks = [entry['week'] for entry in weekly_sales]
-    # weekly_totals = [float(entry['total']) for entry in weekly_sales]
-    # monthly_sales = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__gte=two_years_ago).annotate(year=ExtractYear('Tarih'),month=ExtractMonth('Tarih')).values('year', 'month').annotate(total=Sum('Toplam')).order_by('year', 'month') # Son 2 yılın aylık satışları
-    # months = [f"{entry['year']}-{entry['month']:02d}" for entry in monthly_sales]
-    # monthly_totals = [float(entry['total']) for entry in monthly_sales]
-
     context = {
-        # 'weeks': json.dumps(weeks),
-        # 'weekly_totals': json.dumps(weekly_totals),
-        # 'months': json.dumps(months),
-        # 'monthly_totals': json.dumps(monthly_totals),
         'title': title,
         'firma_adi': firma_adi,
         'tdns': tdns,
@@ -861,13 +886,9 @@ def stokduzeltme(request, firma, pk):
     if firma_adi != firma:
         return redirect('demofirmaurl')
 
-    fa = firma
-    pk = pk
+    stokturcek = Stok.objects.filter(id=pk).values_list('Tur', flat=True).first()
 
-    sipbncek = Stok.objects.filter(id=pk).values_list('Afaturano', flat=True).first()
-    sipvarmi = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipbncek).exists()
-    
-    if not sipvarmi:
+    if stokturcek == 'A':
         kontrolstok = get_object_or_404(Stok, pk=pk)
 
         if request.method == "POST":
@@ -887,15 +908,50 @@ def stokduzeltme(request, firma, pk):
                     return redirect('stoklistesiurl')
         else:
             form = StokFormu(instance=kontrolstok)
-    else:
-        sk = Stok.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
-        pk = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipbncek, Stokkodu=sk).values_list('id', flat=True).first()
+
+    elif stokturcek == 'T':
+        kontrolstok = get_object_or_404(Stok, pk=pk)
+
+        if request.method == "POST":
+            form = StokFormu(request.POST, instance=kontrolstok)
+            if 'stoksil' in request.POST:
+                kontrolstok.delete()
+                return redirect('stoklistesiurl')
+            elif 'stokekle' in request.POST:
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.Firmaadi = request.user
+                    if post.Adet > 0:
+                        post.Tur = 'A'
+                    else:
+                        post.Tur = 'T'
+                    post.save1()
+                    return redirect('stoklistesiurl')
+        else:
+            form = StokFormu(instance=kontrolstok)
+
+    elif stokturcek == 'S':
+        bncek = Stok.objects.filter(id=pk).values_list('Afaturano', flat=True).first()
+        skcek = Stok.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+        pk = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=bncek, Stokkodu=skcek, Tur='S').values_list('id', flat=True).first()
 
         return redirect('siparisduzeltmeurl', firma, pk)
+
+    elif stokturcek == 'İ':
+        bncek = Stok.objects.filter(id=pk).values_list('Afaturano', flat=True).first()
+        skcek = Stok.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+        pk = Iade.objects.filter(Firmaadi=firma_adi_id, Siparisno=bncek, Stokkodu=skcek, Tur='İ').values_list('id', flat=True).first()
+
+        return redirect('iadeduzeltmeurl', firma, pk)
+
+    else:
+        form = StokFormu(instance=kontrolstok)
+
 
     title = 'Stok Detayı'
     form = StokFormu(instance=kontrolstok)
     return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+
 
 
 def sayimliste(request, sort=None):
@@ -1120,43 +1176,57 @@ def siparisduzeltme(request, firma, pk):
     if firma_adi != firma:
         return redirect('demofirmaurl')
 
-    kontrol = get_object_or_404(Siparis, pk=pk)
-    siparis = SiparisFormu(instance=kontrol, user=request.user)
+    sipturcek = Siparis.objects.filter(id=pk).values_list('Tur', flat=True).first()
 
-    sinca = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
-    stkca = Siparis.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
-    kstok = get_object_or_404(Stok, Afaturano=sinca, Stokkodu=stkca)
+    if sipturcek == 'S':
+        kontrolsip = get_object_or_404(Siparis, pk=pk)
 
-    if request.method == "POST":
-        if 'siparissil' in request.POST:
-            kontrol.delete()
-            kstok.delete()
-            return redirect('siparislistesiurl')
-        elif 'siparisekle' in request.POST:
-            siparis = SiparisFormu(request.POST, instance=kontrol, user=request.user)
-            if siparis.is_valid():
-                post = siparis.save(commit=False)
-                post.Firmaadi = request.user
-                post.Tur = 'S'
-                post.save3()
-
-                sipno = siparis.cleaned_data['Siparisno']
-                stokkodu = siparis.cleaned_data['Stokkodu']
-                sayi = siparis.cleaned_data['Adet']
-                adet = sayi * -1
-                satfiyat = siparis.cleaned_data['Satisfiyati']
-                
-                kstok.Firmaadi = request.user
-                kstok.Afaturano = sipno
-                kstok.Stokkodu = stokkodu
-                kstok.Adet = adet
-                kstok.Alisfiyati = satfiyat
-                kstok.Tur = 'S'
-                kstok.save1()
-
+        if request.method == "POST":
+            siparis = SiparisFormu(request.POST, instance=kontrolsip, user=request.user)
+            if 'siparissil' in request.POST:
+                kontrolsip.delete()
                 return redirect('siparislistesiurl')
+            elif 'siparisekle' in request.POST:
+                if siparis.is_valid():
+                    post = siparis.save(commit=False)
+                    post.Firmaadi = request.user
+                    post.Tur = 'S'
+                    post.save3()
+
+                    sipno = siparis.cleaned_data['Siparisno']
+                    stokkodu = siparis.cleaned_data['Stokkodu']
+                    sayi = siparis.cleaned_data['Adet']
+                    adet = sayi * -1
+                    satfiyat = siparis.cleaned_data['Satisfiyati']
+                    
+                    sinca = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
+                    stkca = Siparis.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+                    kstok = get_object_or_404(Stok, Afaturano=sinca, Stokkodu=stkca)
+
+                    kstok.Firmaadi = request.user
+                    kstok.Afaturano = sipno
+                    kstok.Stokkodu = stokkodu
+                    kstok.Adet = adet
+                    kstok.Alisfiyati = satfiyat
+                    kstok.Tur = 'S'
+                    kstok.save1()
+
+                    return redirect('siparislistesiurl')
+        else:
+            siparis = SiparisFormu(instance=kontrolsip, user=request.user)
+
+    elif sipturcek == 'İ':
+        sipcek = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
+        skcek = Siparis.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+        pk = Iade.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipcek, Stokkodu=skcek, Tur='İ').values_list('id', flat=True).first()
+
+        return redirect('iadeduzeltmeurl', firma, pk)
+
+    else:
+        siparis = SiparisFormu(instance=kontrolsip, user=request.user)
 
     title = 'Sipariş Detayı'
+    siparis = SiparisFormu(instance=kontrolsip, user=request.user)
     return render(request, 'etikom/siparisdetay.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
 
 
@@ -1334,28 +1404,38 @@ def kargoduzeltme(request, firma, pk):
     if firma_adi != firma:
         return redirect('demofirmaurl')
 
-    fa = firma
-    pk = pk
+    turcek = Kargo.objects.filter(pk=pk).values_list('Tur', flat=True).first()
 
-    kontrolkargo = get_object_or_404(Kargo, pk=pk)
+    if turcek == 'K':
+        kontrolkargo = get_object_or_404(Kargo, pk=pk)
 
-    if request.method == "POST":
-        form = KargoFormu(request.POST, instance=kontrolkargo)
-        if 'kargosil' in request.POST:
-            kontrolkargo.delete()
-            return redirect('kargolistesiurl')
-        elif 'kargoekle' in request.POST:
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.Firmaadi = request.user
-                post.Tur = 'K'
-                post.save5()
+        if request.method == "POST":
+            form = KargoFormu(request.POST, instance=kontrolkargo)
+            if 'kargosil' in request.POST:
+                kontrolkargo.delete()
                 return redirect('kargolistesiurl')
+            elif 'kargoekle' in request.POST:
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.Firmaadi = request.user
+                    post.Tur = 'K'
+                    post.save5()
+                    return redirect('kargolistesiurl')
+        else:
+            form = KargoFormu(instance=kontrolkargo)
+
+    elif turcek == 'İ':
+        sipcek = Kargo.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
+        skcek = Kargo.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
+        pk = Iade.objects.filter(Firmaadi=firma_adi_id, Siparisno=sipcek, Stokkodu=skcek, Tur='İ').values_list('id', flat=True).first()
+
+        return redirect('iadeduzeltmeurl', firma, pk)
+
     else:
         form = KargoFormu(instance=kontrolkargo)
 
     title = 'Kargo Detayı'
-    form = KargoFormu(instance=kontrolkargo)
+
     return render(request, 'etikom/kargodetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 def kargoexceliindir(request):
@@ -1415,16 +1495,17 @@ def iadeeklemeyap(request):
 
                         pzr_yeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Pazaryeri').first()
                         pazaryeri = pzr_yeri['Pazaryeri']
+                        adt = form.cleaned_data['Adet'] * -1
                         trh = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Tarih').first()
                         tarih = trh['Tarih']
                         kmsyn = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Komisyon').first()
                         komisyon = kmsyn['Komisyon']
-                        siparis = Siparis(Firmaadi=Firmaadi, Pazaryeri=pazaryeri, Tarih=tarih, Siparisno=sip_no, Stokkodu=stk_no, Adet=adet, Komisyon=komisyon, Satisfiyati=fiyat, Tur='İ')
+                        siparis = Siparis(Firmaadi=Firmaadi, Pazaryeri=pazaryeri, Tarih=tarih, Siparisno=sip_no, Stokkodu=stk_no, Adet=adt, Komisyon=komisyon, Satisfiyati=fiyat, Tur='İ')
                         siparis.save4()
 
                         desi = form.cleaned_data['Desi']
                         iade_ttr = form.cleaned_data['Iadetutari']
-                        kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Desi=desi, Hizmetbedeli=0, Kargotutari=iade_ttr)
+                        kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Stokkodu=stk_no, Desi=desi, Hizmetbedeli=0, Kargotutari=iade_ttr)
                         kargo.save5()
 
                         return redirect('iadelistesiurl')
@@ -1520,6 +1601,7 @@ def iadeliste(request, sort=None):
 def iadeexcelyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
+    firma_adi_id = request.user.id
 
     if request.method == "POST":
         if 'excel_file' in request.FILES:
@@ -1527,20 +1609,97 @@ def iadeexcelyuklemeyap(request):
             df = pd.read_excel(excel_file)
             for index, row in df.iterrows():
                 siparis_no = row['Sipariş No']
+                stk_no = row['Stok Kodu'],
                 if isinstance(siparis_no, int):
                     siparis = str(siparis_no)
                 else:
                     siparis = siparis_no
+                iade = Iade(
+                    Siparisno = siparis,
+                    Stokkodu = row['Stok Kodu'],
+                    Adet = row['Adet'],
+                    Desi = row['Desi'],
+                    Iadetutari = row['İade Kargo Tutarı'],
+                    Firmaadi = request.user,
+                    Tur = 'İ'
+                )
+                iade.save6()
+
+                fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=siparis, Stokkodu=stk_no).values('Satisfiyati').first()
+                fiyat = fyt['Satisfiyati']
+                stok = Stok(
+                    Firmaadi = request.user,
+                    Afaturano = siparis,
+                    Stokkodu = row['Stok Kodu'],
+                    Adet = row['Adet'],
+                    Alisfiyati = fiyat,
+                    Tur = 'İ'
+                )
+                stok.save1()
+
+                pzr_yeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=siparis, Stokkodu=stk_no).values('Pazaryeri').first()
+                pazaryeri = pzr_yeri['Pazaryeri']
+                trh = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=siparis, Stokkodu=stk_no).values('Tarih').first()
+                tarih = trh['Tarih']
+                kmsyn = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=siparis, Stokkodu=stk_no).values('Komisyon').first()
+                komisyon = kmsyn['Komisyon']
+                sip = Siparis(
+                    Pazaryeri = pazaryeri,
+                    Tarih = tarih,
+                    Siparisno = row['Sipariş No'],
+                    Stokkodu = row['Stok Kodu'],
+                    Adet = row['Adet'],
+                    Satisfiyati = fiyat,
+                    Komisyon = komisyon,
+                    Firmaadi = request.user,
+                    Tur = 'İ'
+                )
+                sip.save3()
+
                 kargo = Kargo(
                     Desi = row['Desi'],
-                    Kargotutari = row['Kargo Tutarı'],
-                    Hizmetbedeli = row['Hizmet + İşlem Bedeli'],
+                    Kargotutari = row['İade Kargo Tutarı'],
+                    Hizmetbedeli = 0,
                     Siparisno = siparis,
                     Firmaadi = request.user,
-                    Tur = 'K'
+                    Tur = 'İ'
                 )
                 kargo.save5()
             
-            return redirect('kargolistesiurl')
+            return redirect('iadelistesiurl')
 
     return render(request, 'etikom/iadeexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+
+def iadeduzeltme(request, firma, pk):
+    
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    if firma_adi != firma:
+        return redirect('demofirmaurl')
+
+    fa = firma
+    pk = pk
+
+    kontroliade = get_object_or_404(Iade, pk=pk)
+    form = IadeFormu(instance=kontroliade)
+
+
+    if request.method == "POST":
+        form = IadeFormu(request.POST, instance=kontroliade)
+        if 'iadesil' in request.POST:
+            kontroliade.delete()
+            return redirect('iadelistesiurl')
+        elif 'iadeekle' in request.POST:
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.Firmaadi = request.user
+                post.Tur = 'K'
+                post.save5()
+                return redirect('iadelistesiurl')
+    else:
+        form = IadeFormu(instance=kontroliade)
+
+    title = 'İade Detayı'
+    
+    return render(request, 'etikom/iadedetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})

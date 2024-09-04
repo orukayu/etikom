@@ -18,7 +18,7 @@ class Iade(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        ordering = ['Siparisno']  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+        ordering = ['-id',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
 
     def __str__(self):
         return str(self.Siparisno)
@@ -26,6 +26,7 @@ class Iade(models.Model):
 
 class Kargo(models.Model):
     Siparisno = models.CharField(max_length=25, null=True)
+    Stokkodu = models.CharField(max_length=25, null=True)
     Desi = models.IntegerField()
     Kargotutari = models.DecimalField(max_digits=10, decimal_places=2)
     Hizmetbedeli = models.DecimalField(max_digits=10, decimal_places=2, null=True)
@@ -38,7 +39,7 @@ class Kargo(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        ordering = ['Siparisno']  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+        ordering = ['-id',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
 
     def __str__(self):
         return str(self.Siparisno)
@@ -48,7 +49,7 @@ class Siparis(models.Model):
     Pazaryeri = models.CharField(max_length=25)
     Tarih = models.DateField()
     Stokkodu = models.CharField(max_length=25)
-    Adet = models.PositiveIntegerField()
+    Adet = models.IntegerField()
     Satisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Komisyon = models.DecimalField(max_digits=10, decimal_places=2)
@@ -63,7 +64,7 @@ class Siparis(models.Model):
 
     def save4(self, *args, **kwargs):
         self.Toplam = self.Adet * self.Satisfiyati
-        self.Komisyontutari = self.Toplam * -1 * self.Komisyon / 100
+        self.Komisyontutari = self.Toplam * self.Komisyon / 100
         super().save(*args, **kwargs)
 
     class Meta:

@@ -26,7 +26,7 @@
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Dönem Sayısı: <strong>{{ tdns }} Ay</strong></li>
+                <li>İade Ürün: <strong>{{ ius }} Adet</strong></li>
                 <li>Sipariş Ort.: <strong>{{ orsp|floatformat:"g" }} Ürün</strong></li>
             </ul>
         </div>
@@ -99,7 +99,7 @@
                         {{ siparis.Tarih|date:"d.m.Y" }}
                     </td>
                     <td class="text-center">
-                        {{ siparis.Siparisno }}
+                        <a href="{% url 'stokfaturasiurl' sort=siparis.Siparisno %}">{{ siparis.Siparisno }}</a>
                     </td>
                     <td>
                         <a href="{% url 'stokgecmisiurl' sort=siparis.Stokkodu %}">{{ siparis.Stokkodu }}</a>

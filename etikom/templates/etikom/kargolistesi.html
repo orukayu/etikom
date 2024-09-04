@@ -81,7 +81,7 @@
                         {{ kargo.Tur }}
                     </td>
                     <td>
-                        {{ kargo.Siparisno }}
+                        <a href="{% url 'stokfaturasiurl' sort=kargo.Siparisno %}">{{ kargo.Siparisno }}</a>
                     </td>
                     <td class="text-center">
                         {{ kargo.Desi }}

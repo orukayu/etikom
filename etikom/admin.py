@@ -4,6 +4,7 @@ from django.contrib import admin
 from .models import Stok
 from .models import Siparis
 from .models import Kargo
+from .models import Iade
 from .models import Blog
 from .forms import SiparisFormu
 
@@ -19,9 +20,13 @@ class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'Baslik', 'Metin', 'Url')
 
 class KargoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Toplam')
+    list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Stokkodu', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Toplam')
+
+class IadeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Desi', 'Iadetutari', 'Stokkodu', 'Adet', 'Toplam')
 
 admin.site.register(Stok,StokAdmin)
 admin.site.register(Siparis,SiparisAdmin)
 admin.site.register(Kargo,KargoAdmin)
+admin.site.register(Iade,IadeAdmin)
 admin.site.register(Blog,BlogAdmin)
