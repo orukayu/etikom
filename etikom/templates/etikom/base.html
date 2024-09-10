@@ -224,7 +224,7 @@
                                 </ul>
                                 
                                 <div class="sidebar-heading text-center align-items-center px-3 mt-3 text-body-secondary text-uppercase">
-                                    <h6 class="text-black text-opacity-25">{{ firma_adi }}</h6>
+                                    <h6 class="text-warning">{{ firma_adi }}</h6>
                                 </div>
 
                                 <ul class="nav flex-column border-bottom pb-2">
@@ -346,17 +346,17 @@
                                         <div class="collapse" id="gider-collapse" style="">
                                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                                 <li>
-                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'iadeekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'giderekleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                         <svg class="bi"><use xlink:href="#receipt"></use></svg>Gider Ekle
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'iadeexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'giderexcelyukleurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                         <svg class="bi"><use xlink:href="#xlsx"></use></svg>Excel Yükle
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'iadelistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'giderlistesiurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                                                         <svg class="bi"><use xlink:href="#inbox"></use></svg>Gider Listesi
                                                     </a>
                                                 </li>
@@ -386,7 +386,7 @@
                     <div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
                         {% block baslik %}
                         <div class="col-12 col-sm-5">
-                            <h1 class="h4">{{ firma_adi|upper}} İşlemleri</h1>
+                            <h1 class="h4 text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer">Firma İşlemleri</small></h1>
                         </div>
                         {% endblock %}
                     </div>

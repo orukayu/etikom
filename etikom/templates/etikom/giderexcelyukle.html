@@ -1,0 +1,40 @@
+{% extends 'etikom/base.html' %}
+
+{% block baslik %}
+<div class="col-12 col-sm-5">
+    <h4>{{ firma_adi|title }} - Toplu Gider Girişi</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="metin mt-3">
+    <h5>
+        DİKKAT !
+    </h5>
+    <p>
+        Yükleyeceğiniz excel dosyası, 2007 veya üzeri bir sürüm olup "xlsx/xlsm/xltx/xltm" uzantılı ve aşağıda ki örnek tablo şeklinde olmalıdır.<br>
+        Daha fazla bilgi için instagramdan <a href="https://www.instagram.com/etikom_net/">@etikom_net</a> videolarımızı izleyebilirsiniz.
+    </p>
+</div>
+
+<div style="max-width: 600px;">
+    <img src="/static/media/ornek-excel-gider-tablosu.webp" class="img-fluid"/>
+</div>
+<p>
+    Örnek excel dosyasını indirmek için <a href="/static/file/ornek-gider-dosyasi.xlsx"><strong>tıklayınız.</strong></a>
+</p>
+
+<div class="mt-3">
+    <form method="post" class="row g-3" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="col-auto">
+            <input class="form-control" type="file" name="excel_file">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Excel Yükle</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

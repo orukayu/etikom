@@ -107,3 +107,16 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.Baslik
+
+class Gider(models.Model):
+    Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    Baslik = models.TextField()
+    Tarih = models.DateField()
+    Tutar = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+    class Meta:
+        ordering = ['-Tarih',]  # Tablonun hangi başlığa göre sıralanacağını belirliyor
+
+    def __str__(self):
+        return self.Baslik

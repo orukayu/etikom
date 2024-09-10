@@ -4,7 +4,7 @@
 <dl class="row align-items-center">
     <dt class="col-sm-3"><h4>{{ firma_adi|title }}<br>Özet İade Raporu</h4></dt>
     <dd class="col-sm-9">
-        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Sipariş No</strong>'su eklediğiniz siparişlerden birinin no'su olmalıdır. Aksi takdirde iade edilen ürün için stok bilgisi değişmeyecektir.
+        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Desi</strong> ve <strong>İade Kargo Tutarı</strong>'nı iade edilen siparişin stok kodlarına bölüştürünüz. Bu şekilde iadelerin toplam kargo tutarı doğru hesaplanır.
     </dd>
 </dl>
 {% endblock %}
@@ -21,7 +21,7 @@
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
                 <li>Ort. İade Tutarı: <strong>{{ ort_tutar|floatformat:"2g" }}</strong></li>
-                <li>Toplam İade Tutarı: <strong>{{ top_tutar|floatformat:"2g" }}</strong></li>
+                <li>Toplam Kargo Tutarı: <strong>{{ top_tutar|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
@@ -42,7 +42,7 @@
             İade Kargo Listesi;
         </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'kargoexcelindirurl' %}';">Excel İndir</button>
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'iadeexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
     <div class="table-responsive small">

@@ -3,7 +3,19 @@ from .models import Stok
 from .models import Siparis
 from .models import Kargo
 from .models import Iade
+from .models import Gider
 from django.utils.dateparse import parse_date
+
+class GiderFormu(forms.ModelForm):
+    class Meta:
+        model = Gider
+        fields = ['Baslik', 'Tarih', 'Tutar']
+        labels = {"Baslik" : "Başlık", "Tarih" : "Tarih", "Tutar" : "Tutar"}
+        widgets = {
+            'Baslik': forms.TextInput(attrs={'placeholder': 'Kira Gideri'}),
+            'Tarih': forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': '01/04/2024'}),
+            'Tutar': forms.TextInput(attrs={'placeholder': '12500.00'}),
+        }
 
 class IadeFormu(forms.ModelForm):
     class Meta:

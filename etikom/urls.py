@@ -49,9 +49,7 @@ urlpatterns = [
     path('kargo-listesi/<str:sort>/', views.kargoliste, name='kargosiralamaurl'),
 
     path('kargo-duzeltme/<str:firma>/<int:pk>/', views.kargoduzeltme, name='kargoduzeltmeurl'),
-
     path('kargo-exceli-indir/', views.kargoexceliindir, name='kargoexcelindirurl'),
-
 
 
 
@@ -62,10 +60,21 @@ urlpatterns = [
     path('iade-listesi/<str:sort>/', views.iadeliste, name='iadesiralamaurl'),
     
     path('iade-duzeltme/<str:firma>/<int:pk>/', views.iadeduzeltme, name='iadeduzeltmeurl'),
+    path('iade-exceli-indir/', views.iadeexceliindir, name='iadeexcelindirurl'),
 
 
 
 
+    path('gider-ekle/', views.gidereklemeyap, name='giderekleurl'),
+    path('gider-exceli-yukle/', views.giderexcelyuklemeyap, name='giderexcelyukleurl'),
+
+    path('gider-listesi/', views.giderliste, name='giderlistesiurl'),
+    path('gider-listesi/<str:sort>/', views.giderliste, name='gidersiralamaurl'),
+
+    path('gider-duzeltme/<str:firma>/<int:pk>/', views.giderduzeltme, name='giderduzeltmeurl'),
+    path('gider-exceli-indir/', views.giderexceliindir, name='giderexcelindirurl'),
+
+    path('baslik-detayi/<str:sort>/', views.baslikdetayi, name='baslikdetayiurl'),
 
     path('giris/', views.girisyap, name='girisurl'),
     path('hakkimizda/', views.hakkimizdayap, name='hakkimizdaurl'),

@@ -7,12 +7,14 @@ from .models import Siparis
 from .models import Blog
 from .models import Kargo
 from .models import Iade
+from .models import Gider
 from .forms import StokFormu
 from .forms import KayitFormu
 from .forms import GirisFormu
 from .forms import SiparisFormu
 from .forms import KargoFormu
 from .forms import IadeFormu
+from .forms import GiderFormu
 
 from django.db.models import Sum
 from django.db.models import Q
@@ -46,7 +48,7 @@ from django.contrib import messages
 def anasayfa(request):
     title = 'Etikom'
     if not request.user.is_authenticated:
-        user = authenticate(username='demo firma', password='demofirma')
+        user = authenticate(username='demo', password='demo')
         if user:
             login(request, user)
             return redirect('girisurl')
@@ -1703,3 +1705,201 @@ def iadeduzeltme(request, firma, pk):
     title = 'İade Detayı'
     
     return render(request, 'etikom/iadedetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+
+def gidereklemeyap(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Gider'
+    
+    if request.method == "POST":
+        if 'giderekle' in request.POST:
+            form = GiderFormu(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.Firmaadi = request.user
+                post.save()
+                return redirect('giderlistesiurl')
+                    
+    else:
+        form = GiderFormu()
+
+    return render(request, 'etikom/giderekle.html', {'title': title, 'firma_adi': firma_adi, 'form': form})
+
+def giderliste(request, sort=None):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    gider = Gider.objects.filter(Firmaadi=firma_adi_id).count()
+    if gider is None:
+        gider_sayisi = 0
+    else:
+        gider_sayisi = gider
+
+    basliklar = Gider.objects.filter(Firmaadi=firma_adi_id).values('Baslik').distinct().count()                  # baslik sayisi
+    tutarlar = Gider.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Tutar"))["Tutar__sum"]                 # toplam tutar
+
+
+    if gider_sayisi == 0:
+        baslik_sayisi = 0
+        top_tutar = 0
+    else:
+        baslik_sayisi = basliklar
+        top_tutar = tutarlar
+    
+
+    if sort == 'az-baslik':
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id).order_by('Baslik').values()
+    elif sort == 'za-baslik':
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id).order_by('-Baslik').values()
+    elif sort == 'az-tarih':
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id).order_by('Tarih').values()
+    elif sort == 'za-tarih':
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values()
+    elif sort == 'az-tutar':
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id).order_by('Tutar').values()
+    elif sort == 'za-tutar':
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id).order_by('-Tutar').values()
+    else:
+        gider = Gider.objects.filter(Firmaadi=firma_adi_id)
+
+    firma = request.user.username
+    title = 'Gider Listesi'
+
+    context = {
+        'gider': gider,
+        'firma_adi': firma_adi,
+        'firma': firma,
+        'title': title,
+        'gider_sayisi': gider_sayisi,
+        'baslik_sayisi': baslik_sayisi,
+        'top_tutar': top_tutar,
+    }
+    
+
+    return render(request, 'etikom/giderlistesi.html', context)
+
+def iadeexceliindir(request):
+    firma_adi_id = request.user.id
+
+    # Kargo modelinden tüm verileri al
+    iadeler = Iade.objects.filter(Firmaadi=firma_adi_id)
+
+    # Kargo verilerini bir DataFrame'e dönüştür
+    data = {
+        'Sipariş No': [iade.Siparisno for iade in iadeler],
+        'Stok Kodu': [iade.Stokkodu for iade in iadeler],
+        'Adet': [iade.Adet for iade in iadeler],
+        'Desi': [iade.Desi for iade in iadeler],
+        'İade Tutarı': [str(iade.Iadetutari).replace('.', ',') for iade in iadeler],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_buffer = BytesIO()
+    df.to_excel(excel_buffer, index=False)
+    excel_buffer.seek(0)  # Buffer'ın başına git
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_iade_kargo_listesi.xlsx"'
+
+    return response
+
+def giderduzeltme(request, firma, pk):
+    
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    if firma_adi != firma:
+        return redirect('demofirmaurl')
+
+    fa = firma
+    pk = pk
+
+    kontrolgider = get_object_or_404(Gider, pk=pk)
+    form = GiderFormu(instance=kontrolgider)
+
+
+    if request.method == "POST":
+        form = GiderFormu(request.POST, instance=kontrolgider)
+        if 'gidersil' in request.POST:
+            kontrolgider.delete()
+            return redirect('giderlistesiurl')
+        elif 'giderekle' in request.POST:
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.Firmaadi = request.user
+                post.save()
+                return redirect('giderlistesiurl')
+    else:
+        form = GiderFormu(instance=kontrolgider)
+
+    title = 'Gider Detayı'
+    
+    return render(request, 'etikom/giderdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+
+def giderexceliindir(request):
+    firma_adi_id = request.user.id
+
+    # Kargo modelinden tüm verileri al
+    giderler = Gider.objects.filter(Firmaadi=firma_adi_id)
+
+    # Kargo verilerini bir DataFrame'e dönüştür
+    data = {
+        'Başlık': [gider.Baslik for gider in giderler],
+        'Tarih': [gider.Tarih.strftime('%d.%m.%Y') for gider in giderler],
+        'Tutar': [str(gider.Tutar).replace('.', ',') for gider in giderler],
+    }
+    df = pd.DataFrame(data)
+
+    # DataFrame'i Excel dosyasına dönüştür
+    excel_buffer = BytesIO()
+    df.to_excel(excel_buffer, index=False)
+    excel_buffer.seek(0)  # Buffer'ın başına git
+
+    # HTTP yanıtı olarak Excel dosyasını döndür
+    response = HttpResponse(excel_buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_etikom_gider_listesi.xlsx"'
+
+    return response
+
+def giderexcelyuklemeyap(request):
+    title = 'Excel Yükle'
+    firma_adi = request.user.username
+
+    if request.method == "POST":
+        if 'excel_file' in request.FILES:
+            excel_file = request.FILES['excel_file']
+            df = pd.read_excel(excel_file)
+            for index, row in df.iterrows():
+                gider = Gider(
+                    Baslik = row['Başlık'],
+                    Tarih = row['Tarih'],
+                    Tutar = row['Tutar'],
+                    Firmaadi = request.user,
+                )
+                gider.save()
+            
+            return redirect('giderlistesiurl')
+
+    return render(request, 'etikom/giderexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+
+def baslikdetayi(request, sort):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Baslık Detayı'
+    baslik = Gider.objects.filter(Firmaadi=firma_adi_id, Baslik=sort)
+
+    baslik_sayisi = baslik.count()                                                                               # baslik sayisi
+    top_tutar = baslik.aggregate(Sum("Tutar"))["Tutar__sum"]                                                      # toplam tutar
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+        'sort': sort,
+        'baslik': baslik,
+        'baslik_sayisi': baslik_sayisi,
+        'top_tutar': top_tutar,
+    }
+
+    return render(request, 'etikom/baslikdetayi.html', context)
