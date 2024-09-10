@@ -48,7 +48,7 @@ from django.contrib import messages
 def anasayfa(request):
     title = 'Etikom'
     if not request.user.is_authenticated:
-        user = authenticate(username='demo', password='demo')
+        user = authenticate(username='demo', password='demodemo')
         if user:
             login(request, user)
             return redirect('girisurl')
