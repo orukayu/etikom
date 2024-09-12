@@ -1,10 +1,12 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<dl class="row align-items-center">
-    <dt class="col-sm-3"><h4>{{ firma_adi|title }} Stok Listesi</h4></dt>
+<dl class="row align-items-center m-0">
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Listesi</small></h4></dt>
     <dd class="col-sm-9">
-        Ürünlerinize ait stok kodlarının, mevcut adetlerinin ve ortalama alış fiyatlarının listesidir. Listenizi Excel dosyası olarak indirip stok sayımlarınızda da kullanabilirsiniz. Kontrol etmek istediğiniz ürüne ait hareketler için <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+        <p class="m-0">
+            Ürünlerinize ait stok kodlarının, mevcut adetlerinin ve ortalama alış fiyatlarının listesidir. Listenizi Excel dosyası olarak indirip stok sayımlarınızda da kullanabilirsiniz. Kontrol etmek istediğiniz ürüne ait hareketler için <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+        </p>
     </dd>
 </dl>
 {% endblock %}

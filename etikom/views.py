@@ -1299,12 +1299,16 @@ def pazaryeridetay(request, pzr):
 def siparistopla(request, sira):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
-    title = 'Siparişler'
+    title = 'Sipariş Topla'
 
     tarihler = list(Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values_list('Tarih', flat=True).distinct())
-    en_son_tarih = tarihler[sira-1]
 
     liste_sayisi = len(tarihler)
+
+    if liste_sayisi is 0:
+        return redirect('siparisyokurl')
+    else:
+        en_son_tarih = tarihler[sira-1]
 
     if en_son_tarih is not None:
         # En son tarihe ait siparişleri filtreleyin
@@ -1326,6 +1330,17 @@ def siparistopla(request, sira):
 
     return render(request, 'etikom/siparistopla.html', context)
 
+def siparisyok(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Sipariş Yok'
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+    }
+
+    return render(request, 'etikom/siparisyok.html', context)
 
 def siparistoplaexceli(request, sira):
     firma_adi_id = request.user.id

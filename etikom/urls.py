@@ -32,6 +32,8 @@ urlpatterns = [
     path('siparis-icerikleri/<int:sira>', views.siparistopla, name='siparisleritoplaurl'),
     path('siparis-topla-exceli/<int:sira>', views.siparistoplaexceli, name='siptoplaexcelindirurl'),
 
+    path('siparis-yok/', views.siparisyok, name='siparisyokurl'),
+
     path('siparis-listesi/', views.siparisliste, name='siparislistesiurl'),
     path('siparis-listesi/<str:sort>/', views.siparisliste, name='siparissiralama'),
 

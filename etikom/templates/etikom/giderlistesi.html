@@ -1,10 +1,12 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<dl class="row align-items-center">
-    <dt class="col-sm-3 text-uppercase"><h4>{{ firma_adi|title }}<br>Özet Gider Raporu</h4></dt>
+<dl class="row align-items-center m-0">
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Özet Gider Raporu</small></h4></dt>
     <dd class="col-sm-9">
-        Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Sipariş No</strong>'su eklediğiniz siparişlerden birinin no'su olmalıdır. Aksi takdirde kargo raporlarınızda maliyetiniz fazla çıkacaktır.
+        <p class="m-0">
+            Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Başlık</strong> bilgilerini aynı tür giderler için ortak yazınız. Bu şekilde gider raporlarınız daha kesin ve net olacaktır.
+        </p>
     </dd>
 </dl>
 {% endblock %}

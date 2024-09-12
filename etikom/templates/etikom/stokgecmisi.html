@@ -1,10 +1,12 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<dl class="row">
-    <dt class="col-sm-3 pt-2"><h4>{{ firma_adi|title }} Stok Detayı</h4></dt>
+<dl class="row align-items-center m-0">
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Detayı</small></h4></dt>
     <dd class="col-sm-9">
-        Adetleri <strong>Eksi "-"</strong> olan satırlar, sipariş veya toptan satış işlemlerine aittir. <strong>Artı "+"</strong> olan satırlar ise alım veya iade işlemlerine ait bilgileri listelemektedir. Tür sütununda işleme ait kısa kodları görebilirsiniz.
+        <p class="m-0">
+            Adetleri <strong>Eksi "-"</strong> olan satırlar, sipariş veya toptan satış işlemlerine aittir. <strong>Artı "+"</strong> olan satırlar ise alım veya iade işlemlerine ait bilgileri listelemektedir. Tür sütununda işleme ait kısa kodları görebilirsiniz.
+        </p>
     </dd>
 </dl>
 {% endblock %}

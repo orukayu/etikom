@@ -1,10 +1,12 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<dl class="row align-items-center">
-    <dt class="col-sm-3"><h4>{{ firma_adi|title }}<br>Sipariş İçerikleri</h4></dt>
+<dl class="row align-items-center m-0">
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş İçerikleri</small></h4></dt>
     <dd class="col-sm-9">
-        Bu sayfada, aynı güne ait siparişlerde ki ürünlerin stok kodları ve toplam adetleri listelenmektedir. Gitmek istediğiniz tarihe <strong>"Önceki Gün"</strong> veya <strong>"Sonraki Gün"</strong> butonlarını kullanarak gidip o güne ait hangi üründen kaç adet sipariş verildiğini görebilirsiniz.
+        <p class="m-0">
+            Bu sayfada, aynı güne ait siparişlerde ki ürünlerin stok kodları ve toplam adetleri listelenmektedir. Gitmek istediğiniz tarihe <strong>"Önceki Gün"</strong> veya <strong>"Sonraki Gün"</strong> butonlarını kullanarak gidip o güne ait hangi üründen kaç adet sipariş verildiğini görebilirsiniz.
+        </p>
     </dd>
 </dl>
 {% endblock %}
