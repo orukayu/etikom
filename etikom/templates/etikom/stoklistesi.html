@@ -2,7 +2,7 @@
 
 {% block baslik %}
 <dl class="row align-items-center m-0">
-    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Hareketleri</small></h4></dt>
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Raporu</small></h4></dt>
     <dd class="col-sm-9">
         <p class="m-0">
             Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait ayrıntılar için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
@@ -41,7 +41,7 @@
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Stok Geçmişi;
+            Stok Hareketleri;
         </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
@@ -56,7 +56,7 @@
                     <th scope="col">Tür<br>
                         (<a href="{% url 'hareketsiralamaurl' sort='az-tur' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-tur' %}">Z</a>)
                     </th>
-                    <th scope="col">Belge No<br>
+                    <th scope="col">Fatura / Sipariş No<br>
                         (<a href="{% url 'hareketsiralamaurl' sort='az-fatura-no' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-fatura-no' %}">Z</a>)
                     </th>
                     <th scope="col">Stok Kodu<br>

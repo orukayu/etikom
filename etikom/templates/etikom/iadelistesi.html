@@ -2,7 +2,7 @@
 
 {% block baslik %}
 <dl class="row align-items-center m-0">
-    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Özet İade Raporu</small></h4></dt>
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">İade Raporu</small></h4></dt>
     <dd class="col-sm-9">
         <p class="m-0">
             Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine tıklayabilirsiniz. <strong>Desi</strong> ve <strong>İade Kargo Tutarı</strong>'nı iade edilen siparişin stok kodlarına bölüştürünüz. Bu şekilde iadelerin toplam kargo tutarı doğru hesaplanır.
@@ -83,7 +83,7 @@
                         {{ iade.Tur }}
                     </td>
                     <td>
-                        <a href="{% url 'stokfaturasiurl' sort=iade.Siparisno %}">{{ iade.Siparisno }}</a>
+                        <a href="{% url 'siparisdetayurl' sort=iade.Siparisno %}">{{ iade.Siparisno }}</a>
                     </td>
                     <td>
                         <a href="{% url 'stokgecmisiurl' sort=iade.Stokkodu %}">{{ iade.Stokkodu }}</a>

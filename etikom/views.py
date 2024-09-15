@@ -67,6 +67,7 @@ def demofirma(request):
             stok = StokFormu()
             siparis = SiparisFormu()
             kargo = KargoFormu()
+            iade = IadeFormu()
             if giris.is_valid():
                 firma_adi = giris.cleaned_data['firma_adi']
                 password1 = giris.cleaned_data['password1']
@@ -567,6 +568,10 @@ def girisyap(request):
     n_s_t = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('total_cikis')[:5] #en çok satılan 5 ürün
     n_s_t = list(n_s_t)  # QuerySet'i listeye çevir
 
+    n_s_t_list = list(n_s_t)
+    for item in n_s_t_list:
+        item['total_cikis'] = abs(item['total_cikis'])
+
     # Eksik sayıda item varsa, boş item ekle
     n_s_t_count = len(n_s_t)
     if n_s_t_count < 5:
@@ -575,6 +580,11 @@ def girisyap(request):
 
     n_s_y = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lt=0).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en az satilan 5 urun
     n_s_y = list(n_s_y)  # QuerySet'i listeye çevir
+
+    n_s_y_list = list(n_s_y)
+    for item in n_s_y_list:
+        item['total_cikis'] = abs(item['total_cikis'])
+
 
     # Eksik sayıda item varsa, boş item ekle
     n_s_y_count = len(n_s_y)
@@ -666,6 +676,23 @@ def girisyap(request):
 
     tstc = abs(ksa - tstg)
 
+    edkocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('Komisyon')[0]
+    edko = edkocek['Komisyon']
+
+    eykocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('-Komisyon')[0]
+    eyko = eykocek['Komisyon']
+
+    kom_topla = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').aggregate(Sum("Komisyon"))["Komisyon__sum"]
+    sip_say = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').count()
+
+    if sip_say == 0:
+        oko = 0
+    else:
+        oko = kom_topla / sip_say
+
+    tokotu = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Komisyontutari"))["Komisyontutari__sum"]
+
+
     context = {
         'title': title,
         'firma_adi': firma_adi,
@@ -692,6 +719,10 @@ def girisyap(request):
         'tstg': tstg,
         'tstc': tstc,
         'ksa': ksa,
+        'edko': edko,
+        'eyko': eyko,
+        'oko': oko,
+        'tokotu': tokotu,
     }
 
     return render(request, 'etikom/giris.html', context)
@@ -1095,15 +1126,19 @@ def stokfaturasi(request, sort):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Fatura Detayı'
+
+    faturaturcek = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).values_list('Tur', flat=True).first()
+
+    if faturaturcek == 'S':
+        return redirect('siparisdetayurl', sort)
+    elif faturaturcek == 'İ':
+        return redirect('siparisdetayurl', sort)
+
+
     fatura = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort)
 
     tstc = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).values('Stokkodu').order_by('Stokkodu').distinct().count()
     tsta = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sort).aggregate(Sum("Adet"))["Adet__sum"]
-
-    if tsta <= 0:
-        tip = 'ile Satış'
-    else:
-        tip = 'ile Alım'
     
     tsta = abs(tsta)
 
@@ -1121,7 +1156,6 @@ def stokfaturasi(request, sort):
         'tstc': tstc,
         'tsta': tsta,
         'sftt': sftt,
-        'tip': tip,
         'oafi': oafi,
     }
 
@@ -1631,7 +1665,7 @@ def iadeexcelyuklemeyap(request):
             df = pd.read_excel(excel_file)
             for index, row in df.iterrows():
                 siparis_no = row['Sipariş No']
-                stk_no = row['Stok Kodu'],
+                stk_no = row['Stok Kodu']
                 if isinstance(siparis_no, int):
                     siparis = str(siparis_no)
                 else:
@@ -1648,7 +1682,7 @@ def iadeexcelyuklemeyap(request):
                 iade.save6()
 
                 fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=siparis, Stokkodu=stk_no).values('Satisfiyati').first()
-                fiyat = fyt['Satisfiyati']
+                fiyat = fyt['Satisfiyati'] if fyt else None
                 stok = Stok(
                     Firmaadi = request.user,
                     Afaturano = siparis,
@@ -1683,6 +1717,7 @@ def iadeexcelyuklemeyap(request):
                     Kargotutari = row['İade Kargo Tutarı'],
                     Hizmetbedeli = 0,
                     Siparisno = siparis,
+                    Stokkodu = row['Stok Kodu'],
                     Firmaadi = request.user,
                     Tur = 'İ'
                 )
@@ -1923,3 +1958,34 @@ def baslikdetayi(request, sort):
     }
 
     return render(request, 'etikom/baslikdetayi.html', context)
+
+def siparisdetay(request, sort):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+    title = 'Sipariş Detayı'
+
+    siparisler = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sort)               # siparis modelinde ki ayni nolu siparisler
+
+    tstc = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sort).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tsta = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sort).aggregate(Sum("Adet"))["Adet__sum"]
+    
+    tsta = abs(tsta)
+
+    sftt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sort).aggregate(Sum("Toplam"))["Toplam__sum"]
+
+    sftt = abs(sftt)
+
+    oafi = sftt / tsta
+
+    context = {
+        'firma_adi': firma_adi,
+        'title': title,
+        'siparisler': siparisler,
+        'tstc': tstc,
+        'tsta': tsta,
+        'sftt': sftt,
+        'oafi': oafi,
+        'sort': sort,
+    }
+
+    return render(request, 'etikom/siparis.html', context)

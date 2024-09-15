@@ -21,8 +21,8 @@ urlpatterns = [
     path('stok-exceli-indir/', views.stokexceliindir, name='stokexcelindirurl'),
     path('sayim-exceli-indir/', views.sayimexcelindir, name='sayimexcelindirurl'),
 
-    path('belge-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
-    path('stok-gecmisi/<str:sort>/', views.stokgecmisi, name='stokgecmisiurl'),
+    path('fatura-detayi/<str:sort>/', views.stokfaturasi, name='stokfaturasiurl'),
+    path('stok-detayi/<str:sort>/', views.stokgecmisi, name='stokgecmisiurl'),
 
 
 
@@ -41,6 +41,7 @@ urlpatterns = [
     path('siparis-exceli-indir/', views.sipexceliindir, name='sipexcelindirurl'),
 
     path('pazaryeri-detayi/<str:pzr>/', views.pazaryeridetay, name='pazaryeridetayurl'),
+    path('siparis-detayi/<str:sort>/', views.siparisdetay, name='siparisdetayurl'),
 
 
 

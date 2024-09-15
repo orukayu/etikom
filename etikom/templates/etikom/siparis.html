@@ -2,7 +2,7 @@
 
 {% block baslik %}
 <div>
-    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Fatura Detayı</small></h4>
+    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş Detayı</small></h4>
 </div>
 {% endblock %}
 
@@ -32,47 +32,57 @@
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Fatura No; <sort class="text-success">{{ sort }}</sort>
+            Sipariş No; <sort class="text-success">{{ sort }}</sort>
         </h5>
     </div>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead class="table-light">
                 <tr>
-                    <th scope="col" class="pt-3 pb-3">Sıra No
-                    </th>
-                    <th scope="col" class="pt-3 pb-3">Tür
-                    </th>
-                    <th scope="col" class="pt-3 pb-3">Stok Kodu
-                    </th>
-                    <th scope="col" class="pt-3 pb-3">Adet
-                    </th>
-                    <th scope="col" class="pt-3 pb-3">Fiyat
-                    </th>
-                    <th scope="col" class="pt-3 pb-3">Toplam
-                    </th>
+                    <th scope="col" class="pt-3 pb-3">Sıra No</th>
+                    <th scope="col" class="pt-3 pb-3">Tür</th>
+                    <th scope="col" class="pt-3 pb-3">Pazaryeri</th>
+                    <th scope="col" class="pt-3 pb-3">Tarih</th>
+                    <th scope="col" class="pt-3 pb-3">Stok Kodu</th>
+                    <th scope="col" class="pt-3 pb-3">Adet</th>
+                    <th scope="col" class="pt-3 pb-3">Satış Fiyatı</th>
+                    <th scope="col" class="pt-3 pb-3">Toplam</th>
+                    <th scope="col" class="pt-3 pb-3">Komisyon Oranı %</th>
+                    <th scope="col" class="pt-3 pb-3">Komisyon Tutarı</th>
                 </tr>
             </thead>
             <tbody>
-                {% for fatura in fatura %}
+                {% for siparisler in siparisler %}
                 <tr>
                     <td class="text-center">
                         {{ forloop.counter }}
                     </td>
                     <td class="text-center">
-                        {{ fatura.Tur }}
-                    </td>
-                    <td>
-                        <a href="{% url 'stokgecmisiurl' sort=fatura.Stokkodu %}">{{ fatura.Stokkodu }}</a>
+                        {{ siparisler.Tur }}
                     </td>
                     <td class="text-center">
-                        {{ fatura.Adet }}
+                        <a href="{% url 'pazaryeridetayurl' pzr=siparisler.Pazaryeri %}">{{ siparisler.Pazaryeri }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Tarih|date:"d.m.Y" }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'stokgecmisiurl' sort=siparisler.Stokkodu %}">{{ siparisler.Stokkodu }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Adet }}
                     </td>
                     <td class="text-end">
-                        {{ fatura.Alisfiyati }}
+                        {{ siparisler.Satisfiyati }}
                     </td>
                     <td class="text-end">
-                        {{ fatura.Toplam }}
+                        {{ siparisler.Toplam }}
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Komisyon }}
+                    </td>
+                    <td class="text-end">
+                        {{ siparisler.Komisyontutari }}
                     </td>
                 </tr>
                 {% endfor %}

@@ -87,7 +87,7 @@
 .card-body {
     text-align: left;
 }
-#sayi1, #sayi2, #sayi3, #sayi4, #sayi5 {
+#sayi1, #sayi2, #sayi3, #sayi4, #sayi5, #id_Hizmetbedeli {
     width: 150px;
 }
 span#toplam, span#ts {

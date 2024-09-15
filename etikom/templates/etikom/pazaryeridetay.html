@@ -1,12 +1,8 @@
 {% extends 'etikom/base.html' %}
 
 {% block baslik %}
-<div class="col-12 col-sm-5">
-    <h4>{{ firma_adi|title }} Pazaryeri Detayı</h4>
-</div>
 <div>
-    <p>
-    </p>
+    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Pazaryeri Detayı</small></h4>
 </div>
 {% endblock %}
 
@@ -36,7 +32,7 @@
     </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Pazaryeri; <sort class="text-warning">{{ pzr }}</sort> <small class="blockquote-footer">Siparişleri</small>
+            Pazaryeri; <sort class="text-success">{{ pzr }}</sort>
         </h5>
     </div>
     <div class="table-responsive small">
@@ -68,10 +64,10 @@
                         {{ pazaryeri.Tarih|date:"d.m.Y" }}</a>
                     </td>
                     <td class="text-center">
-                        {{ pazaryeri.Siparisno }}
+                        <a href="{% url 'siparisdetayurl' sort=pazaryeri.Siparisno %}">{{ pazaryeri.Siparisno }}</a>
                     </td>
                     <td>
-                        {{ pazaryeri.Stokkodu }}
+                        <a href="{% url 'stokgecmisiurl' sort=pazaryeri.Stokkodu %}">{{ pazaryeri.Stokkodu }}</a>
                     </td>
                     <td class="text-center">
                         {{ pazaryeri.Adet }}
