@@ -708,7 +708,10 @@ def girisyap(request):
     sip_say = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').count()
 
     if sip_say == 0:
+        edko = 0
+        eyko = 0
         oko = 0
+        tokotu = 0
     else:
         oko = kom_topla / sip_say
 
