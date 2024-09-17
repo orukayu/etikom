@@ -698,11 +698,17 @@ def girisyap(request):
 
     tstc = abs(ksa - tstg)
 
-    edkocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('Komisyon')[0]
-    edko = edkocek['Komisyon']
+    edkocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('Komisyon')
+    if edkocek:
+        edko = edkocek[0]['Komisyon']
+    else:
+        edko = 0
 
-    eykocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('-Komisyon')[0]
-    eyko = eykocek['Komisyon']
+    eykocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('-Komisyon')
+    if eykocek:
+        edko = eykocek[0]['Komisyon']
+    else:
+        edko = 0
 
     kom_topla = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').aggregate(Sum("Komisyon"))["Komisyon__sum"]
     sip_say = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').count()
