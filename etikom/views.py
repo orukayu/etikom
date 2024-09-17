@@ -226,6 +226,25 @@ def demofirma(request):
         ort_desi = desiler / kargolar
         top_tutar = tutarlar
 
+    iadeler = Iade.objects.filter(Firmaadi=firma_adi_id).count()
+    if iadeler is None:
+        iade_sayisi = 0
+    else:
+        iade_sayisi = iadeler
+
+    urunler = Iade.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').distinct().count()
+    if urunler is None:
+        iade_urunler = 0
+    else:
+        iade_urunler = urunler
+
+    iadekargo = Iade.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Iadetutari"))["Iadetutari__sum"]
+
+    if iadekargo == 0:
+        iadekrg_tutari = 0
+    else:
+        iadekrg_tutari = iadekargo
+
     context = {
         'giris': giris,
         'stok': stok,
@@ -244,6 +263,9 @@ def demofirma(request):
         'kargo_sayisi': kargo_sayisi,
         'ort_desi': ort_desi,
         'top_tutar': top_tutar,
+        'iade_sayisi': iade_sayisi,
+        'iade_urunler': iade_urunler,
+        'iadekrg_tutari': iadekrg_tutari,
     }
 
     return render(request, 'etikom/base.html', context)
@@ -692,6 +714,19 @@ def girisyap(request):
 
     tokotu = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Komisyontutari"))["Komisyontutari__sum"]
 
+    n_i_u = Iade.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en çok iade 5 ürün
+    n_i_u = list(n_i_u)  # QuerySet'i listeye çevir
+
+    n_i_u_list = list(n_i_u)
+    for item in n_i_u_list:
+        item['total_cikis'] = (item['total_cikis'])
+
+    # Eksik sayıda item varsa, boş item ekle
+    n_i_u_count = len(n_i_u)
+    if n_i_u_count < 5:
+        for _ in range(5 - n_i_u_count):
+            n_i_u.append({'Stokkodu': None, 'total_adet': 0})
+
 
     context = {
         'title': title,
@@ -723,6 +758,7 @@ def girisyap(request):
         'eyko': eyko,
         'oko': oko,
         'tokotu': tokotu,
+        'n_i_u': n_i_u,
     }
 
     return render(request, 'etikom/giris.html', context)

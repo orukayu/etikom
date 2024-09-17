@@ -547,14 +547,14 @@
                                         {% csrf_token %}
                                         {{ iade.as_p }}
                                         <div class="d-flex gap-2 justify-content-center py-3">
-                                            <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="kargoekle">İade Ekle</button>
-                                            <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'kargoexcelyukleurl' %}';">Excel Yükle</button>
-                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'kargolistesiurl' %}';">İade Listesi</button>
+                                            <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="iadeekle">İade Ekle</button>
+                                            <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'iadeexcelyukleurl' %}';">Excel Yükle</button>
+                                            <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'iadelistesiurl' %}';">İade Listesi</button>
                                         </div>
                                     </form>
-                                    <p style="font-weight: bold;">Toplam Kargo Sayısı:<span id="ts">{{ kargo_sayisi|floatformat:"-3g" }}</span></p>
-                                    <p style="font-weight: bold;">Ortalama Desi:<span id="ts">{{ ort_desi|floatformat:"2g" }}</span></p>
-                                    <p style="font-weight: bold;">Toplam Kargo Tutarı:<span id="ts">{{ top_tutar|floatformat:"2g" }}</span></p>
+                                    <p style="font-weight: bold;">İade Sayısı:<span id="ts">{{ iade_sayisi|floatformat:"-3g" }}</span></p>
+                                    <p style="font-weight: bold;">İade Ürün Çeşidi:<span id="ts">{{ iade_urunler|floatformat:"2g" }}</span></p>
+                                    <p style="font-weight: bold;">İade Kargo Tutarı:<span id="ts">{{ iadekrg_tutari|floatformat:"2g" }}</span></p>
                                 </div>
                             </div>
                         </div>

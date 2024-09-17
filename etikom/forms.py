@@ -101,7 +101,7 @@ class StokFormu(forms.ModelForm):
     class Meta:
         model = Stok
         fields = ('Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
-        labels = {"Stokkodu" : "Stok Kodu", "Alisfiyati" : "Fiyat", "Afaturano" : "Fatura No"}
+        labels = {"Stokkodu" : "Stok Kodu", "Alisfiyati" : "Alış Fiyatı", "Afaturano" : "Fatura No"}
         widgets = {
             'Afaturano': forms.TextInput(attrs={'placeholder': 'FTR202400001234'}),
             'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12'}),
