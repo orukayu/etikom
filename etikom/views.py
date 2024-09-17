@@ -706,9 +706,9 @@ def girisyap(request):
 
     eykocek = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').values('Komisyon').order_by('-Komisyon')
     if eykocek:
-        edko = eykocek[0]['Komisyon']
+        eyko = eykocek[0]['Komisyon']
     else:
-        edko = 0
+        eyko = 0
 
     kom_topla = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').aggregate(Sum("Komisyon"))["Komisyon__sum"]
     sip_say = Siparis.objects.filter(Firmaadi=firma_adi_id, Tur='S').count()
