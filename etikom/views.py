@@ -625,7 +625,7 @@ def girisyap(request):
 
     s_a_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__gt=0).order_by('total_adet')[:5] #stogu azalan urunler
     c_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct()  # pazaryerleri listesi
-    b_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').annotate(total_satis=Sum('Toplam')).order_by('-total_satis')[:5] #en çok satılan 5 ürün
+    b_p_y = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').annotate(total_satis=Sum('Toplam')).order_by('-total_satis')[:5] #en buyuk pazaryeri
     s_y_u = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet=Sum('Adet')).filter(total_adet__gt=0).order_by('-total_adet')[:5] #stogu azalan urunler
 
     today = datetime.today()    # Şu anki tarih
@@ -737,6 +737,59 @@ def girisyap(request):
             n_i_u.append({'Stokkodu': None, 'total_adet': 0})
 
 
+    # 1. Iade tablosundaki benzersiz stok kodlarını alın
+    iade_stok_kodlari = Iade.objects.filter(Firmaadi=firma_adi_id).values_list('Stokkodu', flat=True).distinct()
+
+    # 2. Iadesi olmayan stok kodlarını Siparis tablosunda bulun
+    iadesi_olmayan_stok_kodlari = Siparis.objects.filter(Firmaadi=firma_adi_id).exclude(Stokkodu__in=iade_stok_kodlari)
+
+    # 3. Adetleri toplayın ve sıralayın
+    adet_toplamlari = (
+        iadesi_olmayan_stok_kodlari
+        .values('Stokkodu')
+        .annotate(total_adet=Sum('Adet'))
+        .order_by('-total_adet')
+    )
+
+    # 4. İlk 5 öğeyi seçin
+    ilk_5_oge = adet_toplamlari[:5]
+
+    giderler = Gider.objects.filter(Firmaadi=firma_adi_id).values('Baslik').annotate(total_gider=Sum('Tutar')).order_by('-total_gider')[:5]
+    giderler = list(giderler)  # QuerySet'i listeye çevir
+
+    giderler_list = list(giderler)
+    for item in giderler_list:
+        item['total_gider'] = (item['total_gider'])
+
+    # Eksik sayıda item varsa, boş item ekle
+    giderler_count = len(giderler)
+    if giderler_count < 5:
+        for _ in range(5 - giderler_count):
+            giderler.append({'Baslik': None, 'total_gider': 0})
+
+    edkrcek = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').values('Kargotutari').order_by('Kargotutari')
+    if edkrcek:
+        edkt = edkrcek[0]['Kargotutari']
+    else:
+        edkt = 0
+
+    eykrcek = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').values('Kargotutari').order_by('-Kargotutari')
+    if eykrcek:
+        eykt = eykrcek[0]['Kargotutari']
+    else:
+        eykt = 0
+
+    krg_topla = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
+    krg_say = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').count()
+
+    if krg_say == 0:
+        edkt = 0
+        eykt = 0
+        okt = 0
+        tokrtu = 0
+    else:
+        okt = krg_topla / krg_say
+
     context = {
         'title': title,
         'firma_adi': firma_adi,
@@ -768,6 +821,12 @@ def girisyap(request):
         'oko': oko,
         'tokotu': tokotu,
         'n_i_u': n_i_u,
+        'ilk_5_oge': ilk_5_oge,
+        'giderler': giderler,
+        'edkt': edkt,
+        'eykt': eykt,
+        'okt': okt,
+        'krg_topla': krg_topla,
     }
 
     return render(request, 'etikom/giris.html', context)
@@ -1389,7 +1448,7 @@ def siparistopla(request, sira):
 
     liste_sayisi = len(tarihler)
 
-    if liste_sayisi is 0:
+    if liste_sayisi == 0:
         return redirect('siparisyokurl')
     else:
         en_son_tarih = tarihler[sira-1]
