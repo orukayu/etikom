@@ -27,7 +27,7 @@ class IadeAdmin(admin.ModelAdmin):
     list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Desi', 'Iadetutari', 'Stokkodu', 'Adet', 'Toplam')
 
 class GiderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Baslik', 'Tarih', 'Tutar')
+    list_display = ('id', 'Firmaadi', 'Baslik', 'Tarih', 'Tutar')
 
 admin.site.register(Stok,StokAdmin)
 admin.site.register(Siparis,SiparisAdmin)

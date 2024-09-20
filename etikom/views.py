@@ -638,12 +638,16 @@ def girisyap(request):
     haftasonu = haftabasi + timedelta(days=6)  # Haftanın bitişi (Pazar)
     buhaftaki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[haftabasi, haftasonu])
     bh_siplerin_toplami = buhaftaki_sipler.aggregate(bhsip_tt=Sum('Toplam'))['bhsip_tt']
+    if bh_siplerin_toplami is None:
+        bh_siplerin_toplami = 0
 
     # Gecen haftanın siparişlerini filtreleme
     gecen_haftasonu = today - timedelta(days=bugun+1)
     gecen_haftabasi = gecen_haftasonu - timedelta(days=6)
     gcn_haftaki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gecen_haftabasi, gecen_haftasonu])
     gh_siplerin_toplami = gcn_haftaki_sipler.aggregate(ghsip_tt=Sum('Toplam'))['ghsip_tt']
+    if gh_siplerin_toplami is None:
+        gh_siplerin_toplami = 0
 
     # Bu ayın siparişlerini filtreleme
     aybasi = datetime(buyil, buay, 1)
@@ -651,6 +655,8 @@ def girisyap(request):
     aysonu = datetime(buyil, buay, ayinsongunu)
     buayki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[aybasi, aysonu])
     ba_sipler_toplami = buayki_sipler.aggregate(basip_tt=Sum('Toplam'))['basip_tt']
+    if ba_sipler_toplami is None:
+        ba_sipler_toplami = 0
 
     # Gecen ayın siparişlerini filtreleme
     gcn_aybasi = datetime(buyil, buay-1, 1)
@@ -658,18 +664,24 @@ def girisyap(request):
     gcn_aysonu = datetime(buyil, buay-1, gcn_ayinsongunu)
     gcn_ayki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gcn_aybasi, gcn_aysonu])
     ga_sipler_toplami = gcn_ayki_sipler.aggregate(gasip_tt=Sum('Toplam'))['gasip_tt']
+    if ga_sipler_toplami is None:
+        ga_sipler_toplami = 0
 
     # Bu yılın siparişlerini filtreleme
     yilbasi = datetime(buyil, 1, 1)
     yilsonu = datetime(buyil, 12, 31)
     buyilki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[yilbasi, yilsonu])
     by_sipler_toplami = buyilki_sipler.aggregate(bysip_tt=Sum('Toplam'))['bysip_tt']
+    if by_sipler_toplami is None:
+        by_sipler_toplami = 0
 
     # Gecen yılın siparişlerini filtreleme
     gcn_yilbasi = datetime(buyil-1, 1, 1)
     gcn_yilsonu = datetime(buyil-1, 12, 31)
     gcn_yilki_sipler = Siparis.objects.filter(Firmaadi=firma_adi_id, Tarih__range=[gcn_yilbasi, gcn_yilsonu])
     gy_sipler_toplami = gcn_yilki_sipler.aggregate(gysip_tt=Sum('Toplam'))['gysip_tt']
+    if gy_sipler_toplami is None:
+        gy_sipler_toplami = 0
 
 
     tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()      # Toplam stok cesidi sayısı
@@ -722,6 +734,8 @@ def girisyap(request):
         oko = kom_topla / sip_say
 
     tokotu = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Komisyontutari"))["Komisyontutari__sum"]
+    if tokotu is None:
+        tokotu = 0
 
     n_i_u = Iade.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_cikis=Sum('Adet')).order_by('-total_cikis')[:5] #en çok iade 5 ürün
     n_i_u = list(n_i_u)  # QuerySet'i listeye çevir
@@ -734,7 +748,7 @@ def girisyap(request):
     n_i_u_count = len(n_i_u)
     if n_i_u_count < 5:
         for _ in range(5 - n_i_u_count):
-            n_i_u.append({'Stokkodu': None, 'total_adet': 0})
+            n_i_u.append({'Stokkodu': None, 'total_cikis': 0})
 
 
     # 1. Iade tablosundaki benzersiz stok kodlarını alın
@@ -753,6 +767,18 @@ def girisyap(request):
 
     # 4. İlk 5 öğeyi seçin
     ilk_5_oge = adet_toplamlari[:5]
+
+    ilk_5 = list(ilk_5_oge)  # QuerySet'i listeye çevir
+
+    ilk_5_list = list(ilk_5)
+    for item in ilk_5_list:
+        item['total_adet'] = (item['total_adet'])
+
+    # Eksik sayıda item varsa, boş item ekle
+    ilk_5_count = len(ilk_5)
+    if ilk_5_count < 5:
+        for _ in range(5 - ilk_5_count):
+            ilk_5.append({'Stokkodu': None, 'total_adet': 0})
 
     giderler = Gider.objects.filter(Firmaadi=firma_adi_id).values('Baslik').annotate(total_gider=Sum('Tutar')).order_by('-total_gider')[:5]
     giderler = list(giderler)  # QuerySet'i listeye çevir
@@ -780,6 +806,9 @@ def girisyap(request):
         eykt = 0
 
     krg_topla = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
+    if krg_topla is None:
+        krg_topla = 0
+
     krg_say = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').count()
 
     if krg_say == 0:
@@ -821,7 +850,7 @@ def girisyap(request):
         'oko': oko,
         'tokotu': tokotu,
         'n_i_u': n_i_u,
-        'ilk_5_oge': ilk_5_oge,
+        'ilk_5': ilk_5,
         'giderler': giderler,
         'edkt': edkt,
         'eykt': eykt,

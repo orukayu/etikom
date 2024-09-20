@@ -245,11 +245,11 @@
                     <ul class="list-unstyled mt-3 mb-4">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             En Düşük Komisyon Oranı :
-                            <span class="badge text-bg-primary rounded-pill">{{ edko }}</span>
+                            <span class="badge text-bg-primary rounded-pill">{{ edko|floatformat:"2g" }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             En Yüksek Komisyon Oranı :
-                            <span class="badge text-bg-primary rounded-pill">{{ eyko }}</span>
+                            <span class="badge text-bg-primary rounded-pill">{{ eyko|floatformat:"2g" }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Ortalama Komisyon Oranı :
@@ -266,6 +266,33 @@
         <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Giden Kargo Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            En Düşük Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ edkt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            En Yüksek Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ eykt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Ortalama Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ okt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ krg_topla|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>        
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
                     <h4 class="my-0 fw-normal">İadesi Çok Olan 5 Ürün</h4>
                 </div>
                 <div class="card-body">
@@ -273,7 +300,7 @@
                         {% for item in n_i_u %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ item.Stokkodu|default_if_none:"-" }}
-                            <span class="badge text-bg-primary rounded-pill">{{ item.total_cikis|default_if_none:"-" }}</span>
+                            <span class="badge text-bg-primary rounded-pill">{{ item.total_cikis|default_if_none:"0"|floatformat:"0" }}</span>
                         </li>
                         {% endfor %}
                     </ul>
@@ -288,10 +315,10 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled mt-3 mb-4">
-                        {% for item in ilk_5_oge %}
+                        {% for item in ilk_5 %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ item.Stokkodu|default_if_none:"-" }}
-                            <span class="badge text-bg-primary rounded-pill">{{ item.total_adet|default_if_none:"-" }}</span>
+                            <span class="badge text-bg-primary rounded-pill">{{ item.total_adet|default_if_none:"0"|floatformat:"0" }}</span>
                         </li>
                         {% endfor %}
                     </ul>
@@ -316,34 +343,7 @@
                     <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">Giden Kargo Raporu</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            En Düşük Kargo Tutarı :
-                            <span class="badge text-bg-primary rounded-pill">{{ edkt }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            En Yüksek Kargo Tutarı :
-                            <span class="badge text-bg-primary rounded-pill">{{ eykt }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Ortalama Kargo Tutarı :
-                            <span class="badge text-bg-primary rounded-pill">{{ okt|floatformat:"2g" }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Toplam Kargo Tutarı :
-                            <span class="badge text-bg-primary rounded-pill">{{ krg_topla|floatformat:"2g" }}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        </div>        
     </div>
 </div>
 {% endblock %}
