@@ -1837,7 +1837,7 @@ def iadeexcelyuklemeyap(request):
                     Tarih = tarih,
                     Siparisno = row['Sipariş No'],
                     Stokkodu = row['Stok Kodu'],
-                    Adet = row['Adet'],
+                    Adet = row['Adet'] * -1,
                     Satisfiyati = fiyat,
                     Komisyon = komisyon,
                     Firmaadi = request.user,
