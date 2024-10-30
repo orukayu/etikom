@@ -288,18 +288,14 @@ def stokliste(request, sort=None):
         tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
         ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
         tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
-        ostm = tstm / tstg
 
         # None kontrolü
         if tstg is None:
             tstg = 0
-            ostm = 0
         if ksa is None:
             ksa = 0
-            ostm = 0
         if tstm is None:
             tstm = 0
-            ostm = 0
 
     tstc = abs(ksa - tstg)                                                                                      # Stok cikisi
 
@@ -309,6 +305,8 @@ def stokliste(request, sort=None):
         tsatis = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok satis bedeli
 
     tsts = abs(tsatis)
+
+    ostm = (tstm - tsts) / ksa
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
@@ -827,6 +825,7 @@ def girisyap(request):
         'tsistt': tsistt,
         'tststt': tststt,
         'ts': ts,
+        'tstm': tstm,
         'ort_dnm_sts': ort_dnm_sts,
         'n_s_t': n_s_t,
         'n_s_y': n_s_y,
@@ -1353,48 +1352,39 @@ def siparisduzeltme(request, firma, pk):
 
     sipturcek = Siparis.objects.filter(id=pk).values_list('Tur', flat=True).first()
 
-    sipcek = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
-    skcek = Siparis.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
-    spk = Stok.objects.filter(Firmaadi=firma_adi_id, Afaturano=sipcek, Stokkodu=skcek, Tur='S').values_list('id', flat=True).first()
-
-
     if sipturcek == 'S':
-        kontrolsip = get_object_or_404(Siparis, pk=pk)
-        kontrolstk = get_object_or_404(Stok, pk=spk)
-        if request.method == "POST":
-            siparis = SiparisFormu(request.POST, instance=kontrolsip, user=request.user)
-            if 'siparissil' in request.POST:
-                kontrolsip.delete()
-                kontrolstk.delete()
+        kontrolsiparis = get_object_or_404(Siparis, pk=pk)
+        siparis = SiparisFormu(request.POST, instance=kontrolsiparis, user=request.user)
+        if 'siparissil' in request.POST:
+            stok_entry = Stok.objects.filter(Afaturano=kontrolsiparis.Siparisno, Stokkodu=kontrolsiparis.Stokkodu, Tur='S').first()
+            if stok_entry:
+                stok_entry.delete()
+
+            kontrolsiparis.delete()
+            return redirect('siparislistesiurl')
+        elif 'siparisekle' in request.POST:
+            stok_entry = Stok.objects.filter(Afaturano=kontrolsiparis.Siparisno, Stokkodu=kontrolsiparis.Stokkodu, Tur='S').first()
+            if stok_entry:
+                stok_entry.delete()
+
+            kontrolsiparis.delete()
+            if siparis.is_valid():
+                post = siparis.save(commit=False)
+                post.Firmaadi = request.user
+                post.Tur = 'S'
+                post.save3()
+
+
+                Firmaadi = request.user
+                adet = siparis.cleaned_data['Adet']
+                fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=kontrolsiparis.Siparisno, Stokkodu=kontrolsiparis.Stokkodu, Tur='S').values('Satisfiyati').first()
+                fiyat = fyt['Satisfiyati']
+                stok = Stok(Firmaadi=request.user, Afaturano=kontrolsiparis.Siparisno, Stokkodu=kontrolsiparis.Stokkodu, Adet=adet, Alisfiyati=fiyat, Tur='S')
+                stok.save1()
+
                 return redirect('siparislistesiurl')
-            elif 'siparisekle' in request.POST:
-                if siparis.is_valid():
-                    post = siparis.save(commit=False)
-                    post.Firmaadi = request.user
-                    post.Tur = 'S'
-                    post.save3()
-
-                    sipno = siparis.cleaned_data['Siparisno']
-                    stokkodu = siparis.cleaned_data['Stokkodu']
-                    sayi = siparis.cleaned_data['Adet']
-                    adet = sayi * -1
-                    satfiyat = siparis.cleaned_data['Satisfiyati']
-                    
-                    sinca = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
-                    stkca = Siparis.objects.filter(id=pk).values_list('Stokkodu', flat=True).first()
-                    kstok = get_object_or_404(Stok, Afaturano=sinca, Stokkodu=stkca)
-
-                    kstok.Firmaadi = request.user
-                    kstok.Afaturano = sipno
-                    kstok.Stokkodu = stokkodu
-                    kstok.Adet = adet
-                    kstok.Alisfiyati = satfiyat
-                    kstok.Tur = 'S'
-                    kstok.save1()
-
-                    return redirect('siparislistesiurl')
         else:
-            siparis = SiparisFormu(instance=kontrolsip, user=request.user)
+            siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
 
     elif sipturcek == 'İ':
         sipcek = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
@@ -1404,10 +1394,10 @@ def siparisduzeltme(request, firma, pk):
         return redirect('iadeduzeltmeurl', firma, pk)
 
     else:
-        siparis = SiparisFormu(instance=kontrolsip, user=request.user)
+        siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
 
     title = 'Sipariş Detayı'
-    siparis = SiparisFormu(instance=kontrolsip, user=request.user)
+    siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
     return render(request, 'etikom/siparisdetay.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
 
 
