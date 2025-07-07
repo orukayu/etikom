@@ -46,233 +46,24 @@ from django.contrib import messages
 
 # Create your views here.
 
-def anasayfa(request):
+def girisyap(request):
     title = 'Etikom'
-    if not request.user.is_authenticated:
-        user = authenticate(username='demo', password='demodemo')
-        if user:
-            login(request, user)
-            return redirect('girisurl')
-
-    return redirect('demofirmaurl')
-
-
-def demofirma(request):
-    title = 'Anasayfa'
-    firma_adi = request.user.username
-    firma_adi_id = request.user.id
-
     if request.method == 'POST':
-        if 'girisyap' in request.POST:
-            giris = GirisFormu(request.POST)
-            stok = StokFormu()
-            siparis = SiparisFormu()
-            kargo = KargoFormu()
-            iade = IadeFormu()
-            if giris.is_valid():
-                firma_adi = giris.cleaned_data['firma_adi']
-                password1 = giris.cleaned_data['password1']
-                userkontrol = authenticate(username=firma_adi, password=password1)
-                if userkontrol is not None:
-                    login(request, userkontrol)
-                    return redirect('girisurl')
-                else:
-                    mesaj = ''
-                    giris.add_error('firma_adi', 'Hatalı firma adı veya şifre.')
-        elif 'stokekle' in request.POST:
-            stok = StokFormu(request.POST)
-            if stok.is_valid():
-                post = stok.save(commit=False)
-                post.Firmaadi = request.user
-                if post.Adet > 0:
-                    post.Tur = 'A'
-                else:
-                    post.Tur = 'T'
-                post.save1()
-                return redirect('demofirmaurl')
-
-        elif 'sipekle' in request.POST:
-            siparis = SiparisFormu(request.POST, user=request.user)
-            giris = GirisFormu()
-            stok = StokFormu()
-            kargo = KargoFormu()
-            if siparis.is_valid():
-                post = siparis.save(commit=False)
-                post.Firmaadi = request.user
-                post.Tur = 'S'
-                post.save3()
-
-                # Stok modeline kaydedilecek verileri ayir
-                sipno = siparis.cleaned_data['Siparisno']
-                stokkodu = siparis.cleaned_data['Stokkodu']
-                sayi = siparis.cleaned_data['Adet']
-                adet = sayi * -1
-                satfiyat = siparis.cleaned_data['Satisfiyati']
-                Firmaadi = request.user
-
-                # Stok modelini olustur ve kaydet
-                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat, Tur='S')
-                stok.save1()
-                return redirect('demofirmaurl')
-
-        elif 'kargoekle' in request.POST:
-            kargo = KargoFormu(request.POST)
-            if kargo.is_valid():
-                sip_no = kargo.cleaned_data['Siparisno']
-                kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
-                if kontrol > 0:
-                    post = kargo.save(commit=False)
-                    post.Firmaadi = request.user
-                    post.Tur = 'K'
-                    post.save5()
-                    return redirect('demofirmaurl')
-                else:
-                    kargo.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
-                    giris = GirisFormu()
-                    stok = StokFormu()
-                    siparis = SiparisFormu(user=request.user)
-        elif 'iadeekle' in request.POST:
-            iade = IadeFormu(request.POST)
-            if iade.is_valid():
-                sip_no = iade.cleaned_data['Siparisno']
-                sip_kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no).count()
-                if sip_kontrol > 0:
-                    stk_no = iade.cleaned_data['Stokkodu']
-                    stk_kontrol = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).count()
-                    if stk_kontrol > 0:
-                        post = iade.save(commit=False)
-                        post.Firmaadi = request.user
-                        post.Tur = 'İ'
-                        post.save6()
-
-                        Firmaadi = request.user
-                        adet = iade.cleaned_data['Adet']
-                        fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Satisfiyati').first()
-                        fiyat = fyt['Satisfiyati']
-                        stok = Stok(Firmaadi=Firmaadi, Afaturano=sip_no, Stokkodu=stk_no, Adet=adet, Alisfiyati=fiyat, Tur='İ')
-                        stok.save1()
-
-                        pzr_yeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Pazaryeri').first()
-                        pazaryeri = pzr_yeri['Pazaryeri']
-                        adt = iade.cleaned_data['Adet'] * -1
-                        trh = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Tarih').first()
-                        tarih = trh['Tarih']
-                        kmsyn = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Komisyon').first()
-                        komisyon = kmsyn['Komisyon']
-                        siparis = Siparis(Firmaadi=Firmaadi, Pazaryeri=pazaryeri, Tarih=tarih, Siparisno=sip_no, Stokkodu=stk_no, Adet=adt, Komisyon=komisyon, Satisfiyati=fiyat, Tur='İ')
-                        siparis.save4()
-
-                        desi = iade.cleaned_data['Desi']
-                        iade_ttr = iade.cleaned_data['Iadetutari']
-                        kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Stokkodu=stk_no, Desi=desi, Hizmetbedeli=0, Kargotutari=iade_ttr)
-                        kargo.save5()
-
-                        return redirect('iadelistesiurl')
-                    else:
-                        form.add_error('Stokkodu', 'Stok Kodu Siparişe Ait Değil !')
-                else:
-                    form.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
-
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('raporlarurl')  # Ana sayfa URL'inizi buraya yazın
         else:
-            giris = GirisFormu()
-            stok = StokFormu()
-            siparis = SiparisFormu(user=request.user)
-            kargo = KargoFormu()
-            iade = IadeFormu()
-    else:
-        giris = GirisFormu()
-        stok = StokFormu()
-        siparis = SiparisFormu(user=request.user)
-        kargo = KargoFormu()
-        iade = IadeFormu()
-
-    mesaj = ''
-
-    stv = Stok.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Stok modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
-
-    if stv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
-        ts = 0
-        om = 0
-        tm = 0
-    else:
-        ts = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]       # Adet sutununda ki rakamlarin toplamini verir.
-        tm = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
-        om = tm / ts
-
-    siv = Siparis.objects.filter(Firmaadi=firma_adi_id).count()                       # Bu kod, Siparis modelinde kaç veri olduğunu sayar. Eğer veri yoksa 0 değeri döndürür.
-
-    if siv == 0:                                     # 0 lı şart koyulmazsa tablo boşken hata veriyor.
-        tss = 0
-        osm = 0
-        tsm = 0
-    else:
-        tfs = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Siparisno').order_by('Siparisno').distinct()      # Siparis tablosunda ki satir sayisi
-        tss = len(tfs)
-        tsm = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
-        osm = tsm / tss
-
-    kargolar = Kargo.objects.filter(Firmaadi=firma_adi_id).count()
-    if kargolar is None:
-        kargo_sayisi = 0
-    else:
-        kargo_sayisi = kargolar
-
-    desiler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]
-    tutarlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
-
-    if kargo_sayisi == 0:
-        ort_desi = 0
-        top_tutar = 0
-    else:
-        ort_desi = desiler / kargolar
-        top_tutar = tutarlar
-
-    iadeler = Iade.objects.filter(Firmaadi=firma_adi_id).count()
-    if iadeler is None:
-        iade_sayisi = 0
-    else:
-        iade_sayisi = iadeler
-
-    urunler = Iade.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').distinct().count()
-    if urunler is None:
-        iade_urunler = 0
-    else:
-        iade_urunler = urunler
-
-    iadekargo = Iade.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Iadetutari"))["Iadetutari__sum"]
-
-    if iadekargo == 0:
-        iadekrg_tutari = 0
-    else:
-        iadekrg_tutari = iadekargo
-
+            messages.error(request, 'Kullanıcı adı veya şifre yanlış.')
     context = {
-        'giris': giris,
-        'stok': stok,
-        'siparis': siparis,
-        'kargo': kargo,
-        'iade': iade,
-        'mesaj': mesaj,
-        'firma_adi': firma_adi,
-        'title': title,
-        'ts': ts,
-        'om': om,
-        'tm': tm,
-        'tss': tss,
-        'osm': osm,
-        'tsm': tsm,
-        'kargo_sayisi': kargo_sayisi,
-        'ort_desi': ort_desi,
-        'top_tutar': top_tutar,
-        'iade_sayisi': iade_sayisi,
-        'iade_urunler': iade_urunler,
-        'iadekrg_tutari': iadekrg_tutari,
+        'title': title
     }
 
-    return render(request, 'etikom/base.html', context)
+    return render(request, 'etikom/giris.html', context)
 
-
-def stokliste(request, sort=None):
+def stokharaketleriyap(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -357,10 +148,10 @@ def stokliste(request, sort=None):
     }
     
 
-    return render(request, 'etikom/stoklistesi.html', context)
+    return render(request, 'etikom/stokharaketleri.html', context)
 
 
-def siparisliste(request, sort=None):
+def siparislistesiyap(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -458,7 +249,7 @@ def siparisliste(request, sort=None):
 
     return render(request, 'etikom/siparislistesi.html', context)
 
-def kargoliste(request, sort=None):
+def kargolistesiyap(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -538,11 +329,18 @@ def kargoliste(request, sort=None):
 
     return render(request, 'etikom/kargolistesi.html', context)
 
-def girisyap(request):
+def raporlaryap(request):
+    if not request.user.is_authenticated:  # Eğer kullanıcı giriş yapmamışsa
+        demo_kullanici = authenticate(request, username='demo', password='demodemo')
+        if demo_kullanici is not None:
+            login(request, demo_kullanici)
+        else:
+            return redirect('girisurl')
+
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    title = 'E-ticaretin Kolay Muhasebesi'    
+    title = 'Genel Raporlar'   
 
     kont_tststt = Stok.objects.filter(Firmaadi=firma_adi_id, Tur='T', Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]       # toptan satis tutari
     if kont_tststt == None:
@@ -858,7 +656,7 @@ def girisyap(request):
         'krg_topla': krg_topla,
     }
 
-    return render(request, 'etikom/giris.html', context)
+    return render(request, 'etikom/raporlar.html', context)
 
 def kayitol(request):
     title = 'Kayıt Ol'
@@ -890,10 +688,17 @@ def kayitol(request):
 
 def cikisyap(request):
     logout(request)
-    return redirect('anasayfa')
+    return redirect('girisurl')
 
 
 def blogyap(request):
+    if not request.user.is_authenticated:  # Eğer kullanıcı giriş yapmamışsa
+        demo_kullanici = authenticate(request, username='demo', password='demodemo')
+        if demo_kullanici is not None:
+            login(request, demo_kullanici)
+        else:
+            return redirect('girisurl')
+
     firma_adi = request.user.username
     title = 'Blog'
     blog = Blog.objects.all()
@@ -908,12 +713,26 @@ def blogdetayyap(request, url):
     return render(request, 'etikom/blogdetay.html', {'title': title, 'firma_adi': firma_adi, 'blog': blog})
 
 def iletisimyap(request):
+    if not request.user.is_authenticated:  # Eğer kullanıcı giriş yapmamışsa
+        demo_kullanici = authenticate(request, username='demo', password='demodemo')
+        if demo_kullanici is not None:
+            login(request, demo_kullanici)
+        else:
+            return redirect('girisurl')
+
     firma_adi = request.user.username
     title = 'İletişim'
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/iletisim.html', {'title': title, 'firma_adi': firma_adi})
 
 def hakkimizdayap(request):
+    if not request.user.is_authenticated:  # Eğer kullanıcı giriş yapmamışsa
+        demo_kullanici = authenticate(request, username='demo', password='demodemo')
+        if demo_kullanici is not None:
+            login(request, demo_kullanici)
+        else:
+            return redirect('girisurl')
+
     firma_adi = request.user.username
     title = 'Hakkımızda'
     # ... iletişim sayfası içeriğini oluşturun
@@ -925,7 +744,7 @@ def fiyatlamayap(request):
     # ... iletişim sayfası içeriğini oluşturun
     return render(request, 'etikom/fiyatlandirma.html', {'title': title, 'firma_adi': firma_adi})
 
-def stokexcelyuklemeyap(request):
+def stokexceliyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
 
@@ -948,10 +767,10 @@ def stokexcelyuklemeyap(request):
             
             return redirect('stoklistesiurl')
 
-    return render(request, 'etikom/stokexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/stokexceliyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 
-def sipexcelyuklemeyap(request):
+def sipexceliyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
 
@@ -984,9 +803,9 @@ def sipexcelyuklemeyap(request):
 
             return redirect('siparislistesiurl')
     
-    return render(request, 'etikom/sipexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/sipexceliyukle.html', {'firma_adi': firma_adi, 'title': title})
 
-def kargoexcelyuklemeyap(request):
+def kargoexceliyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
 
@@ -1012,7 +831,7 @@ def kargoexcelyuklemeyap(request):
             
             return redirect('kargolistesiurl')
 
-    return render(request, 'etikom/kargoexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/kargoexceliyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 
 def stokexceliindir(request):
@@ -1120,7 +939,7 @@ def stokduzeltme(request, firma, pk):
 
 
 
-def sayimliste(request, sort=None):
+def stoklistesiyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -1165,7 +984,7 @@ def sayimliste(request, sort=None):
         'title': title,
     }
 
-    return render(request, 'etikom/sayimlistesi.html', context)
+    return render(request, 'etikom/stoklistesi.html', context)
 
 
 def sayimexcelindir(request):
@@ -1220,8 +1039,17 @@ def stokeklemeyap(request):
     
     return render(request, 'etikom/stokekle.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
+def fiyathesaplamayap(request):
 
-def siparisekleme(request):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    title = 'Fiyat Hesaplama'
+    
+    return render(request, 'etikom/fiyathesaplama.html', {'firma_adi': firma_adi, 'title': title})
+
+
+def sipariseklemeyap(request):
 
     firma_adi = request.user.username
     firma_adi_id = request.user.id
@@ -1252,7 +1080,7 @@ def siparisekleme(request):
 
     title = 'Sipariş Ekle'
     
-    return render(request, 'etikom/sipekle.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/siparisekleme.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
 
 
 def stokfaturasi(request, sort):
@@ -1465,7 +1293,7 @@ def pazaryeridetay(request, pzr):
 
     return render(request, 'etikom/pazaryeridetay.html', context)
 
-def siparistopla(request, sira):
+def siparisleritoplayap(request, sira):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Sipariş Topla'
@@ -1497,7 +1325,7 @@ def siparistopla(request, sira):
         'liste_sayisi': liste_sayisi,
     }
 
-    return render(request, 'etikom/siparistopla.html', context)
+    return render(request, 'etikom/siparisleritopla.html', context)
 
 def siparisyok(request):
     firma_adi = request.user.username
@@ -1705,7 +1533,7 @@ def iadeeklemeyap(request):
 
     return render(request, 'etikom/iadeekle.html', {'title': title, 'firma_adi': firma_adi, 'form': form})
 
-def iadeliste(request, sort=None):
+def iadelistesiyap(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -1784,7 +1612,7 @@ def iadeliste(request, sort=None):
     return render(request, 'etikom/iadelistesi.html', context)
 
 
-def iadeexcelyuklemeyap(request):
+def iadeexceliyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
     firma_adi_id = request.user.id
@@ -1855,7 +1683,7 @@ def iadeexcelyuklemeyap(request):
             
             return redirect('iadelistesiurl')
 
-    return render(request, 'etikom/iadeexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/iadeexceliyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 def iadeduzeltme(request, firma, pk):
     
@@ -1966,7 +1794,7 @@ def gidereklemeyap(request):
 
     return render(request, 'etikom/giderekle.html', {'title': title, 'firma_adi': firma_adi, 'form': form})
 
-def giderliste(request, sort=None):
+def giderlistesiyap(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -2104,7 +1932,7 @@ def giderexceliindir(request):
 
     return response
 
-def giderexcelyuklemeyap(request):
+def giderexceliyuklemeyap(request):
     title = 'Excel Yükle'
     firma_adi = request.user.username
 
@@ -2123,7 +1951,7 @@ def giderexcelyuklemeyap(request):
             
             return redirect('giderlistesiurl')
 
-    return render(request, 'etikom/giderexcelyukle.html', {'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/giderexceliyukle.html', {'firma_adi': firma_adi, 'title': title})
 
 def baslikdetayi(request, sort):
     firma_adi = request.user.username

@@ -1,4 +1,4 @@
-{% extends 'etikom/base.html' %}
+{% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
 <div>
@@ -10,7 +10,7 @@
 <div class="col-sm-6 col-lg-4 mb-4 mt-3">
     <div class="card mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
-            <h4 class="my-0 fw-normal text-center">Gider Ekle</h4>
+            <h4 class="my-0 fw-normal text-center">Gider Bilgisi Ekle</h4>
         </div>
         <div class="card-body">
             <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Firmanızın gider kalemlerini ekleyebilir veya Excel ile toplu gider bilgilerinide yükleyebilirsiniz.</small></h5>
@@ -19,7 +19,7 @@
                 {{ form.as_p }}
                 <div class="d-flex gap-2 justify-content-center py-3">
                     <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="giderekle">Gider Ekle</button>
-                    <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'giderexcelyukleurl' %}';">Excel Yükle</button>
+                    <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'giderexceliyukleurl' %}';">Excel Yükle</button>
                     <button class="btn btn-success rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'giderlistesiurl' %}';">Gider Listesi</button>
                 </div>
             </form>

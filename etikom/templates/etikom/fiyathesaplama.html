@@ -1,0 +1,66 @@
+{% extends 'etikom/anasayfa.html' %}
+
+{% block baslik %}
+<div>
+    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Fiyat Hesaplama Sayfası</small></h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-6 col-lg-4 mb-4 mt-3">
+    <div class="card mb-4 rounded-3 shadow-sm">
+        <div class="card-header py-3">
+            <h4 class="my-0 fw-normal text-center">Satış Fiyatı Hesaplama</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Ürününüz için e-ticaret pazaryeri satış fiyatını kolayca hesaplayabilirsiniz.</small></h5>
+            <script>
+            window.onload = function() {
+                toplama(); // Sayfa yüklendiğinde toplama fonksiyonunu tetikle
+            };
+
+            function toplama() {
+                var sayi1 = Number(document.getElementById('sayi1').value);
+                var sayi2 = Number(document.getElementById('sayi2').value);
+                var sayi3 = Number(document.getElementById('sayi3').value);
+                var sayi4 = Number(document.getElementById('sayi4').value);
+                var sayi5 = Number(document.getElementById('sayi5').value);
+
+                var toplam = 100 * (sayi1 + sayi4 + sayi5 + (sayi1 * sayi2 / 100)) / (100 - sayi3);
+                toplam = Number(toplam.toFixed(2));
+                document.getElementById('toplam').innerHTML = toplam;
+            }
+
+
+            document.getElementById('sayi1').onkeyup = function() {
+                toplama();
+            };
+
+            document.getElementById('sayi2').onkeyup = function() {
+                toplama();
+            };
+
+            document.getElementById('sayi3').onkeyup = function() {
+                toplama();
+            };
+
+            document.getElementById('sayi4').onkeyup = function() {
+                toplama();
+            };
+
+            document.getElementById('sayi5').onkeyup = function() {
+                toplama();
+            };
+            </script>
+            <form class="fhformu">
+                <p>Alış Fiyatı:<input type="number" id="sayi1" value="120" class="input" onkeyup="toplama()"></p>
+                <p>Kar Oranı (%):<input type="number" id="sayi2" value="15" class="input" onkeyup="toplama()"></p>
+                <p>Komisyon Oranı (%):<input type="number" id="sayi3" value="12" class="input" onkeyup="toplama()"></p>
+                <p>Kargo Ücreti:<input type="number" id="sayi4" value="45" class="input" onkeyup="toplama()"></p>
+                <p>Hizmet+İşlem Bedeli:<input type="number" id="sayi5" value="15" class="input" onkeyup="toplama()"></p>
+                <p style="font-weight: bold;">Satış Fiyatı:<span id="toplam"></span></p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

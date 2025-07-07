@@ -1,109 +1,53 @@
-{% extends 'etikom/base.html' %}
+{% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
 <dl class="row align-items-center m-0">
-    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Raporu</small></h4></dt>
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Listesi</small></h4></dt>
     <dd class="col-sm-9">
         <p class="m-0">
-            Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait ayrıntılar için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+            Ürünlerinize ait stok kodlarının, mevcut adetlerinin ve ortalama alış fiyatlarının listesidir. Listenizi Excel dosyası olarak indirip stok sayımlarınızda da kullanabilirsiniz. Kontrol etmek istediğiniz ürüne ait hareketler için <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
         </p>
     </dd>
 </dl>
 {% endblock %}
 
+
 {% block content %}
-<div class="stoklistesi">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
-        <div class="rapor col-6 col-md">
-            <ul class="list-unstyled mt-3">
-                <li>Belge Sayısı: <strong>{{ tfta|floatformat:"-3g" }}</strong></li>
-                <li>Stok Çeşidi: <strong>{{ tsc|floatformat:"-3g" }}</strong></li>
-            </ul>
-        </div>
-        <div class="rapor col-6 col-md">
-            <ul class="list-unstyled mt-3">
-                <li>Stok Girişi: <strong>{{ tstg|floatformat:"-3g" }} Adet</strong></li>
-                <li>Satılan Ürün: <strong>{{ tstc|floatformat:"-3g" }} Adet</strong></li>
-            </ul>
-        </div>
-        <div class="rapor col-6 col-md">
-            <ul class="list-unstyled mt-3">
-                <li>Kalan Stok: <strong>{{ ksa|floatformat:"-3g" }} Adet</strong></li>
-                <li>Toplam Alım: <strong>{{ tstm|floatformat:"2g" }}</strong></li>
-            </ul>
-        </div>
-        <div class="rapor col-6 col-md">
-            <ul class="list-unstyled mt-3">
-                <li>Toplam Satış: <strong>{{ tsts|floatformat:"2g" }}</strong></li>
-                <li>Ort. Stok Maliyeti: <strong>{{ ostm|floatformat:"2g" }}</strong></li>
-            </ul>
-        </div>
-    </div>
+<div class="sayimlistesi">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
-            Stok Hareketleri;
+            Stok Tablosu;
         </h5>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
+            <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'sayimexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead class="table-light">
                 <tr>
-                    <th scope="col">Detay<br>
-                    </th>
-                    <th scope="col">Tür<br>
-                        (<a href="{% url 'hareketsiralamaurl' sort='az-tur' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-tur' %}">Z</a>)
-                    </th>
-                    <th scope="col">Fatura / Sipariş No<br>
-                        (<a href="{% url 'hareketsiralamaurl' sort='az-fatura-no' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-fatura-no' %}">Z</a>)
-                    </th>
-                    <th scope="col">Stok Kodu<br>
-                        (<a href="{% url 'hareketsiralamaurl' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-stok-kodu' %}">Z</a>)
-                    </th>
-                    <th scope="col">Adet<br>
-                        (<a href="{% url 'hareketsiralamaurl' sort='az-adet' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-adet' %}">Z</a>)
-                    </th>
-                    <th scope="col">Fiyat<br>
-                        (<a href="{% url 'hareketsiralamaurl' sort='az-fiyat' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-fiyat' %}">Z</a>)
-                    </th>
-                    <th scope="col">Toplam<br>
-                        (<a href="{% url 'hareketsiralamaurl' sort='az-toplam' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-toplam' %}">Z</a>)
-                    </th>
+                    <th scope="col" class="pt-3 pb-3">Sıra No</th>
+                    <th scope="col" class="pt-3 pb-3">Stok Kodu</th>
+                    <th scope="col" class="pt-3 pb-3">Toplam Giriş</th>
+                    <th scope="col" class="pt-3 pb-3">Mevcut Adet</th>
+                    <th scope="col" class="pt-3 pb-3">Ort. Alış Fiyatı</th>
                 </tr>
             </thead>
             <tbody>
-                {% for stok in stok %}
+                {% for stok_kodu, values in etopla.items %}
                 <tr>
-                    <td class="text-center">
-                        <a href="{% url 'stokduzeltmeurl' firma=firma pk=stok.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
-                    </td>
-                    <td class="text-center">
-                        {{ stok.Tur }}
-                    </td>
-                    <td>
-                        <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'stokgecmisiurl' sort=stok.Stokkodu %}">{{ stok.Stokkodu }}</a>
-                    </td>
-                    <td class="text-center">
-                        {{ stok.Adet }}
-                    </td>
-                    <td class="text-end">
-                        {{ stok.Alisfiyati }}
-                    </td>
-                    <td class="text-end">
-                        {{ stok.Toplam }}
-                    </td>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td><a href="{% url 'stokgecmisiurl' sort=stok_kodu %}">{{ stok_kodu }}</a></td>
+                    <td class="text-center">{{ values.total_adet_filtered }}</td>
+                    <td class="text-center">{{ values.total_adet_all }}</td>
+                    <td class="text-center">{{ values.ortalama_alisfiyati|floatformat:"2g" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="mb-2 px-3">
-        <p>{{ stsys }} Satır</p>
+        <p></p>
     </div>
 </div>
 {% endblock %}

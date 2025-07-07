@@ -1,0 +1,353 @@
+{% extends 'etikom/anasayfa.html' %}
+
+{% block copy %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block baslik %}
+<dl class="row align-items-center m-0">
+    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Genel Raporlar</small></h4></dt>
+    <dd class="col-sm-9">
+        <p class="m-0">
+            Kâr ve giderlerinizi haftalık, aylık ve yıllık olarak görmek için tek yapmanız gereken siparişlerinizi girmek. Etikom sizin için hesaplayacaktır. Sizde firmanıza ait özel raporlar ile e-ticaretinizi kolayca yönetebilmek için premium ayrıcalıkları keşfedin.
+        </p>
+    </dd>
+</dl>
+{% endblock %}
+
+
+{% block content %}
+<div class="metin mt-3">
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Sipariş Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bu Haftaki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ bh_siplerin_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bu Ayki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ ba_sipler_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bu Yılki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ by_sipler_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Geçen Haftaki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ gh_siplerin_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Geçen Ayki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ ga_sipler_toplami|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Geçen Yılki Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ gy_sipler_toplami|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Satış Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Satış Dönemi :
+                            <span class="badge text-bg-primary rounded-pill">{{ tdns }} Ay</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Siparişler :
+                            <span class="badge text-bg-primary rounded-pill">{{ tsistt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toptan Satışlar :
+                            <span class="badge text-bg-primary rounded-pill">{{ tststt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Satış Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ ts|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Aylık Ortalama Satış :
+                            <span class="badge text-bg-primary rounded-pill">{{ ort_dnm_sts|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Stok Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Stok Çeşidi :
+                            <span class="badge text-bg-primary rounded-pill">{{ tsc|floatformat:"-3g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Stok Girişi :
+                            <span class="badge text-bg-primary rounded-pill">{{ tstg|floatformat:"-3g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Satılan Stok Adedi :
+                            <span class="badge text-bg-primary rounded-pill">{{ tstc|floatformat:"-3g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Kalan Stok Adedi :
+                            <span class="badge text-bg-primary rounded-pill">{{ ksa|floatformat:"-3g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Stok Maliyeti :
+                            <span class="badge text-bg-primary rounded-pill">{{ tstm|floatformat:"-3g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">En Çok Satılan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for n_s_t in n_s_t %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ n_s_t.Stokkodu|default_if_none:"-" }}
+                            <span class="badge text-bg-primary rounded-pill">{{ n_s_t.total_cikis|default_if_none:"-" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">En Az Satılan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for n_s_y in n_s_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ n_s_y.Stokkodu|default_if_none:"-" }}
+                            <span class="badge text-bg-primary rounded-pill">{{ n_s_y.total_cikis|default_if_none:"-" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Stoğu Tükenen 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for item in s_t_u %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.Stokkodu|default_if_none:"-" }}
+                            <span class="badge text-bg-primary rounded-pill">{{ item.total_adet|default_if_none:"-" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Stoğu En Az 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for s_a_u in s_a_u %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ s_a_u.Stokkodu }}
+                            <span class="badge text-bg-primary rounded-pill">{{ s_a_u.total_adet }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Stoğu En Çok 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for s_y_u in s_y_u %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ s_y_u.Stokkodu }}
+                            <span class="badge text-bg-primary rounded-pill">{{ s_y_u.total_adet }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Çalışılan Pazaryerleri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for c_p_y in c_p_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ c_p_y.Pazaryeri }}
+                            <span class="badge text-bg-primary rounded-pill">{{ forloop.counter }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">En Büyük 5 Pazaryeri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for b_p_y in b_p_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ b_p_y.Pazaryeri }}
+                            <span class="badge text-bg-primary rounded-pill">{{ b_p_y.total_satis|floatformat:"2g" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Komisyon Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            En Düşük Komisyon Oranı :
+                            <span class="badge text-bg-primary rounded-pill">{{ edko|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            En Yüksek Komisyon Oranı :
+                            <span class="badge text-bg-primary rounded-pill">{{ eyko|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Ortalama Komisyon Oranı :
+                            <span class="badge text-bg-primary rounded-pill">{{ oko|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Komisyon Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ tokotu|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Giden Kargo Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            En Düşük Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ edkt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            En Yüksek Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ eykt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Ortalama Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ okt|floatformat:"2g" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Toplam Kargo Tutarı :
+                            <span class="badge text-bg-primary rounded-pill">{{ krg_topla|floatformat:"2g" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>        
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">İadesi Çok Olan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for item in n_i_u %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.Stokkodu|default_if_none:"-" }}
+                            <span class="badge text-bg-primary rounded-pill">{{ item.total_cikis|default_if_none:"0"|floatformat:"0" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">İadesi Olmayan 5 Ürün</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for item in ilk_5 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.Stokkodu|default_if_none:"-" }}
+                            <span class="badge text-bg-primary rounded-pill">{{ item.total_adet|default_if_none:"0"|floatformat:"0" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Gider Raporu</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for item in giderler %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.Baslik|default_if_none:"-" }}
+                            <span class="badge text-bg-primary rounded-pill">{{ item.total_gider|default_if_none:"-"|floatformat:"2g" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+{% endblock %}

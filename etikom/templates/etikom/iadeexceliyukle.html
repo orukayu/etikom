@@ -1,8 +1,8 @@
-{% extends 'etikom/base.html' %}
+{% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
 <div>
-    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Excel İle Stok Girişi</small></h4>
+    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Excel İle İade Girişi</small></h4>
 </div>
 {% endblock %}
 
@@ -13,15 +13,15 @@
     </h5>
     <p>
         Yükleyeceğiniz excel dosyası, 2007 veya üzeri bir sürüm olup "xlsx/xlsm/xltx/xltm" uzantılı ve aşağıda ki örnek tablo şeklinde olmalıdır.<br>
-        Toptan satışlarınızı veya iade ettiğiniz ürünleri (-) adet olarak girebilirsiniz. Daha fazla bilgi için instagramdan <a href="https://www.instagram.com/etikom_net/">@etikom_net</a> videolarımızı izleyebilirsiniz.
+        Sipariş numarasını listenizden, stok kodlarınıda Sipariş içeriğinden giriniz. Daha fazla bilgi için instagramdan <a href="https://www.instagram.com/etikom_net/">@etikom_net</a> videolarımızı izleyebilirsiniz.
     </p>
 </div>
 
 <div style="max-width: 600px;">
-    <img src="/static/media/ornek-excel-stok-tablosu.webp" class="img-fluid"/>
+    <img src="/static/media/ornek-excel-iade-tablosu.webp" class="img-fluid"/>
 </div>
 <p>
-    Örnek excel dosyasını indirmek için <a href="/static/file/ornek-stok-dosyasi.xlsx"><strong>tıklayınız.</strong></a>
+    Örnek excel dosyasını indirmek için <a href="/static/file/ornek-iade-dosyasi.xlsx"><strong>tıklayınız.</strong></a>
 </p>
 
 <div class="mt-3">

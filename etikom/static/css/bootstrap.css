@@ -32,6 +32,11 @@
     fill: currentColor;
 }
 
+.koyu.active {
+  color: blue !important;
+  font-weight: bold !important;
+}
+
 .nav-scroller {
     position: relative;
     z-index: 2;
