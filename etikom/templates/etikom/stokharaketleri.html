@@ -77,7 +77,7 @@
                 {% for stok in stok %}
                 <tr>
                     <td class="text-center">
-                        <a href="{% url 'stokduzeltmeurl' firma=firma pk=stok.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
+                        <a href="{% url 'stokharaketdetayiurl' firma=firma pk=stok.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td class="text-center">
                         {{ stok.Tur }}

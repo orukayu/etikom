@@ -1,0 +1,96 @@
+{% extends 'etikom/anasayfa.html' %}
+
+{% block baslik %}
+<div>
+    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş Detayı</small></h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="stoklistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Stok Çeşidi: <strong>{{ tstc|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Adet: <strong>{{ tsta|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Ort. Fiyat: <strong>{{ oafi|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Tutar: <strong>{{ sftt|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+        <h5>
+            Sipariş No; <sort class="text-success">{{ sort }}</sort>
+        </h5>
+    </div>
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" class="pt-3 pb-3">Sıra No</th>
+                    <th scope="col" class="pt-3 pb-3">Tür</th>
+                    <th scope="col" class="pt-3 pb-3">Pazaryeri</th>
+                    <th scope="col" class="pt-3 pb-3">Tarih</th>
+                    <th scope="col" class="pt-3 pb-3">Stok Kodu</th>
+                    <th scope="col" class="pt-3 pb-3">Adet</th>
+                    <th scope="col" class="pt-3 pb-3">Satış Fiyatı</th>
+                    <th scope="col" class="pt-3 pb-3">Toplam</th>
+                    <th scope="col" class="pt-3 pb-3">Komisyon Oranı %</th>
+                    <th scope="col" class="pt-3 pb-3">Komisyon Tutarı</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for siparisler in siparisler %}
+                <tr>
+                    <td class="text-center">
+                        {{ forloop.counter }}
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Tur }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'pazaryeridetayurl' pzr=siparisler.Pazaryeri %}">{{ siparisler.Pazaryeri }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Tarih|date:"d.m.Y" }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'stokgecmisiurl' sort=siparisler.Stokkodu %}">{{ siparisler.Stokkodu }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Adet }}
+                    </td>
+                    <td class="text-end">
+                        {{ siparisler.Satisfiyati }}
+                    </td>
+                    <td class="text-end">
+                        {{ siparisler.Toplam }}
+                    </td>
+                    <td class="text-center">
+                        {{ siparisler.Komisyon }}
+                    </td>
+                    <td class="text-end">
+                        {{ siparisler.Komisyontutari }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-2 px-3">
+        <p></p>
+    </div>
+</div>
+{% endblock %}

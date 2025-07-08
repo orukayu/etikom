@@ -863,13 +863,13 @@ def stokexceliindir(request):
 
 
 
-def stokduzeltme(request, firma, pk):
+def stokharaketdetayiyap(request, firma, pk):
     
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
     if firma_adi != firma:
-        return redirect('demofirmaurl')
+        return redirect('cikisurl')
 
     stokturcek = Stok.objects.filter(id=pk).values_list('Tur', flat=True).first()
 
@@ -935,7 +935,7 @@ def stokduzeltme(request, firma, pk):
 
     title = 'Stok Detayı'
     form = StokFormu(instance=kontrolstok)
-    return render(request, 'etikom/stokdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/stokharaketdetayi.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 
 
@@ -1083,7 +1083,7 @@ def sipariseklemeyap(request):
     return render(request, 'etikom/siparisekleme.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
 
 
-def stokfaturasi(request, sort):
+def stokfaturasiyap(request, sort):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Fatura Detayı'
@@ -1124,7 +1124,7 @@ def stokfaturasi(request, sort):
 
 
 
-def stokgecmisi(request, sort):
+def stokgecmisiyap(request, sort):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Stok Geçmişi'
@@ -1226,7 +1226,7 @@ def siparisduzeltme(request, firma, pk):
 
     title = 'Sipariş Detayı'
     siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
-    return render(request, 'etikom/siparisdetay.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/siparisduzeltme.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
 
 
 def sipexceliindir(request):
@@ -1262,7 +1262,7 @@ def sipexceliindir(request):
     return response
 
 
-def pazaryeridetay(request, pzr):
+def pazaryeridetayiyap(request, pzr):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Pazaryeri Detayı'
@@ -1450,7 +1450,7 @@ def kargoduzeltme(request, firma, pk):
 
     title = 'Kargo Detayı'
 
-    return render(request, 'etikom/kargodetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/kargoduzeltme.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 def kargoexceliindir(request):
     firma_adi_id = request.user.id
@@ -1773,7 +1773,7 @@ def iadeduzeltme(request, firma, pk):
 
     title = 'İade Detayı'
     
-    return render(request, 'etikom/iadedetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/iadeduzeltme.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 def gidereklemeyap(request):
     firma_adi = request.user.username
@@ -1905,7 +1905,7 @@ def giderduzeltme(request, firma, pk):
 
     title = 'Gider Detayı'
     
-    return render(request, 'etikom/giderdetay.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
+    return render(request, 'etikom/giderduzeltme.html', {'form': form, 'firma_adi': firma_adi, 'title': title})
 
 def giderexceliindir(request):
     firma_adi_id = request.user.id
@@ -1953,7 +1953,7 @@ def giderexceliyuklemeyap(request):
 
     return render(request, 'etikom/giderexceliyukle.html', {'firma_adi': firma_adi, 'title': title})
 
-def baslikdetayi(request, sort):
+def giderbaslikdetayiyap(request, sort):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Baslık Detayı'
@@ -1971,9 +1971,9 @@ def baslikdetayi(request, sort):
         'top_tutar': top_tutar,
     }
 
-    return render(request, 'etikom/baslikdetayi.html', context)
+    return render(request, 'etikom/giderbaslikdetayi.html', context)
 
-def siparisdetay(request, sort):
+def siparisdetayiyap(request, sort):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
     title = 'Sipariş Detayı'
@@ -2002,4 +2002,4 @@ def siparisdetay(request, sort):
         'sort': sort,
     }
 
-    return render(request, 'etikom/siparis.html', context)
+    return render(request, 'etikom/siparisdetayi.html', context)

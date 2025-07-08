@@ -67,7 +67,7 @@
                         <a href="{% url 'giderduzeltmeurl' firma=firma pk=gider.id %}"><svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></a>
                     </td>
                     <td>
-                        <a href="{% url 'baslikdetayiurl' sort=gider.Baslik %}">{{ gider.Baslik }}</a>
+                        <a href="{% url 'giderbaslikdetayiurl' sort=gider.Baslik %}">{{ gider.Baslik }}</a>
                     </td>
                     <td class="text-center">
                         {{ gider.Tarih }}
