@@ -53,6 +53,7 @@
 			.navbar-brand {background-color: unset;box-shadow: none;}
 			.form-signin input[type="username"] {margin-bottom: -1px;border-bottom-right-radius: 0;border-bottom-left-radius: 0;}
 			body {background-color: #ededed !important}
+			.yeni:hover{font-weight: 500}
 		</style>
 	</head>
 	<body class="d-flex flex-column h-100">
@@ -93,11 +94,12 @@
 			        </ul>
 			    {% endif %}
 				<button class="btn btn-primary w-100 py-2" type="submit" name="girisyap">Giriş Yap</button>
-				<p class="mt-5 mb-3 text-body-secondary">© 2017–2025</p>
+				<div style="align-items: center;border-bottom: 1px solid #DADDE1;display: flex;margin: 20px 16px;text-align: center;"></div>
+				<a class="nav-link yeni" href="{% url 'kayitolurl' %}">Yeni Kullanıcı Ekle</a>
 			</form>
 		</main>
 		<footer class="footer py-3 bg-body-tertiary">
-			<div class="container"> <span class="text-body-secondary">E-Ticaretin Kolay Muhasebesi</span> </div>
+			<div class="container"> <span class="text-body-secondary">E-Ticaretin Kolay Muhasebesi   © 2017–2025</span> </div>
 		</footer>
 	</body>
 </html>

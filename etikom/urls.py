@@ -10,7 +10,7 @@ urlpatterns = [
     path('iletisim/', views.iletisimyap, name='iletisimurl'),
     path('blog/', views.blogyap, name='blogurl'),
     path('blog/<str:url>/', views.blogdetayyap, name='blogdetayurl'),
-    path('raporlar/', views.raporlaryap, name='raporlarurl'),
+    path('genel-raporlar/', views.raporlaryap, name='raporlarurl'),
 
     path('fiyat-hesapla/', views.fiyathesaplamayap, name='fiyathesaplaurl'),
 

@@ -167,6 +167,10 @@
           <symbol id="iadeekle" viewBox="0 0 16 16">
             <path d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z"/>
           </symbol>
+          <symbol id="tag" viewBox="0 0 16 16">
+            <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+            <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+          </symbol>
         </svg>
         <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
             <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="{% url 'raporlarurl' %}">
@@ -198,7 +202,7 @@
                         </div>
                         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                             <div class="fixed-sol">
-                                <ul class="nav flex-column border-bottom pb-2">
+                                <ul class="nav flex-column pb-2">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0 koyu" style="font-weight: 600;" href="{% url 'hakkimizdaurl' %}">
                                             <svg class="bi"><use xlink:href="#file-earmark-text"></use></svg>Hakkımızda
@@ -220,12 +224,12 @@
                                         </a>
                                     </li>
                                 </ul>
-                                
+                                <div style="border-bottom: 1px solid #DADDE1;margin-left: 10px;"></div>
                                 <div class="sidebar-heading text-center align-items-center px-3 mt-3 text-body-secondary text-uppercase">
                                     <h6 class="text-warning">{{ firma_adi }}</h6>
                                 </div>
 
-                                <ul class="nav flex-column border-bottom pb-2">
+                                <ul class="nav flex-column pb-2">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0 koyu" style="font-weight: 600;" href="{% url 'raporlarurl' %}">
                                             <svg class="bi"><use xlink:href="#signpost"></use></svg>Genel Raporlar
@@ -239,17 +243,7 @@
                                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                                 <li>
                                                     <a class="nav-link d-flex align-items-center gap-2" href="{% url 'fiyathesaplaurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                        <svg class="bi"><use xlink:href="#grid"></use></svg>Fiyat Hesapla
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'fiyathesaplaurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                        <svg class="bi"><use xlink:href="#sayim"></use></svg>Fiyat Listesi
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'fiyathesaplaurl' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                                                        <svg class="bi"><use xlink:href="#columns-gap"></use></svg>Fiyat Hareketleri
+                                                        <svg class="bi"><use xlink:href="#tag"></use></svg>Fiyat Hesapla
                                                     </a>
                                                 </li>
                                             </ul>
@@ -386,7 +380,7 @@
                                         </div>
                                     </li>
                                 </ul>
-
+                                <div style="border-bottom: 1px solid #DADDE1;margin-left: 10px;"></div>
                                 <ul class="nav flex-column pt-2">
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
@@ -421,6 +415,20 @@
             if (link.getAttribute("href") === window.location.pathname) {
               link.classList.add("active");
             }
+          });
+        </script>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+              const activeLink = document.querySelector(".nav-link.active");
+              if (activeLink) {
+                  const collapse = activeLink.closest(".collapse");
+                  if (collapse) {
+                      const button = collapse.previousElementSibling.querySelector("button");
+                      collapse.classList.add("show");
+                      button.classList.remove("collapsed");
+                      button.setAttribute("aria-expanded", "true");
+                  }
+              }
           });
         </script>
     </body>

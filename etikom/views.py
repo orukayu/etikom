@@ -659,6 +659,13 @@ def raporlaryap(request):
     return render(request, 'etikom/raporlar.html', context)
 
 def kayitol(request):
+    if not request.user.is_authenticated:  # Eğer kullanıcı giriş yapmamışsa
+        demo_kullanici = authenticate(request, username='demo', password='demodemo')
+        if demo_kullanici is not None:
+            login(request, demo_kullanici)
+        else:
+            return redirect('girisurl')
+    
     title = 'Kayıt Ol'
     kayit = KayitFormu()
     firma_adi = request.user.username
@@ -678,7 +685,7 @@ def kayitol(request):
                 else:
                     kayit = User.objects.create_user(username=firma_adi, email=email, password=password1)
                     kayit.save()
-                    return redirect('demofirmaurl')
+                    return redirect('cikisurl')
             else:
                 kayit.add_error('password1', 'Şifre farklı girilmiş.')
 
@@ -1176,7 +1183,7 @@ def siparisduzeltme(request, firma, pk):
     firma_adi_id = request.user.id
 
     if firma_adi != firma:
-        return redirect('demofirmaurl')
+        return redirect('cikisurl')
 
     sipturcek = Siparis.objects.filter(id=pk).values_list('Tur', flat=True).first()
 
@@ -1416,7 +1423,7 @@ def kargoduzeltme(request, firma, pk):
     firma_adi_id = request.user.id
 
     if firma_adi != firma:
-        return redirect('demofirmaurl')
+        return redirect('cikisurl')
 
     turcek = Kargo.objects.filter(pk=pk).values_list('Tur', flat=True).first()
 
@@ -1691,7 +1698,7 @@ def iadeduzeltme(request, firma, pk):
     firma_adi_id = request.user.id
 
     if firma_adi != firma:
-        return redirect('demofirmaurl')
+        return redirect('cikisurl')
 
     fa = firma
     pk = pk
@@ -1880,7 +1887,7 @@ def giderduzeltme(request, firma, pk):
     firma_adi_id = request.user.id
 
     if firma_adi != firma:
-        return redirect('demofirmaurl')
+        return redirect('cikisurl')
 
     fa = firma
     pk = pk

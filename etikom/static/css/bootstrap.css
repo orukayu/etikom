@@ -34,7 +34,7 @@
 
 .koyu.active {
   color: blue !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
 }
 
 .nav-scroller {
@@ -262,4 +262,8 @@ svg.fav {
 
 .txt-jstfy {
     text-align: justify;
+}
+
+.sidebar .nav-link.active {
+    font-weight: 700;
 }

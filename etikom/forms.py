@@ -5,6 +5,9 @@ from .models import Kargo
 from .models import Iade
 from .models import Gider
 from django.utils.dateparse import parse_date
+from django.core.exceptions import ValidationError
+import re
+from django.contrib.auth.models import User
 
 class GiderFormu(forms.ModelForm):
     class Meta:
@@ -53,6 +56,23 @@ class KayitFormu(forms.Form):
     email = forms.EmailField(label='E-posta Adresi')    
     password1 = forms.CharField(label='Şifre', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Şifreyi Tekrar Girin', widget=forms.PasswordInput)
+
+    def clean_firma_adi(self):
+        firma_adi = self.cleaned_data.get('firma_adi')
+
+        # Sadece harf, rakam ve alt çizgiye izin ver
+        if not re.match(r'^[a-zA-Z0-9_ğüşçöıĞÜŞÇÖİ ]+$', firma_adi):
+            raise ValidationError("Firma adı yalnızca harf, rakam ve boşluk içerebilir. Özel karakterler ve HTML etiketleri yasaktır.")
+
+        return firma_adi
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Şifreler eşleşmiyor.")
 
 
 class SiparisFormu(forms.ModelForm):
