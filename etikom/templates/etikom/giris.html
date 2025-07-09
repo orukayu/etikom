@@ -69,7 +69,6 @@
 							<li class="nav-item"> <a class="nav-link" href="{% url 'hakkimizdaurl' %}">Hakkımızda</a> </li>
 							<li class="nav-item"> <a class="nav-link" href="{% url 'iletisimurl' %}">İletişim</a> </li>
 							<li class="nav-item"> <a class="nav-link" href="{% url 'blogurl' %}">Blog</a> </li>
-							<li class="nav-item"> <a class="nav-link" href="{% url 'raporlarurl' %}">Demo</a> </li>
 						</ul> 
 					</div>
 				</div>
@@ -95,7 +94,10 @@
 			    {% endif %}
 				<button class="btn btn-primary w-100 py-2" type="submit" name="girisyap">Giriş Yap</button>
 				<div style="align-items: center;border-bottom: 1px solid #DADDE1;display: flex;margin: 20px 16px;text-align: center;"></div>
-				<a class="nav-link yeni" href="{% url 'kayitolurl' %}">Yeni Kullanıcı Ekle</a>
+				<ul>
+					<li class="nav-item"> <a class="nav-link yeni" href="{% url 'raporlarurl' %}">Demo'ya Git</a> </li>
+					<li class="nav-item"> <a class="nav-link yeni" href="{% url 'kayitolurl' %}">Yeni Kullanıcı Ekle</a> </li>
+				</ul>
 			</form>
 		</main>
 		<footer class="footer py-3 bg-body-tertiary">

@@ -14,6 +14,28 @@
 
 {% block content %}
 <div class="sayimlistesi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Stok Çeşidi: <strong>{{ tsc|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Toplam Giriş: <strong>{{ tsga|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Güncel Stok: <strong>{{ gsa|floatformat:"-3g" }}</strong></li>
+            </ul>
+        </div>
+        <div class="rapor col-6 col-md">
+            <ul class="list-unstyled mt-3">
+                <li>Ort. Alış Fiyatı: <strong>{{ oaf|floatformat:"2g" }}</strong></li>
+            </ul>
+        </div>
+    </div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
         <h5>
             Stok Tablosu;

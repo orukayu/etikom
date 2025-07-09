@@ -665,7 +665,7 @@ def kayitol(request):
             login(request, demo_kullanici)
         else:
             return redirect('girisurl')
-    
+
     title = 'Kayıt Ol'
     kayit = KayitFormu()
     firma_adi = request.user.username
@@ -950,11 +950,19 @@ def stoklistesiyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
+    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
+
     # Adet > 0 olan satırlardan Toplam sütunlarının toplamını hesaplama
-    toplam_toplam = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(total_toplam=Sum('Toplam')).order_by('Stokkodu')
+    toplam_toplam = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').values('Stokkodu').annotate(total_toplam=Sum('Toplam')).order_by('Stokkodu')
 
     # Adet > 0 olan satırlardan Adet sütunlarının toplamını hesaplama
-    toplam_adet_filtered = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).values('Stokkodu').annotate(total_adet_filtered=Sum('Adet')).order_by('Stokkodu')
+    toplam_adet_filtered = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').values('Stokkodu').annotate(total_adet_filtered=Sum('Adet')).order_by('Stokkodu')
+
+    toplamalimlar = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
+    toplamkalanlar = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
+    toplamtoplamlar = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Toplam'))['toplam_adet']
+    toplamadetler = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
+    oaf = toplamtoplamlar / toplamadetler
 
     # Stok Kodu'na göre tüm Adet sütunlarının toplamını hesaplama (Adet değerine bakmaksızın)
     toplam_adet_all = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet_all=Sum('Adet')).order_by('Stokkodu')
@@ -989,6 +997,10 @@ def stoklistesiyap(request):
         'etopla': etopla,
         'firma_adi': firma_adi,
         'title': title,
+        'tsc': tsc,
+        'tsga': toplamalimlar,
+        'gsa': toplamkalanlar,
+        'oaf': oaf,
     }
 
     return render(request, 'etikom/stoklistesi.html', context)
