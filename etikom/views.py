@@ -75,6 +75,8 @@ def stokharaketleriyap(request, sort=None):
         ksa = 0
         tstm = 0
         ostm = 0
+        tsts = 0
+        tstc = 0
     else:
         tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
         ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
@@ -88,16 +90,16 @@ def stokharaketleriyap(request, sort=None):
         if tstm is None:
             tstm = 0
 
-    tstc = abs(ksa - tstg)                                                                                      # Stok cikisi
+        tstc = abs(ksa - tstg)                                                                                      # Stok cikisi
 
-    if tstc == 0:
-        tsatis = 0
-    else:
-        tsatis = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok satis bedeli
+        if tstc == 0:
+            tsatis = 0
+        else:
+            tsatis = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum("Toplam"))["Toplam__sum"]          # toplam stok satis bedeli
 
-    tsts = abs(tsatis)
+        tsts = abs(tsatis)
 
-    ostm = (tstm - tsts) / ksa
+        ostm = (tstm - tsts) / ksa
 
     stsys = Stok.objects.filter(Firmaadi=firma_adi_id).count()
 
@@ -950,19 +952,28 @@ def stoklistesiyap(request):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
-    tsc = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tscs = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    toplamalimlar = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
+    toplamkalanlar = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
+    toplamtoplamlar = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Toplam'))['toplam_adet']
+    toplamadetler = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
+
+    if toplamtoplamlar is None:
+        oaf = 0
+    else:
+        oaf = toplamtoplamlar / toplamadetler    
+
+    if tscs == 0:
+        tsc = 0
+        toplamalimlar = 0
+        toplamkalanlar = 0
+
 
     # Adet > 0 olan satırlardan Toplam sütunlarının toplamını hesaplama
     toplam_toplam = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').values('Stokkodu').annotate(total_toplam=Sum('Toplam')).order_by('Stokkodu')
 
     # Adet > 0 olan satırlardan Adet sütunlarının toplamını hesaplama
     toplam_adet_filtered = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').values('Stokkodu').annotate(total_adet_filtered=Sum('Adet')).order_by('Stokkodu')
-
-    toplamalimlar = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
-    toplamkalanlar = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
-    toplamtoplamlar = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Toplam'))['toplam_adet']
-    toplamadetler = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0, Tur='A').aggregate(toplam_adet=Sum('Adet'))['toplam_adet']
-    oaf = toplamtoplamlar / toplamadetler
 
     # Stok Kodu'na göre tüm Adet sütunlarının toplamını hesaplama (Adet değerine bakmaksızın)
     toplam_adet_all = Stok.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').annotate(total_adet_all=Sum('Adet')).order_by('Stokkodu')
