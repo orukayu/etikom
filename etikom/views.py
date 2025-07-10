@@ -80,7 +80,7 @@ def stokharaketleriyap(request, sort=None):
     else:
         tstg = Stok.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]
         ksa = Stok.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Adet"))["Adet__sum"]
-        tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
+        tstm = Stok.objects.filter(Firmaadi=firma_adi_id, Tur='A', Toplam__gt=0).aggregate(Sum("Toplam"))["Toplam__sum"]
 
         # None kontrolü
         if tstg is None:
@@ -967,6 +967,8 @@ def stoklistesiyap(request):
         tsc = 0
         toplamalimlar = 0
         toplamkalanlar = 0
+    else:
+        tsc = tscs
 
 
     # Adet > 0 olan satırlardan Toplam sütunlarının toplamını hesaplama
