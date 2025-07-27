@@ -92,9 +92,7 @@
 .card-body {
     text-align: left;
 }
-#sayi1, #sayi2, #sayi3, #sayi4, #sayi5, #id_Hizmetbedeli {
-    width: 150px;
-}
+
 span#toplam, span#ts {
     float: right;
     padding-right: 1em;
@@ -115,11 +113,14 @@ td#tabloadet {
 td#tablofiyat {
     text-align: right;
 }
-input, select#id_Stokkodu {
+select#id_Stokkodu {
     float: right;
     text-align: right;
     max-width: 170px;
     width: -webkit-fill-available;
+}
+input#baslik, input#tarih, input#tutar, input#siparisno, input#stokkodu, input#adet, input#desi, input#iadetutari, input#kargotutari, input#hizmetbedeli, input#pazaryeri, input#satisfiyati, input#komisyon, input#faturano, input#alisfiyati, input#toplam, input#sayi1, input#sayi2, input#sayi3, input#sayi4, input#sayi5 {
+    text-align: right;
 }
 .g-3 input {
     float: none;
@@ -266,8 +267,4 @@ svg.fav {
 
 .sidebar .nav-link.active {
     font-weight: 700;
-}
-
-.logogolge {
-    filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.5));
 }

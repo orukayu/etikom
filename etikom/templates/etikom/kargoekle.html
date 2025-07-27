@@ -16,7 +16,30 @@
             <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Siparişleriniz için giden kargo bilgisi ekleyebilir yada Excel ile toplu kargo bilgisi yükleyebilirsiniz.</small></h5>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Sipariş No</label>
+                    <div class="col-sm-8">
+                        {{ form.Siparisno }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Desi</label>
+                    <div class="col-sm-8">
+                        {{ form.Desi }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Kargo Tutarı</label>
+                    <div class="col-sm-8">
+                        {{ form.Kargotutari }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-6 col-form-label">Hizmet+İşlem Bedeli</label>
+                    <div class="col-sm-6">
+                        {{ form.Hizmetbedeli }}
+                    </div>
+                </div>
                 <div class="d-flex gap-2 justify-content-center py-3">
                     <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="kargoekle">Kargo Ekle</button>
                     <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'kargoexceliyukleurl' %}';">Excel Yükle</button>

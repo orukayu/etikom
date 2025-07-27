@@ -15,10 +15,12 @@ class GiderFormu(forms.ModelForm):
         fields = ['Baslik', 'Tarih', 'Tutar']
         labels = {"Baslik" : "Başlık", "Tarih" : "Tarih", "Tutar" : "Tutar"}
         widgets = {
-            'Baslik': forms.TextInput(attrs={'placeholder': 'Kira Gideri'}),
-            'Tarih': forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': '01/04/2024'}),
-            'Tutar': forms.TextInput(attrs={'placeholder': '12500.00'}),
+            'Baslik': forms.TextInput(attrs={'placeholder': 'Kira Gideri', 'class': 'form-control', 'id': 'baslik'}),
+            'Tutar': forms.TextInput(attrs={'placeholder': '12500.00', 'class': 'form-control', 'id': 'tutar'}),
         }
+    Tarih = forms.DateField(
+        widget=forms.TextInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'tarih'}),
+    )
 
 class IadeFormu(forms.ModelForm):
     class Meta:
@@ -26,11 +28,11 @@ class IadeFormu(forms.ModelForm):
         fields = ['Siparisno', 'Stokkodu', 'Adet', 'Desi', 'Iadetutari']
         labels = {"Siparisno" : "Sipariş No", "Stokkodu" : "Stok Kodu", "Adet" : "Adet", "Desi" : "Desi", "Iadetutari" : "İade Kargo Tutarı"}
         widgets = {
-            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
-            'Stokkodu': forms.TextInput(attrs={'placeholder': 'Sipariş içeriğinden ...'}),
-            'Adet': forms.TextInput(attrs={'placeholder': '1'}),
-            'Desi': forms.TextInput(attrs={'placeholder': '3'}),
-            'Iadetutari': forms.TextInput(attrs={'placeholder': '27.50'}),
+            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...', 'class': 'form-control', 'id': 'siparisno'}),
+            'Stokkodu': forms.TextInput(attrs={'placeholder': 'Sipariş içeriğinden ...', 'class': 'form-control', 'id': 'stokkodu'}),
+            'Adet': forms.TextInput(attrs={'placeholder': '1', 'class': 'form-control', 'id': 'adet'}),
+            'Desi': forms.TextInput(attrs={'placeholder': '3', 'class': 'form-control', 'id': 'desi'}),
+            'Iadetutari': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'iadetutari'}),
         }
 
 
@@ -40,10 +42,10 @@ class KargoFormu(forms.ModelForm):
         fields = ['Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli']
         labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet+İşlem Bedeli"}
         widgets = {
-            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...'}),
-            'Desi': forms.TextInput(attrs={'placeholder': '3'}),
-            'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50'}),
-            'Hizmetbedeli': forms.TextInput(attrs={'placeholder': '5.99'}),
+            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...', 'class': 'form-control', 'id': 'siparisno'}),
+            'Desi': forms.TextInput(attrs={'placeholder': '3', 'class': 'form-control', 'id': 'desi'}),
+            'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'kargotutari'}),
+            'Hizmetbedeli': forms.TextInput(attrs={'placeholder': '5.99', 'class': 'form-control', 'id': 'hizmetbedeli'}),
         }
 
 
@@ -89,16 +91,11 @@ class SiparisFormu(forms.ModelForm):
         fields = ('Pazaryeri', 'Tarih', 'Siparisno', 'Stokkodu', 'Adet', 'Satisfiyati', 'Komisyon')
         labels = {"Komisyon" : "Komisyon (%)", "Siparisno" : "Sipariş No", "Tarih" : "Sipariş Tarihi", "Stokkodu" : "Stok Kodu", "Satisfiyati" : "Satış Fiyatı"}
         widgets = {            
-            'Pazaryeri': forms.TextInput(attrs={'placeholder': 'Trendyol, HB, N11 vb.'}),
-            'Tarih': forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': '28/04/2024'}),
-            'Siparisno': forms.TextInput(attrs={'placeholder': '2155139405'}),
-            'Adet': forms.TextInput(attrs={'placeholder': '4'}),
-            'Satisfiyati': forms.TextInput(attrs={'placeholder': '137.50'}),
-            'Komisyon': forms.TextInput(attrs={'placeholder': '9.60'}),
-        }
-
-        input_formats = {
-            'Tarih': ['%d/%m/%Y'],
+            'Pazaryeri': forms.TextInput(attrs={'placeholder': 'Trendyol, HB, N11 vb.', 'class': 'form-control', 'id': 'pazaryeri'}),
+            'Siparisno': forms.TextInput(attrs={'placeholder': '2155139405', 'class': 'form-control', 'id': 'siparisno'}),
+            'Adet': forms.TextInput(attrs={'placeholder': '4', 'class': 'form-control', 'id': 'adet'}),
+            'Satisfiyati': forms.TextInput(attrs={'placeholder': '137.50', 'class': 'form-control', 'id': 'satisfiyati'}),
+            'Komisyon': forms.TextInput(attrs={'placeholder': '9.60', 'class': 'form-control', 'id': 'komisyon'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -109,12 +106,9 @@ class SiparisFormu(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields['Stokkodu'].initial = self.instance.Stokkodu
 
-
-    def clean_Tarih(self):
-        tarih = self.cleaned_data['Tarih']
-        if not tarih:
-            raise forms.ValidationError("Lütfen tarihi 'gg/aa/yyyy' formatında girin.")
-        return tarih
+    Tarih = forms.DateField(
+        widget=forms.TextInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'tarih'}),
+    )
 
 class StokFormu(forms.ModelForm):
 
@@ -123,10 +117,10 @@ class StokFormu(forms.ModelForm):
         fields = ('Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
         labels = {"Stokkodu" : "Stok Kodu", "Alisfiyati" : "Alış Fiyatı", "Afaturano" : "Fatura No"}
         widgets = {
-            'Afaturano': forms.TextInput(attrs={'placeholder': 'FTR202400001234'}),
-            'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12'}),
-            'Adet': forms.TextInput(attrs={'placeholder': '4'}),
-            'Alisfiyati': forms.TextInput(attrs={'placeholder': '27.50'}),
-            'Toplam': forms.TextInput(attrs={'placeholder': '110.00'}),
+            'Afaturano': forms.TextInput(attrs={'placeholder': 'FTR202400001234', 'class': 'form-control', 'id': 'faturano'}),
+            'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12', 'class': 'form-control', 'id': 'stokkodu'}),
+            'Adet': forms.TextInput(attrs={'placeholder': '4', 'class': 'form-control', 'id': 'adet'}),
+            'Alisfiyati': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'alisfiyati'}),
+            'Toplam': forms.TextInput(attrs={'placeholder': '110.00', 'class': 'form-control', 'id': 'toplam'}),
         }
 

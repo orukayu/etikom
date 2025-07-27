@@ -13,10 +13,27 @@
             <h4 class="my-0 fw-normal text-center">Gider Bilgisi Ekle</h4>
         </div>
         <div class="card-body">
-            <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Firmanızın gider kalemlerini ekleyebilir veya Excel ile toplu gider bilgilerinide yükleyebilirsiniz.</small></h5>
+            <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Firmanızın gider kalemlerini ekleyebilir veya Excel ile toplu gider bilgilerinizi yükleyebilirsiniz.</small></h5>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Başlık</label>
+                    <div class="col-sm-10">
+                        {{ form.Baslik }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Tarih</label>
+                    <div class="col-sm-10">
+                        {{ form.Tarih }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Tutar</label>
+                    <div class="col-sm-10">
+                        {{ form.Tutar }}
+                    </div>
+                </div>
                 <div class="d-flex gap-2 justify-content-center py-3">
                     <button class="btn btn-primary rounded-pill px-3 btn-sm" type="submit" name="giderekle">Gider Ekle</button>
                     <button class="btn btn-secondary rounded-pill px-3 btn-sm" type="button" onclick="window.location.href = '{% url 'giderexceliyukleurl' %}';">Excel Yükle</button>
