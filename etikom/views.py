@@ -592,6 +592,9 @@ def raporlaryap(request):
         for _ in range(5 - giderler_count):
             giderler.append({'Baslik': None, 'total_gider': 0})
 
+
+    krg_ve_islemler = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').aggregate(Sum("Toplam"))["Toplam__sum"]
+
     edkrcek = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').values('Kargotutari').order_by('Kargotutari')
     if edkrcek:
         edkt = edkrcek[0]['Kargotutari']
@@ -607,6 +610,7 @@ def raporlaryap(request):
     krg_topla = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').aggregate(Sum("Kargotutari"))["Kargotutari__sum"]
     if krg_topla is None:
         krg_topla = 0
+        krg_ve_islemler = 0
 
     krg_say = Kargo.objects.filter(Firmaadi=firma_adi_id, Tur='K').count()
 
@@ -617,6 +621,24 @@ def raporlaryap(request):
         tokrtu = 0
     else:
         okt = krg_topla / krg_say
+
+    
+    giderler_kontrol = Gider.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Tutar"))["Tutar__sum"]
+    if giderler_kontrol is None:
+        giderler_toplami = 0
+    else:
+        giderler_toplami = giderler_kontrol
+
+
+    iadeler_kontrol = Iade.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Iadetutari"))["Iadetutari__sum"]
+    if iadeler_kontrol is None:
+        iadeler_toplami = 0
+    else:
+        iadeler_toplami = iadeler_kontrol
+
+    tgider = tstm + krg_ve_islemler + giderler_toplami + iadeler_toplami + tokotu
+
+    kalan = ts - tgider
 
     context = {
         'title': title,
@@ -656,6 +678,8 @@ def raporlaryap(request):
         'eykt': eykt,
         'okt': okt,
         'krg_topla': krg_topla,
+        'tgider': tgider,
+        'kalan': kalan,
     }
 
     return render(request, 'etikom/raporlar.html', context)

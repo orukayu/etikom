@@ -54,6 +54,9 @@
 			.form-signin input[type="username"] {margin-bottom: -1px;border-bottom-right-radius: 0;border-bottom-left-radius: 0;}
 			body {background-color: #ededed !important}
 			.yeni:hover{font-weight: 500}
+			.logogolge {
+			    filter: drop-shadow(-2px 4px 6px rgba(0, 0, 0, 0.4));
+			}
 		</style>
 	</head>
 	<body class="d-flex flex-column h-100">
@@ -76,9 +79,11 @@
 		</header>
 		<!-- Begin page content -->
 		<main class="flex-shrink-0 form-signin w-100 m-auto">
+			<div style="display: flex;margin: 30px 16px;"></div>
+			<img class="d-block mx-auto mb-4 logogolge" src="/static/media/etikom-logo.png" alt="" width="72" height="72">
 			<form method="post" class="pt-4">
 				{% csrf_token %}
-				<img class="d-block mx-auto mb-4" src="/static/media/etikom-logo.png" alt="" width="72" height="72">
+				
 				<h1 class="h3 mb-3 fw-normal">Giriş Bilgileriniz</h1>
 				<div class="form-floating">
 					<input type="username" class="form-control" id="floatingInput" name="username" placeholder="Username"> <label for="floatingInput">Kullanıcı Adı</label></div>

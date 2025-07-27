@@ -21,6 +21,38 @@
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
         <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3 text-bg-info">
+                    <h4 class="my-0 fw-normal">Toplam Gelir</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title text-center">{{ ts|floatformat:"2g" }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3 text-bg-info">
+                    <h4 class="my-0 fw-normal">Toplam Gider</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title text-center">{{ tgider|floatformat:"2g" }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3 text-bg-info">
+                    <h4 class="my-0 fw-normal">Kalan</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title text-center">{{ kalan|floatformat:"2g" }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                     <h4 class="my-0 fw-normal">Sipariş Raporu</h4>
                 </div>
@@ -206,23 +238,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">Çalışılan Pazaryerleri</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled mt-3 mb-4">
-                        {% for c_p_y in c_p_y %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ c_p_y.Pazaryeri }}
-                            <span class="badge text-bg-primary rounded-pill">{{ forloop.counter }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
+        
         <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
@@ -347,7 +363,24 @@
                     <!-- <button type="button" class="w-100 yesil btn btn-outline-secondary btn-lg btn-outline-primary" onclick="window.location.href = '/kayit-ol';">Excel İndir</button> -->
                 </div>
             </div>
-        </div>        
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Çalışılan Pazaryerleri</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for c_p_y in c_p_y %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ c_p_y.Pazaryeri }}
+                            <span class="badge text-bg-primary rounded-pill">{{ forloop.counter }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
