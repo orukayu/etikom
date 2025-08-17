@@ -53,11 +53,23 @@ class GirisFormu(forms.Form):
     firma_adi = forms.CharField(label='Firma Adı')
     password1 = forms.CharField(label='Şifre', widget=forms.PasswordInput)
 
-class KayitFormu(forms.Form):     
-    firma_adi = forms.CharField(label='Firma Adı')
-    email = forms.EmailField(label='E-posta Adresi')    
-    password1 = forms.CharField(label='Şifre', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Şifreyi Tekrar Girin', widget=forms.PasswordInput)
+class KayitFormu(forms.Form):
+    firma_adi = forms.CharField(
+        label='Firma Adı',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'firmaadi'})
+    )
+    email = forms.EmailField(
+        label='E-posta Adresi',
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'id': 'email'})
+    )
+    password1 = forms.CharField(
+        label='Şifre',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'password1'})
+    )
+    password2 = forms.CharField(
+        label='Şifreyi Tekrar Girin',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'password2'})
+    )
 
     def clean_firma_adi(self):
         firma_adi = self.cleaned_data.get('firma_adi')
