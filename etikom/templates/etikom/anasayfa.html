@@ -171,6 +171,11 @@
             <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
             <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
           </symbol>
+          <symbol id="fatura" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+          </symbol>
         </svg>
         <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
             <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="{% url 'raporlarurl' %}">
@@ -233,6 +238,11 @@
                                     <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0 koyu" style="font-weight: 600;" href="{% url 'raporlarurl' %}">
                                             <svg class="bi"><use xlink:href="#signpost"></use></svg>Genel Raporlar
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn d-flex align-items-center gap-2 border-0 koyu" style="font-weight: 600;" href="{% url 'faturakontrolurl' %}">
+                                            <svg class="bi"><use xlink:href="#fatura"></use></svg>Fatura Kontrol
                                         </a>
                                     </li>
                                     <li class="nav-item">

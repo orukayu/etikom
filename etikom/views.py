@@ -231,7 +231,7 @@ def siparislistesiyap(request, sort=None):
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
 
     firma = request.user.username
-    title = 'Sipariş Hareketleri'
+    title = 'Sipariş Listesi'
 
     context = {
         'siparis': siparis,
@@ -2059,3 +2059,101 @@ def siparisdetayiyap(request, sort):
     }
 
     return render(request, 'etikom/siparisdetayi.html', context)
+
+def kontrolyap(request, sort=None):
+    firma_adi = request.user.username
+    firma_adi_id = request.user.id
+
+    tpys = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Pazaryeri').order_by('Pazaryeri').distinct().count()
+    tsps = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Siparisno').order_by('Siparisno').distinct().count()   # toplam siparis sayisi
+    tsts = Siparis.objects.filter(Firmaadi=firma_adi_id).values('Stokkodu').order_by('Stokkodu').distinct().count()
+    tstc = Siparis.objects.filter(Firmaadi=firma_adi_id, Adet__gt=0).aggregate(Sum('Adet'))["Adet__sum"]                # tum siparislerdeki toplam urun adedi
+
+    if tstc is None:
+        tstc = 0
+
+    tsius = Siparis.objects.filter(Firmaadi=firma_adi_id, Adet__lte=0).aggregate(Sum('Adet'))["Adet__sum"]                # tum siparislerdeki iade urun sayısı
+
+    if tsius is None:
+        ius = 0
+    else:
+        ius = abs(tsius)
+
+    if tstc == 0:                   
+        orsp = 0
+    else:
+        orsp = tstc / tsps          # siparis basina dusen urun sayisi
+
+    tstt = Siparis.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]
+
+    if tstt is None:
+        tstt = 0
+        ostt = 0
+    else:
+        ostt = tstt / tsps
+
+    stsys = Siparis.objects.filter(Firmaadi=firma_adi_id).count()
+
+    if sort == 'az-tur':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Tur').values()
+    elif sort == 'za-tur':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tur').values()
+    elif sort == 'az-pazaryeri':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Pazaryeri').values()
+    elif sort == 'za-pazaryeri':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Pazaryeri').values()
+    elif sort == 'az-tarih':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Tarih').values()
+    elif sort == 'za-tarih':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Tarih').values()
+    elif sort == 'az-siparis-no':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Siparisno').values()
+    elif sort == 'za-siparis-no':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Siparisno').values()
+    elif sort == 'az-stok-kodu':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Stokkodu').values()
+    elif sort == 'za-stok-kodu':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Stokkodu').values()
+    elif sort == 'az-adet':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Adet').values()
+    elif sort == 'za-adet':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Adet').values()
+    elif sort == 'az-satis-fiyati':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Satisfiyati').values()
+    elif sort == 'za-satis-fiyati':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Satisfiyati').values()
+    elif sort == 'az-toplam':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
+    elif sort == 'za-toplam':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Toplam').values()
+    elif sort == 'az-komisyon-orani':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Komisyon').values()
+    elif sort == 'za-komisyon-orani':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Komisyon').values()
+    elif sort == 'az-komisyon-tutari':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Komisyontutari').values()
+    elif sort == 'za-komisyon-tutari':
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Komisyontutari').values()
+    else:
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
+
+    firma = request.user.username
+    title = 'Fatura Kontrol'
+
+    context = {
+        'siparis': siparis,
+        'firma_adi': firma_adi,
+        'title': title,
+        'tpys': tpys,
+        'tsps': tsps,
+        'tsts': tsts,
+        'tstc': tstc,
+        'ius': ius,
+        'orsp': orsp,
+        'tstt': tstt,
+        'ostt': ostt,
+        'stsys': stsys,
+        'firma': firma,
+    }
+
+    return render(request, 'etikom/faturakontrol.html', context)

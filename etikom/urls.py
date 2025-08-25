@@ -11,6 +11,7 @@ urlpatterns = [
     path('blog/', views.blogyap, name='blogurl'),
     path('blog/<str:url>/', views.blogdetayyap, name='blogdetayurl'),
     path('genel-raporlar/', views.raporlaryap, name='raporlarurl'),
+    path('fatura-kontrol/', views.kontrolyap, name='faturakontrolurl'),
 
     path('fiyat-hesapla/', views.fiyathesaplamayap, name='fiyathesaplaurl'),
 
