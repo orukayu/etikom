@@ -1,5 +1,13 @@
 {% extends 'etikom/anasayfa.html' %}
 
+{% block copy %}
+<style type="text/css">
+    div#ustsatir {
+        border-bottom: none !important;
+    }
+</style>
+{% endblock %}
+
 {% block baslik %}
 <dl class="row align-items-center m-0">
     <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Listesi</small></h4></dt>
@@ -14,7 +22,7 @@
 
 {% block content %}
 <div class="sayimlistesi">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3 tab" style="background-color: whitesmoke;">
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
                 <li>Stok Çeşidi: <strong>{{ tsc|floatformat:"-3g" }}</strong></li>
@@ -36,7 +44,7 @@
             </ul>
         </div>
     </div>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-top">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1">
         <h5>
             Stok Tablosu;
         </h5>
@@ -44,7 +52,7 @@
             <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'sayimexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
-    <div class="table-responsive small">
+    <div class="table-responsive small tab">
         <table class="table table-striped table-sm">
             <thead class="table-light">
                 <tr>
