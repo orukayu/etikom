@@ -1,22 +1,16 @@
 {% extends 'etikom/anasayfa.html' %}
 
-{% block copy %}
-<style type="text/css">
-    div#ustsatir {
-        border-bottom: none !important;
-    }
-</style>
-{% endblock %}
-
 {% block baslik %}
-<dl class="row align-items-center m-0">
-    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Haraketleri</small></h4></dt>
-    <dd class="col-sm-9">
-        <p class="m-0">
-            Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait ayrıntılar için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
-        </p>
-    </dd>
-</dl>
+<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+    <dl class="row align-items-center m-0">
+        <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Haraketleri</small></h4></dt>
+        <dd class="col-sm-9">
+            <p class="m-0">
+                Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait ayrıntılar için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+            </p>
+        </dd>
+    </dl>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -47,11 +41,14 @@
             </ul>
         </div>
     </div>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1">
-        <h5>
-            Stok Hareketleri;
-        </h5>
-        <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="d-flex align-items-center pt-2 pb-2">
+        <div class="p-2 mb-0">
+            <h5 class="mb-0">Stok Hareketleri;</h5>
+        </div>
+        <div class="p-2 search-box flex-fill">
+            <input type="text" id="searchInput" class="form-control" placeholder="Sipariş No veya Stok Kodu ara..." onkeyup="searchTable()">
+        </div>
+        <div class="ms-auto p-2">
             <button type="button" class="btn btn-sm btn-success" onclick="window.location.href = '{% url 'stokexcelindirurl' %}';">Excel İndir</button>
         </div>
     </div>
@@ -114,4 +111,29 @@
         <p>{{ stsys }} Satır</p>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    function searchTable() {
+        // Kullanıcının yazdığı metni al
+        const input = document.getElementById("searchInput").value.toLowerCase();
+
+        // Tablodaki tüm satırları bul
+        const rows = document.querySelectorAll("tbody tr");
+
+        // Her satırın içindeki metinlere bak
+        rows.forEach(row => {
+        // Satırın tüm metnini küçük harfe çevir
+        const rowText = row.innerText.toLowerCase();
+
+        // Eğer satırda aranan metin varsa satırı göster, yoksa gizle
+        if (rowText.includes(input)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+        });
+    }
+</script>
 {% endblock %}

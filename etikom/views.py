@@ -1867,9 +1867,11 @@ def giderlistesiyap(request, sort=None):
     if gider_sayisi == 0:
         baslik_sayisi = 0
         top_tutar = 0
+        ort_tutar = 0
     else:
         baslik_sayisi = basliklar
         top_tutar = tutarlar
+        ort_tutar = top_tutar/baslik_sayisi
     
 
     if sort == 'az-baslik':
@@ -1898,6 +1900,7 @@ def giderlistesiyap(request, sort=None):
         'gider_sayisi': gider_sayisi,
         'baslik_sayisi': baslik_sayisi,
         'top_tutar': top_tutar,
+        'ort_tutar': ort_tutar,
     }
     
 
@@ -2060,7 +2063,7 @@ def siparisdetayiyap(request, sort):
 
     return render(request, 'etikom/siparisdetayi.html', context)
 
-def kontrolyap(request, sort=None):
+def faturakontrolyap(request, sort=None):
     firma_adi = request.user.username
     firma_adi_id = request.user.id
 
@@ -2135,7 +2138,7 @@ def kontrolyap(request, sort=None):
     elif sort == 'za-komisyon-tutari':
         siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('-Komisyontutari').values()
     else:
-        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id)
+        siparis = Siparis.objects.filter(Firmaadi=firma_adi_id).order_by('Tarih')[:10]
 
     firma = request.user.username
     title = 'Fatura Kontrol'

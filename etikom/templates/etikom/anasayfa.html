@@ -409,15 +409,14 @@
                 </div>
 
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 min-vh-100">
-                    <div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
-                        {% block baslik %}
-                        {% endblock %}
-                    </div>
+                    {% block baslik %}
+                    {% endblock %}
                     {% block content %}
                     {% endblock %}
                 </main>
             </div>
         </div>
+        {% block script %}
         <script>
           // Tüm bağlantıları seç
           document.querySelectorAll('a').forEach(function(link) {
@@ -441,6 +440,7 @@
               }
           });
         </script>
+        {% endblock %}
     </body>
 </html>
 

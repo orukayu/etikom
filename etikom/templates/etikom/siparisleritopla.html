@@ -1,14 +1,16 @@
 {% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
-<dl class="row align-items-center m-0">
-    <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş İçerikleri</small></h4></dt>
-    <dd class="col-sm-9">
-        <p class="m-0">
-            Bu sayfada, aynı güne ait siparişlerde ki ürünlerin stok kodları ve toplam adetleri listelenmektedir. Gitmek istediğiniz tarihe <strong>"Önceki Gün"</strong> veya <strong>"Sonraki Gün"</strong> butonlarını kullanarak gidip o güne ait hangi üründen kaç adet sipariş verildiğini görebilirsiniz.
-        </p>
-    </dd>
-</dl>
+<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
+    <dl class="row align-items-center m-0">
+        <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş İçerikleri</small></h4></dt>
+        <dd class="col-sm-9">
+            <p class="m-0">
+                Bu sayfada, aynı güne ait siparişlerde ki ürünlerin stok kodları ve toplam adetleri listelenmektedir. Gitmek istediğiniz tarihe <strong>"Önceki Gün"</strong> veya <strong>"Sonraki Gün"</strong> butonlarını kullanarak gidip o güne ait hangi üründen kaç adet sipariş verildiğini görebilirsiniz.
+            </p>
+        </dd>
+    </dl>
+</div>
 {% endblock %}
 
 
