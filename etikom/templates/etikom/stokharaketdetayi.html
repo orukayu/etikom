@@ -1,8 +1,10 @@
 {% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
-<div>
-    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Düzeltme</small></h4>
+<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
+    <div>
+        <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Düzeltme</small></h4>
+    </div>
 </div>
 {% endblock %}
 
@@ -16,7 +18,36 @@
             <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Daha önce eklemiş olduğunuz aşağıda ki stok bilgilerini, değiştirerek tekrar ekleyebilir veya silebilirsiniz.</small></h5>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Fatura No</label>
+                    <div class="col-sm-8">
+                        {{ form.Afaturano }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Stok Kodu</label>
+                    <div class="col-sm-8">
+                        {{ form.Stokkodu }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Adet</label>
+                    <div class="col-sm-8">
+                        {{ form.Adet }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Alış Fiyatı</label>
+                    <div class="col-sm-8">
+                        {{ form.Alisfiyati }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Toplam</label>
+                    <div class="col-sm-8">
+                        {{ form.Toplam }}
+                    </div>
+                </div>
                 <div class="d-flex gap-2 justify-content-center py-3">
                     <form method="post">
         				{% csrf_token %}

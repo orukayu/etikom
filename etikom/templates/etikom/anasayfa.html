@@ -393,11 +393,6 @@
                                 <div style="border-bottom: 1px solid #DADDE1;margin-left: 10px;"></div>
                                 <ul class="nav flex-column pt-2">
                                     <li class="nav-item">
-                                        <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'fiyatlamaurl' %}">
-                                            <svg class="bi"><use xlink:href="#people-circle"></use></svg>Kayıt Ol
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="btn d-flex align-items-center gap-2 border-0" style="font-weight: 600;" href="{% url 'cikisurl' %}">
                                             <svg class="bi"><use xlink:href="#door-closed"></use></svg>Çıkış Yap
                                         </a>
@@ -416,7 +411,6 @@
                 </main>
             </div>
         </div>
-        {% block script %}
         <script>
           // Tüm bağlantıları seç
           document.querySelectorAll('a').forEach(function(link) {
@@ -440,6 +434,7 @@
               }
           });
         </script>
+        {% block script %}
         {% endblock %}
     </body>
 </html>

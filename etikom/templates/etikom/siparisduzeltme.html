@@ -1,8 +1,10 @@
 {% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
-<div>
-    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş Düzeltme</small></h4>
+<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
+    <div>
+        <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Sipariş Düzeltme</small></h4>
+    </div>
 </div>
 {% endblock %}
 
@@ -16,7 +18,48 @@
             <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Daha önce eklemiş olduğunuz aşağıda ki sipariş bilgilerini, değiştirerek tekrar ekleyebilir veya silebilirsiniz.</small></h5>
             <form method="POST">
                 {% csrf_token %}
-                {{ siparis.as_p }}
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Pazaryeri</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Pazaryeri }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Sipariş Tarihi</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Tarih }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Sipariş No</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Siparisno }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Stok Kodu</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Stokkodu }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Adet</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Adet }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Satış Fiyatı</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Satisfiyati }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Komisyon (%)</label>
+                    <div class="col-sm-8">
+                        {{ siparis.Komisyon }}
+                    </div>
+                </div>
                 <div class="d-flex gap-2 justify-content-center py-3">
                     <form method="post">
         				{% csrf_token %}

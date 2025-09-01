@@ -1,8 +1,10 @@
 {% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
-<div>
-    <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Gider Düzeltme</small></h4>
+<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
+    <div>
+        <h4 class="text-warning text-uppercase">{{ firma_adi }} <small class="blockquote-footer text-capitalize">Gider Düzeltme</small></h4>
+    </div>
 </div>
 {% endblock %}
 
@@ -16,7 +18,24 @@
             <h5 class="card-title pricing-card-title"><small class="text-body-secondary fw-light">Daha önce eklemiş olduğunuz aşağıda ki iade bilgilerini, değiştirerek tekrar ekleyebilir veya silebilirsiniz.</small></h5>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Başlık</label>
+                    <div class="col-sm-10">
+                        {{ form.Baslik }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Tarih</label>
+                    <div class="col-sm-10">
+                        {{ form.Tarih }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Tutar</label>
+                    <div class="col-sm-10">
+                        {{ form.Tutar }}
+                    </div>
+                </div>
                 <div class="d-flex gap-2 justify-content-center py-3">
                     <form method="post">
         				{% csrf_token %}
