@@ -1742,6 +1742,7 @@ def iadeexceliyuklemeyap(request):
                     Desi = row['Desi'],
                     Kargotutari = row['İade Kargo Tutarı'],
                     Hizmetbedeli = 0,
+                    Islembedeli = 0,
                     Siparisno = siparis,
                     Stokkodu = row['Stok Kodu'],
                     Firmaadi = request.user,
