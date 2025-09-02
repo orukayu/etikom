@@ -1,12 +1,12 @@
 {% extends 'etikom/anasayfa.html' %}
 
 {% block baslik %}
-<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
+<div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
     <dl class="row align-items-center m-0">
         <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Fatura Kontrol</small></h4></dt>
         <dd class="col-sm-9">
             <p class="m-0">
-                Pazaryerlerinin komisyon, kargo ve işlem tutarı gibi ücretlerini tarafınıza yüksek veya mükerrer fatura etmediğini kontrol edebilir ve mutabakat yapabilirsiniz.
+                Pazaryerlerinin <strong>komisyon</strong>, <strong>kargo</strong> ve <strong>işlem tutarı</strong> gibi ücretlerini size, yüksek veya mükerrer fatura etmediğini kontrol edebilir vede artık pazaryerleri ile mutabakat yapabilirsiniz.
             </p>
         </dd>
     </dl>
@@ -15,34 +15,32 @@
 
 {% block content %}
 <div class="faturakontrollistesi">
-    <!--
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3" style="background-color: whitesmoke;">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3 tab" style="background-color: whitesmoke;">
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Pazaryeri Sayısı: <strong>{{ tpys|floatformat:"-3g" }}</strong></li>
-                <li>Sipariş Sayısı: <strong>{{ tsps|floatformat:"-3g" }}</strong></li>
+                <li>Trendyol: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
+                <li>Hepsiburada: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Stok Çeşidi: <strong>{{ tsts|floatformat:"-3g" }}</strong></li>
-                <li>Satılan Ürün: <strong>{{ tstc|floatformat:"-3g" }} Adet</strong></li>
+                <li>N11: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
+                <li>Etsy: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>İade Ürün: <strong>{{ ius }} Adet</strong></li>
-                <li>Sipariş Ort.: <strong>{{ orsp|floatformat:"g" }} Ürün</strong></li>
+                <li>Çiçeksepeti: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
+                <li>Amazon: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Toplam Satış: <strong>{{ tstt|floatformat:"2g" }}</strong></li>
-                <li>Ort. Satış: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
+                <li>Teknosa: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
+                <li>Koçtaş: <strong>{{ ostt|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
     </div>
-    -->
     <div class="d-flex align-items-center pt-2 pb-2">
         <div class="p-2 mb-0">
             <h5 class="mb-0">Kontrol Tablosu;</h5>
@@ -53,6 +51,11 @@
         <div class="ms-auto p-2">
             <button type="button" class="btn btn-sm btn-success" disabled onclick="window.location.href = '{% url 'sipexcelindirurl' %}';">Excel İndir</button>
         </div>
+    </div>
+    <div class="text-center text-danger">
+        <h1>
+            ÇOK YAKINDA AÇILIYOR! TAKİP EDİN.
+        </h1>
     </div>
     <div class="table-responsive small tab">
         <table class="table table-striped table-sm">
