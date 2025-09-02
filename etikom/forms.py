@@ -39,13 +39,14 @@ class IadeFormu(forms.ModelForm):
 class KargoFormu(forms.ModelForm):
     class Meta:
         model = Kargo
-        fields = ['Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli']
-        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet+İşlem Bedeli"}
+        fields = ['Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Islembedeli']
+        labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet Bedeli", "Islembedeli" : "İşlem Bedeli"}
         widgets = {
             'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...', 'class': 'form-control', 'id': 'siparisno'}),
             'Desi': forms.TextInput(attrs={'placeholder': '3', 'class': 'form-control', 'id': 'desi'}),
             'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'kargotutari'}),
             'Hizmetbedeli': forms.TextInput(attrs={'placeholder': '5.99', 'class': 'form-control', 'id': 'hizmetbedeli'}),
+            'Islembedeli': forms.TextInput(attrs={'placeholder': '4.99', 'class': 'form-control', 'id': 'islembedeli'}),
         }
 
 

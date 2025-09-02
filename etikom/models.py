@@ -30,12 +30,13 @@ class Kargo(models.Model):
     Desi = models.IntegerField()
     Kargotutari = models.DecimalField(max_digits=10, decimal_places=2)
     Hizmetbedeli = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Islembedeli = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Tur = models.CharField(max_length=20, null=True)
 
     def save5(self, *args, **kwargs):
-        self.Toplam = self.Kargotutari + self.Hizmetbedeli
+        self.Toplam = self.Kargotutari + self.Hizmetbedeli + self.Islembedeli
         super().save(*args, **kwargs)
 
     class Meta:

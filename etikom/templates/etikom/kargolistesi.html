@@ -18,7 +18,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center px-3 tab" style="background-color: whitesmoke;">
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Kargo Sayısı: <strong>{{ kargo_sayisi|floatformat:"-3g" }}</strong></li>
+                <li>Genel Toplam: <strong>{{ gen_toplam|floatformat:"2g" }}</strong></li>
                 <li>Ortalama Desi: <strong>{{ ort_desi|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
@@ -36,8 +36,8 @@
         </div>
         <div class="rapor col-6 col-md">
             <ul class="list-unstyled mt-3">
-                <li>Genel Toplam: <strong>{{ gen_toplam|floatformat:"2g" }}</strong></li>
-                <li>-<strong></strong></li>
+                <li>Ort. İşlem Bedeli: <strong>{{ ort_islem|floatformat:"2g" }}</strong></li>
+                <li>Toplam İşlem Bedeli: <strong>{{ top_islem|floatformat:"2g" }}</strong></li>
             </ul>
         </div>
     </div>
@@ -70,8 +70,11 @@
                     <th scope="col">Kargo Tutarı<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-kargo-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-kargo-tutari' %}">Z</a>)
                     </th>
-                    <th scope="col">Hizmet+İşlem Bedeli<br>
+                    <th scope="col">Hizmet Bedeli<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-hizmet-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-hizmet-tutari' %}">Z</a>)
+                    </th>
+                    <th scope="col">İşlem Bedeli<br>
+                        (<a href="{% url 'kargosiralamaurl' sort='az-islem-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-islem-tutari' %}">Z</a>)
                     </th>
                     <th scope="col">Toplam<br>
                         (<a href="{% url 'kargosiralamaurl' sort='az-toplam-tutari' %}">A</a>↔<a href="{% url 'kargosiralamaurl' sort='za-toplam-tutari' %}">Z</a>)
@@ -98,6 +101,9 @@
                     </td>
                     <td class="text-end">
                         {{ kargo.Hizmetbedeli }}
+                    </td>
+                    <td class="text-end">
+                        {{ kargo.Islembedeli }}
                     </td>
                     <td class="text-end">
                         {{ kargo.Toplam }}

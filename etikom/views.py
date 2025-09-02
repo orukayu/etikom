@@ -264,6 +264,7 @@ def kargolistesiyap(request, sort=None):
     desiler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Desi"))["Desi__sum"]                       # toplam desi
     tutarlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Kargotutari"))["Kargotutari__sum"]        # toplam kargo
     hizmetler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Hizmetbedeli"))["Hizmetbedeli__sum"]     # toplam hizmet
+    islemler = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Islembedeli"))["Islembedeli__sum"]     # toplam islem
     toplamlar = Kargo.objects.filter(Firmaadi=firma_adi_id).aggregate(Sum("Toplam"))["Toplam__sum"]                 # genel toplam
 
 
@@ -273,6 +274,8 @@ def kargolistesiyap(request, sort=None):
         ort_tutar = 0
         ort_hizmet = 0
         top_hizmet = 0
+        ort_islem = 0
+        top_islem = 0
         gen_toplam = 0
     else:
         ort_desi = desiler / kargo
@@ -280,6 +283,8 @@ def kargolistesiyap(request, sort=None):
         ort_tutar = top_tutar / kargo_sayisi
         top_hizmet = hizmetler
         ort_hizmet = top_hizmet / kargo_sayisi
+        top_islem = islemler
+        ort_islem = top_islem / kargo_sayisi
         gen_toplam = toplamlar
     
 
@@ -303,6 +308,10 @@ def kargolistesiyap(request, sort=None):
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Hizmetbedeli').values()
     elif sort == 'za-hizmet-tutari':
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Hizmetbedeli').values()
+    elif sort == 'az-islem-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Islembedeli').values()
+    elif sort == 'za-islem-tutari':
+        kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('-Islembedeli').values()
     elif sort == 'az-toplam-tutari':
         kargo = Kargo.objects.filter(Firmaadi=firma_adi_id).order_by('Toplam').values()
     elif sort == 'za-toplam-tutari':
@@ -325,6 +334,8 @@ def kargolistesiyap(request, sort=None):
         'ort_tutar': ort_tutar,
         'top_hizmet': top_hizmet,
         'ort_hizmet': ort_hizmet,
+        'top_islem': top_islem,
+        'ort_islem': ort_islem,
         'gen_toplam': gen_toplam,
     }
     
@@ -855,7 +866,8 @@ def kargoexceliyuklemeyap(request):
                 kargo = Kargo(
                     Desi = row['Desi'],
                     Kargotutari = row['Kargo Tutarı'],
-                    Hizmetbedeli = row['Hizmet + İşlem Bedeli'],
+                    Hizmetbedeli = row['Hizmet Bedeli'],
+                    Islembedeli = row['İşlem Bedeli'],
                     Siparisno = siparis,
                     Firmaadi = request.user,
                     Tur = 'K'
@@ -1575,7 +1587,7 @@ def iadeeklemeyap(request):
 
                         desi = form.cleaned_data['Desi']
                         iade_ttr = form.cleaned_data['Iadetutari']
-                        kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Stokkodu=stk_no, Desi=desi, Hizmetbedeli=0, Kargotutari=iade_ttr)
+                        kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Stokkodu=stk_no, Desi=desi, Hizmetbedeli=0, Islembedeli=0, Kargotutari=iade_ttr)
                         kargo.save5()
 
                         return redirect('iadelistesiurl')

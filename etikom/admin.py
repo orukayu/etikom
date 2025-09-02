@@ -21,7 +21,7 @@ class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'Baslik', 'Metin', 'Url')
 
 class KargoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Stokkodu', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Toplam')
+    list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Stokkodu', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Islembedeli', 'Toplam')
 
 class IadeAdmin(admin.ModelAdmin):
     list_display = ('id', 'Firmaadi', 'Tur', 'Siparisno', 'Desi', 'Iadetutari', 'Stokkodu', 'Adet', 'Toplam')
