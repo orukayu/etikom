@@ -48,7 +48,7 @@ class Kargo(models.Model):
 class Siparis(models.Model):
     Siparisno = models.CharField(max_length=25)
     Pazaryeri = models.CharField(max_length=25)
-    Tarih = models.DateField()
+    Tarih = models.DateField(null=True, blank=True)
     Stokkodu = models.CharField(max_length=25)
     Adet = models.IntegerField()
     Satisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
@@ -113,7 +113,7 @@ class Blog(models.Model):
 class Gider(models.Model):
     Firmaadi = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Baslik = models.TextField()
-    Tarih = models.DateField()
+    Tarih = models.DateField(null=True, blank=True)
     Tutar = models.DecimalField(max_digits=10, decimal_places=2)
 
 
