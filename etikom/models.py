@@ -82,6 +82,7 @@ class Stok(models.Model):
     Alisfiyati = models.DecimalField(max_digits=10, decimal_places=2)
     Toplam = models.DecimalField(max_digits=10, decimal_places=2)
     Tur = models.CharField(max_length=20, null=True)
+    Alistarihi = models.DateField(null=True, blank=True)
     
     def save1(self, *args, **kwargs):
         self.Toplam = self.Adet * self.Alisfiyati

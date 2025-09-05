@@ -11,7 +11,7 @@ from .forms import SiparisFormu
 
 
 class StokAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Firmaadi', 'Tur', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
+    list_display = ('id', 'Firmaadi', 'Tur', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Alistarihi', 'Toplam')
 
 class SiparisAdmin(admin.ModelAdmin):
     form = SiparisFormu

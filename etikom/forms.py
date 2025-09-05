@@ -127,13 +127,14 @@ class StokFormu(forms.ModelForm):
 
     class Meta:
         model = Stok
-        fields = ('Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
-        labels = {"Stokkodu" : "Stok Kodu", "Alisfiyati" : "Alış Fiyatı", "Afaturano" : "Fatura No"}
+        fields = ('Afaturano', 'Alistarihi', 'Stokkodu', 'Adet', 'Alisfiyati', 'Toplam')
+        labels = {"Stokkodu" : "Stok Kodu", "Alisfiyati" : "Alış Fiyatı", "Afaturano" : "Fatura No", "Alistarihi" : "Tarih"}
         widgets = {
             'Afaturano': forms.TextInput(attrs={'placeholder': 'FTR202400001234', 'class': 'form-control', 'id': 'faturano'}),
             'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12', 'class': 'form-control', 'id': 'stokkodu'}),
             'Adet': forms.TextInput(attrs={'placeholder': '4', 'class': 'form-control', 'id': 'adet'}),
             'Alisfiyati': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'alisfiyati'}),
             'Toplam': forms.TextInput(attrs={'placeholder': '110.00', 'class': 'form-control', 'id': 'toplam'}),
+            'Alistarihi': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'alistarihi'})
         }
 

@@ -6,7 +6,7 @@
         <dt class="col-sm-3 text-warning text-uppercase"><h4>{{ firma_adi }} <small class="blockquote-footer text-capitalize">Stok Haraketleri</small></h4></dt>
         <dd class="col-sm-9">
             <p class="m-0">
-                Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait ayrıntılar için <strong>Belge No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
+                Değiştirmek veya silmek istediğiniz satırın detayı için <strong>Kalem <svg class="bi text-primary"><use xlink:href="#kalem"></use></svg></strong> simgesine, fatura yada siparişe ait ayrıntılar için <strong>Fatura / Sipariş No</strong>'suna, ürüne ait işlem geçmişi içinde <strong>Stok Kodu</strong>'na tıklayabilirsiniz.
             </p>
         </dd>
     </dl>
@@ -64,6 +64,9 @@
                     <th scope="col">Fatura / Sipariş No<br>
                         (<a href="{% url 'hareketsiralamaurl' sort='az-fatura-no' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-fatura-no' %}">Z</a>)
                     </th>
+                    <th scope="col">Tarih<br>
+                        (<a href="{% url 'hareketsiralamaurl' sort='az-tarih' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-tarih' %}">Z</a>)
+                    </th>
                     <th scope="col">Stok Kodu<br>
                         (<a href="{% url 'hareketsiralamaurl' sort='az-stok-kodu' %}">A</a>↔<a href="{% url 'hareketsiralamaurl' sort='za-stok-kodu' %}">Z</a>)
                     </th>
@@ -89,6 +92,9 @@
                     </td>
                     <td>
                         <a href="{% url 'stokfaturasiurl' sort=stok.Afaturano %}">{{ stok.Afaturano }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ stok.Alistarihi }}
                     </td>
                     <td>
                         <a href="{% url 'stokgecmisiurl' sort=stok.Stokkodu %}">{{ stok.Stokkodu }}</a>

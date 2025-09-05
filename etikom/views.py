@@ -111,6 +111,10 @@ def stokharaketleriyap(request, sort=None):
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Afaturano').values()
     elif sort == 'za-fatura-no':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Afaturano').values()
+    elif sort == 'az-tarih':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Alistarihi').values()
+    elif sort == 'za-tarih':
+        stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('-Alistarihi').values()
     elif sort == 'az-stok-kodu':
         stok = Stok.objects.filter(Firmaadi=firma_adi_id).order_by('Stokkodu').values()
     elif sort == 'za-stok-kodu':
@@ -800,6 +804,7 @@ def stokexceliyuklemeyap(request):
                 tur = 'A' if row['Adet'] > 0 else 'T'
                 stok = Stok(
                     Afaturano = row['Fatura No'],
+                    Alistarihi = row['Fatura Tarihi'],
                     Stokkodu = row['Stok Kodu'],
                     Adet = row['Adet'],
                     Alisfiyati = row['Fiyat'],
