@@ -44,6 +44,8 @@ import json
 
 from django.contrib import messages
 
+from django.http import JsonResponse
+
 # Create your views here.
 
 def girisyap(request):
@@ -843,6 +845,7 @@ def sipexceliyuklemeyap(request):
                 stk = Stok(
                     Firmaadi = request.user,
                     Afaturano = row['Sipariş No'],
+                    Alistarihi = row['Sipariş Tarihi'],
                     Stokkodu = row['Stok Kodu'],
                     Adet = row['Adet'] * -1,
                     Alisfiyati = row['Satış Fiyatı'],
@@ -1129,27 +1132,32 @@ def sipariseklemeyap(request):
 
     if request.method == "POST":
         if 'sipekle' in request.POST:
-            siparis = SiparisFormu(request.POST, user=request.user)
+            siparis = SiparisFormu(request.POST)
             if siparis.is_valid():
-                post = siparis.save(commit=False)
-                post.Firmaadi = request.user
-                post.Tur = 'S'
-                post.save3()
+                stk_kodu = siparis.cleaned_data['Stokkodu']
+                kontrol = Stok.objects.filter(Firmaadi=firma_adi_id, Stokkodu=stk_kodu).count()
+                if kontrol > 0:                
+                    post = siparis.save(commit=False)
+                    post.Firmaadi = request.user
+                    post.Tur = 'S'
+                    post.save3()
 
-                sipno = siparis.cleaned_data['Siparisno']
-                stokkodu = siparis.cleaned_data['Stokkodu']
-                sayi = siparis.cleaned_data['Adet']
-                adet = sayi * -1
-                satfiyat = siparis.cleaned_data['Satisfiyati']
-                Firmaadi = request.user
+                    sipno = siparis.cleaned_data['Siparisno']
+                    tarih = siparis.cleaned_data['Tarih']
+                    stokkodu = siparis.cleaned_data['Stokkodu']
+                    sayi = siparis.cleaned_data['Adet']
+                    adet = sayi * -1
+                    satfiyat = siparis.cleaned_data['Satisfiyati']
+                    Firmaadi = request.user
 
-                # Book kaydet
-                stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Adet=adet, Alisfiyati=satfiyat, Tur='S')
-                stok.save1()
-                return redirect('siparislistesiurl')
-
+                    # Book kaydet
+                    stok = Stok(Firmaadi=Firmaadi, Afaturano=sipno, Stokkodu=stokkodu, Alistarihi=tarih, Adet=adet, Alisfiyati=satfiyat, Tur='S')
+                    stok.save1()
+                    return redirect('siparislistesiurl')
+                else:
+                    messages.error(request, 'Bu Stok Kodu Mevcut Değil !')
     else:
-        siparis = SiparisFormu(user=request.user)
+        siparis = SiparisFormu()
 
     title = 'Sipariş Ekle'
     
@@ -1255,7 +1263,7 @@ def siparisduzeltme(request, firma, pk):
 
     if sipturcek == 'S':
         kontrolsiparis = get_object_or_404(Siparis, pk=pk)
-        siparis = SiparisFormu(request.POST, instance=kontrolsiparis, user=request.user)
+        siparis = SiparisFormu(request.POST, instance=kontrolsiparis)
         if 'siparissil' in request.POST:
             stok_entry = Stok.objects.filter(Afaturano=kontrolsiparis.Siparisno, Stokkodu=kontrolsiparis.Stokkodu, Tur='S').first()
             if stok_entry:
@@ -1285,7 +1293,7 @@ def siparisduzeltme(request, firma, pk):
 
                 return redirect('siparislistesiurl')
         else:
-            siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
+            siparis = SiparisFormu(instance=kontrolsiparis)
 
     elif sipturcek == 'İ':
         sipcek = Siparis.objects.filter(id=pk).values_list('Siparisno', flat=True).first()
@@ -1295,10 +1303,10 @@ def siparisduzeltme(request, firma, pk):
         return redirect('iadeduzeltmeurl', firma, pk)
 
     else:
-        siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
+        siparis = SiparisFormu(instance=kontrolsiparis)
 
     title = 'Sipariş Detayı'
-    siparis = SiparisFormu(instance=kontrolsiparis, user=request.user)
+    siparis = SiparisFormu(instance=kontrolsiparis)
     return render(request, 'etikom/siparisduzeltme.html', {'siparis': siparis, 'firma_adi': firma_adi, 'title': title})
 
 
@@ -1476,7 +1484,7 @@ def kargoeklemeyap(request):
                     post.save5()
                     return redirect('kargolistesiurl')
                 else:
-                    form.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
+                    messages.error(request, 'Sipariş No Mevcut Değil !')
                     
     else:
         form = KargoFormu()
@@ -1574,12 +1582,6 @@ def iadeeklemeyap(request):
                         post.save6()
 
                         Firmaadi = request.user
-                        adet = form.cleaned_data['Adet']
-                        fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Satisfiyati').first()
-                        fiyat = fyt['Satisfiyati']
-                        stok = Stok(Firmaadi=Firmaadi, Afaturano=sip_no, Stokkodu=stk_no, Adet=adet, Alisfiyati=fiyat, Tur='İ')
-                        stok.save1()
-
                         pzr_yeri = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Pazaryeri').first()
                         pazaryeri = pzr_yeri['Pazaryeri']
                         adt = form.cleaned_data['Adet'] * -1
@@ -1587,19 +1589,26 @@ def iadeeklemeyap(request):
                         tarih = trh['Tarih']
                         kmsyn = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Komisyon').first()
                         komisyon = kmsyn['Komisyon']
+                        fyt = Siparis.objects.filter(Firmaadi=firma_adi_id, Siparisno=sip_no, Stokkodu=stk_no).values('Satisfiyati').first()
+                        fiyat = fyt['Satisfiyati']
+                        adet = form.cleaned_data['Adet']
+                        desi = form.cleaned_data['Desi']
+                        iade_ttr = form.cleaned_data['Iadetutari']
+
+                        stok = Stok(Firmaadi=Firmaadi, Afaturano=sip_no, Alistarihi=tarih, Stokkodu=stk_no, Adet=adet, Alisfiyati=fiyat, Tur='İ')
+                        stok.save1()
+
                         siparis = Siparis(Firmaadi=Firmaadi, Pazaryeri=pazaryeri, Tarih=tarih, Siparisno=sip_no, Stokkodu=stk_no, Adet=adt, Komisyon=komisyon, Satisfiyati=fiyat, Tur='İ')
                         siparis.save4()
 
-                        desi = form.cleaned_data['Desi']
-                        iade_ttr = form.cleaned_data['Iadetutari']
                         kargo = Kargo(Firmaadi=Firmaadi, Tur='İ', Siparisno=sip_no, Stokkodu=stk_no, Desi=desi, Hizmetbedeli=0, Islembedeli=0, Kargotutari=iade_ttr)
                         kargo.save5()
 
                         return redirect('iadelistesiurl')
                     else:
-                        form.add_error('Stokkodu', 'Stok Kodu Siparişe Ait Değil !')
+                        messages.error(request, 'Stok Kodu Bu Siparişe Ait Değil !', extra_tags='stok')
                 else:
-                    form.add_error('Siparisno', 'Sipariş No Mevcut Değil !')
+                    messages.error(request, 'Sipariş No Mevcut Değil !', extra_tags='siparis')
                     
     else:
         form = IadeFormu()
@@ -2178,3 +2187,14 @@ def faturakontrolyap(request, sort=None):
     }
 
     return render(request, 'etikom/faturakontrol.html', context)
+
+def stok_listesi(request):
+    query = request.GET.get('term', '')  # jQuery UI autocomplete term parametresi gönderir
+    user = request.user
+    stokisimleri = (
+        Stok.objects.filter(Firmaadi=user, Stokkodu__icontains=query)
+        .values_list('Stokkodu', flat=True)
+        .distinct()
+        .order_by('Stokkodu')[:10]
+    )
+    return JsonResponse(list(stokisimleri), safe=False)

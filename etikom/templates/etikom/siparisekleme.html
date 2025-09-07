@@ -1,5 +1,10 @@
 {% extends 'etikom/anasayfa.html' %}
 
+{% block copy %}
+<!-- jQuery + jQuery UI ekle -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
 {% block baslik %}
 <div id="ustsatir" class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
     <div>
@@ -37,11 +42,19 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Stok Kodu</label>
-                    <div class="col-sm-8">
+                    <label for="id_stokkodu" class="col-sm-4 col-form-label">Stok Kodu</label>
+                    <div class="col-sm-8 position-relative">
                         {{ siparis.Stokkodu }}
+                        <div id="stok_listesi" 
+                             style="border: 1px solid #ccc; display: none; position: absolute; background: white; max-height: 200px; overflow-y: auto; border-radius: var(--bs-border-radius); z-index: 1000;">
+                        </div>
                     </div>
                 </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="text-danger text-center">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
                 <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Adet</label>
                     <div class="col-sm-8">
@@ -69,4 +82,48 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $("#id_stokkodu").on("keyup", function() {
+        let query = $(this).val();
+        if (query.length > 1) {
+            $.ajax({
+                url: '/api/stoklar/',
+                data: { term: query },  // burada parametre adı 'term' olmalı
+                success: function(data) {
+                    let listDiv = $("#stok_listesi");
+                    listDiv.empty().show();
+
+                    if (data.length > 0) {
+                        data.forEach(function(item) {
+                            // item artık string, item.id yok ve Stokkodu değişkeni yok
+                            listDiv.append('<div class="stokkodu-item">' + item + '</div>');
+                        });
+                    } else {
+                        listDiv.append('<div class="stokkodu-item">Sonuç Bulunamadı.</div>');
+                    }
+                }
+            });
+        } else {
+            $("#stok_listesi").hide();
+        }
+    });
+
+    // Liste elemanına tıklandığında input'a aktar
+    $(document).on("click", ".stokkodu-item", function() {
+        $("#id_stokkodu").val($(this).text());
+        $("#stok_listesi").hide();
+    });
+
+    // Liste dışına tıklayınca gizle
+    $(document).on("click", function(e) {
+        if (!$(e.target).closest("#id_stokkodu, #stok_listesi").length) {
+            $("#stok_listesi").hide();
+        }
+    });
+});
+</script>
 {% endblock %}

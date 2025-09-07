@@ -65,6 +65,7 @@ urlpatterns = [
     path('fatura-detayi/<str:sort>/', views.stokfaturasiyap, name='stokfaturasiurl'),
 
     path('siparis-yok/', views.siparisyok, name='siparisyokurl'),
+    path('api/stoklar/', views.stok_listesi, name='stok_list'),
 
     path("robots.txt", TemplateView.as_view(template_name="etikom/robots.txt", content_type="text/plain")),
 ]

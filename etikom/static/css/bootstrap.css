@@ -117,7 +117,7 @@ select#id_Stokkodu {
     max-width: 170px;
     width: -webkit-fill-available;
 }
-input#baslik, input#tarih, input#alistarihi, input#tutar, input#siparisno, input#stokkodu, input#adet, input#desi, input#iadetutari, input#kargotutari, input#hizmetbedeli, input#islembedeli, input#pazaryeri, input#satisfiyati, input#komisyon, input#faturano, input#alisfiyati, input#toplam, input#sayi1, input#sayi2, input#sayi3, input#sayi4, input#sayi5 {
+input#baslik, input#tarih, input#alistarihi, input#tutar, input#siparisno, input#id_stokkodu, input#stokkodu, input#adet, input#desi, input#iadetutari, input#kargotutari, input#hizmetbedeli, input#islembedeli, input#pazaryeri, input#satisfiyati, input#komisyon, input#faturano, input#alisfiyati, input#toplam, input#sayi1, input#sayi2, input#sayi3, input#sayi4, input#sayi5 {
     text-align: right;
 }
 .g-3 input {
@@ -275,4 +275,17 @@ svg.fav {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.stokkodu-item {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.stokkodu-item:hover {
+    background-color: lightgrey;
+}
+
+input#alistarihi, input#tarih {
+    text-transform: uppercase;
 }

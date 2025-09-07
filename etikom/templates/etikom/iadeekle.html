@@ -19,26 +19,40 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Sipariş No</label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-5 col-form-label">Sipariş No</label>
+                    <div class="col-sm-7">
                         {{ form.Siparisno }}
                     </div>
                 </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if "siparis" in message.tags %}
+                        <p class="text-danger text-center">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
                 <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Stok Kodu</label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-5 col-form-label">Stok Kodu</label>
+                    <div class="col-sm-7">
                         {{ form.Stokkodu }}
                     </div>
                 </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if "stok" in message.tags %}
+                        <p class="text-danger text-center">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
                 <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Adet</label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-5 col-form-label">Adet</label>
+                    <div class="col-sm-7">
                         {{ form.Adet }}
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Desi</label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-5 col-form-label">Desi</label>
+                    <div class="col-sm-7">
                         {{ form.Desi }}
                     </div>
                 </div>

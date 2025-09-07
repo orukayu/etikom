@@ -28,8 +28,8 @@ class IadeFormu(forms.ModelForm):
         fields = ['Siparisno', 'Stokkodu', 'Adet', 'Desi', 'Iadetutari']
         labels = {"Siparisno" : "Sipariş No", "Stokkodu" : "Stok Kodu", "Adet" : "Adet", "Desi" : "Desi", "Iadetutari" : "İade Kargo Tutarı"}
         widgets = {
-            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...', 'class': 'form-control', 'id': 'siparisno'}),
-            'Stokkodu': forms.TextInput(attrs={'placeholder': 'Sipariş içeriğinden ...', 'class': 'form-control', 'id': 'stokkodu'}),
+            'Siparisno': forms.TextInput(attrs={'placeholder': '2155139405', 'class': 'form-control', 'id': 'siparisno'}),
+            'Stokkodu': forms.TextInput(attrs={'placeholder': 'iPhone 12', 'class': 'form-control', 'id': 'stokkodu'}),
             'Adet': forms.TextInput(attrs={'placeholder': '1', 'class': 'form-control', 'id': 'adet'}),
             'Desi': forms.TextInput(attrs={'placeholder': '3', 'class': 'form-control', 'id': 'desi'}),
             'Iadetutari': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'iadetutari'}),
@@ -42,7 +42,7 @@ class KargoFormu(forms.ModelForm):
         fields = ['Siparisno', 'Desi', 'Kargotutari', 'Hizmetbedeli', 'Islembedeli']
         labels = {"Siparisno" : "Sipariş No", "Desi" : "Desi", "Kargotutari" : "Kargo Tutarı", "Hizmetbedeli" : "Hizmet Bedeli", "Islembedeli" : "İşlem Bedeli"}
         widgets = {
-            'Siparisno': forms.TextInput(attrs={'placeholder': 'Sipariş listesinden ...', 'class': 'form-control', 'id': 'siparisno'}),
+            'Siparisno': forms.TextInput(attrs={'placeholder': '2155139405', 'class': 'form-control', 'id': 'siparisno'}),
             'Desi': forms.TextInput(attrs={'placeholder': '3', 'class': 'form-control', 'id': 'desi'}),
             'Kargotutari': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'kargotutari'}),
             'Hizmetbedeli': forms.TextInput(attrs={'placeholder': '5.99', 'class': 'form-control', 'id': 'hizmetbedeli'}),
@@ -91,12 +91,13 @@ class KayitFormu(forms.Form):
 
 
 class SiparisFormu(forms.ModelForm):
-
-    Stokkodu = forms.ModelChoiceField(
-        queryset=Stok.objects.none(),
-        to_field_name="Stokkodu",
-        widget=forms.Select,
-        label="Stok Kodu"
+    Stokkodu = forms.CharField(
+        label="Stok Kodu",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'id_stokkodu',
+            'placeholder': 'iPhone 12'
+        })
     )
 
     class Meta:
@@ -110,14 +111,6 @@ class SiparisFormu(forms.ModelForm):
             'Satisfiyati': forms.TextInput(attrs={'placeholder': '137.50', 'class': 'form-control', 'id': 'satisfiyati'}),
             'Komisyon': forms.TextInput(attrs={'placeholder': '9.60', 'class': 'form-control', 'id': 'komisyon'}),
         }
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        if user:
-            self.fields['Stokkodu'].queryset = Stok.objects.filter(Firmaadi=user.id).values_list('Stokkodu', flat=True).order_by('Stokkodu').distinct()
-        if self.instance and self.instance.pk:
-            self.fields['Stokkodu'].initial = self.instance.Stokkodu
 
     Tarih = forms.DateField(
         widget=forms.TextInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'tarih'}),
@@ -135,6 +128,9 @@ class StokFormu(forms.ModelForm):
             'Adet': forms.TextInput(attrs={'placeholder': '4', 'class': 'form-control', 'id': 'adet'}),
             'Alisfiyati': forms.TextInput(attrs={'placeholder': '27.50', 'class': 'form-control', 'id': 'alisfiyati'}),
             'Toplam': forms.TextInput(attrs={'placeholder': '110.00', 'class': 'form-control', 'id': 'toplam'}),
-            'Alistarihi': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'alistarihi'})
         }
+
+    Alistarihi = forms.DateField(
+        widget=forms.TextInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'alistarihi'}),
+    )
 
