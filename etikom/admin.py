@@ -7,8 +7,8 @@ from .models import Kargo
 from .models import Iade
 from .models import Blog
 from .models import Gider
+from .models import Faturakontrol
 from .forms import SiparisFormu
-
 
 class StokAdmin(admin.ModelAdmin):
     list_display = ('id', 'Firmaadi', 'Tur', 'Afaturano', 'Stokkodu', 'Adet', 'Alisfiyati', 'Alistarihi', 'Toplam')
@@ -29,9 +29,13 @@ class IadeAdmin(admin.ModelAdmin):
 class GiderAdmin(admin.ModelAdmin):
     list_display = ('id', 'Firmaadi', 'Baslik', 'Tarih', 'Tutar')
 
+class FaturakontrolAdmin(admin.ModelAdmin):
+    list_display = ('id', 'Firmaadi', 'Pazaryeri', 'Siparisno', 'Tarih', 'Stokkodu', 'Siparisadet', 'Adet', 'Satisfiyati', 'Toplamsatistutari', 'Pazaryeriindirimi', 'Komisyonorani', 'Komisyontutari', 'Alisfiyati', 'Alistoplami', 'Kargodesi', 'Kargotutari', 'Hizmetbedeli', 'Islembedeli', 'Iadeadet', 'Iadedesi', 'Iadetutari', 'Kalan')
+
 admin.site.register(Stok,StokAdmin)
 admin.site.register(Siparis,SiparisAdmin)
 admin.site.register(Kargo,KargoAdmin)
 admin.site.register(Iade,IadeAdmin)
 admin.site.register(Blog,BlogAdmin)
 admin.site.register(Gider,GiderAdmin)
+admin.site.register(Faturakontrol,FaturakontrolAdmin)

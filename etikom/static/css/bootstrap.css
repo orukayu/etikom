@@ -289,3 +289,6 @@ svg.fav {
 input#alistarihi, input#tarih {
     text-transform: uppercase;
 }
+
+.hucre { cursor:pointer; transition: background-color .15s ease; }
+.hucre.secili { background-color: #ccc; }

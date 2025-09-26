@@ -26,7 +26,16 @@
                 </div>
                 {% if messages %}
                     {% for message in messages %}
+                        {% if "siparis" in message.tags %}
                         <p class="text-danger text-center">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if "eskikayit" in message.tags %}
+                        <p class="text-danger text-center">{{ message }}</p>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
                 <div class="row mb-3">
@@ -63,3 +72,4 @@
     </div>
 </div>
 {% endblock %}
+
